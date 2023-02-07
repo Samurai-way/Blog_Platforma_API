@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {blogsRepository} from "../repositories/blogs-repository";
 import {postBlogValidator} from "../validators/validators";
+import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 
 
 export const blogsRouter = Router({})
@@ -34,7 +35,7 @@ blogsRouter.put('/:id', postBlogValidator, (req: Request, res: Response) => {
         res.send(404)
     }
 })
-blogsRouter.delete('/:id', (req: Request, res: Response) => {
+blogsRouter.delete('/:id', basicAuthMiddleware, (req: Request, res: Response) => {
     const id = +req.params.id
     const deleteBlog = blogsRepository.deleteBlog(id)
     if (deleteBlog) {
