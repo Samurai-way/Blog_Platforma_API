@@ -8,6 +8,7 @@
     "dev": "nodemon --inspect dist/index.js"
   },
   "dependencies": {
+    "@types/uuid": "^9.0.0",
     "express": "^4.18.2",
     "express-validator": "^6.14.3"
   },
