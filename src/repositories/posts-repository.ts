@@ -44,5 +44,14 @@ export const postsRepository = {
         } else {
             return false
         }
+    },
+    deletePostById(id: number) {
+        for (let i = 0; i < posts.length; i++) {
+            if (posts[i].id === id) {
+                posts.splice(i, 1)
+                return true
+            }
+        }
+        return false
     }
 }

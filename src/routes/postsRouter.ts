@@ -34,7 +34,12 @@ postsRouter.put('/:id', postPostsValidator, (req: Request, res: Response) => {
         res.send(404)
     }
 })
-postsRouter.delete('/:id', postPostsValidator, (req: Request, res: Response) => {
+postsRouter.delete('/:id', (req: Request, res: Response) => {
     const id = +req.params.id
-
+    const deletePost = postsRepository.deletePostById(id)
+    if (deletePost) {
+        res.send(204)
+    } else {
+        res.send(404)
+    }
 })
