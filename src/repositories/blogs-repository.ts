@@ -22,5 +22,11 @@ export const blogsRepository = {
         }
         blogs.push(newBlog)
         return newBlog
+    },
+    getBlogById(id:number){
+        if(id){
+            const findBlog = blogs.find(b => b.id === id)
+            return findBlog
+        }
     }
 }
