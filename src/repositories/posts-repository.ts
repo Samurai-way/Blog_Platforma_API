@@ -17,7 +17,7 @@ export const postsRepository = {
     },
     createPost(title: string, shortDescription: string, content: string, blogId: number) {
         const newPost: PostsType = {
-            id: Math.random().toString(),
+            id: String(+(new Date())),
             title,
             shortDescription,
             content,

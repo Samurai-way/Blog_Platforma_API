@@ -1,6 +1,7 @@
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
+import {blogsRepository} from "../repositories/blogs-repository";
 
 
 export const name = body('name').trim().isLength({min: 1, max: 15}).withMessage('name maxLength: 15')
@@ -17,8 +18,21 @@ export const shortDescription = body('shortDescription').trim().isLength({
     min: 1,
     max: 100
 }).withMessage('shortDescription maxLength: 100').isString()
-export const content = body('content').trim().isLength({min: 1, max: 1000}).withMessage('content maxLength: 1000').isString()
-export const blogId = body('blogId').isString().isLength({min: 1}).withMessage('blogId')
+export const content = body('content').trim().isLength({
+    min: 1,
+    max: 1000
+}).withMessage('content maxLength: 1000').isString()
+export const blogId = body('blogId').isString().isLength({min: 1}).custom((value, {req}) => {
+    const blogId = req.body.blogId
+    if (!blogId) {
+        throw new Error('not blogId');
+    }
+    const findBlog = blogsRepository.getBlogById(blogId)
+    if (findBlog) {
+        throw new Error('not blogId');
+    }
+    return true;
+}).withMessage('blogId')
 
-export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware,inputValidationMiddleware]
-export const postPostsValidator = [title, shortDescription, content, blogId, basicAuthMiddleware,inputValidationMiddleware]
+export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware, inputValidationMiddleware]
+export const postPostsValidator = [title, shortDescription, content, blogId, basicAuthMiddleware, inputValidationMiddleware]
