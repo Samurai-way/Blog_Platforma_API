@@ -20,4 +20,4 @@ export const shortDescription = body('shortDescription').trim().isLength({
 export const content = body('content').trim().isLength({min: 1, max: 1000}).withMessage('content maxLength: 1000')
 
 export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware,inputValidationMiddleware]
-export const postPostsValidator = [title, shortDescription, content, inputValidationMiddleware]
+export const postPostsValidator = [title, shortDescription, content, basicAuthMiddleware,inputValidationMiddleware]
