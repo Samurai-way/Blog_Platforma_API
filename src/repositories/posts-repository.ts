@@ -1,9 +1,9 @@
 export type PostsType = {
-    id: string | number,
+    id: string,
     title: string,
     shortDescription: string,
     content: string,
-    blogId: string,
+    blogId: number,
     blogName: string
 }
 
@@ -15,9 +15,9 @@ export const postsRepository = {
             return posts
         }
     },
-    createPost(title: string, shortDescription: string, content: string, blogId: string) {
+    createPost(title: string, shortDescription: string, content: string, blogId: number) {
         const newPost: PostsType = {
-            id: +(new Date()),
+            id: (new Date()).toString(),
             title,
             shortDescription,
             content,
@@ -27,13 +27,13 @@ export const postsRepository = {
         posts.push(newPost)
         return newPost
     },
-    getPostById(id: number) {
+    getPostById(id: string) {
         if (id) {
             const findPost = posts.find(p => p.id === id)
             return findPost
         }
     },
-    updatePostById(id: number, title: string, shortDescription: string, content: string, blogId: string) {
+    updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: number) {
         const findPost = posts.find(p => p.id === id)
         if (findPost) {
             findPost.title = title
@@ -45,7 +45,7 @@ export const postsRepository = {
             return false
         }
     },
-    deletePostById(id: number) {
+    deletePostById(id: string) {
         for (let i = 0; i < posts.length; i++) {
             if (posts[i].id === id) {
                 posts.splice(i, 1)

@@ -1,5 +1,5 @@
 type BlogsType = {
-    id: string | number,
+    id: string,
     name: string,
     description: string,
     websiteUrl: string
@@ -15,7 +15,7 @@ export const blogsRepository = {
     },
     createBlog(name: string, description: string, websiteUrl: string) {
         const newBlog: BlogsType = {
-            id: +(new Date()),
+            id: (new Date()).toString(),
             name,
             description,
             websiteUrl
@@ -23,13 +23,13 @@ export const blogsRepository = {
         blogs.push(newBlog)
         return newBlog
     },
-    getBlogById(id: number) {
+    getBlogById(id: string) {
         if (id) {
             const findBlog = blogs.find(b => b.id === id)
             return findBlog
         }
     },
-    updateBlogById(id: number, name: string, description: string, websiteUrl: string) {
+    updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
         const blog = blogs.find(b => b.id === id)
         if (blog) {
             blog.name = name
@@ -40,7 +40,7 @@ export const blogsRepository = {
             return false
         }
     },
-    deleteBlog(id: number) {
+    deleteBlog(id: string) {
         for (let i = 0; i < blogs.length; i++) {
             if (blogs[i].id === id) {
                 blogs.splice(i, 1)
