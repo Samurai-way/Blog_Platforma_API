@@ -23,3 +23,14 @@ blogsRouter.get('/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
+blogsRouter.put('/:id', (req: Request, res: Response) => {
+    const id = +req.params.id
+    const {name, description, websiteUrl} = req.body
+    const updateBlog = blogsRepository.updateBlogById(id, name, description, websiteUrl)
+    if (updateBlog) {
+        const blog = blogsRepository.getBlogById(id)
+        res.status(204).send(blog)
+    } else {
+        res.send(404)
+    }
+})
