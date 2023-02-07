@@ -8,7 +8,7 @@ app.use(cors())
 app.use(express.json({}))
 
 
-app.use('/app', routes)
+app.use('/api', routes)
 
 
 app.listen(port, () => {
