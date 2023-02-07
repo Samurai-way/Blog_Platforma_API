@@ -22,13 +22,13 @@ export const content = body('content').trim().isLength({
     min: 1,
     max: 1000
 }).withMessage('content maxLength: 1000').isString()
-export const blogId = body('blogId').isString().isLength({min: 1}).custom((value, {req}) => {
+export const blogId = body('blogId').custom((value, {req}) => {
     const blogId = req.body.blogId
     if (!blogId) {
         throw new Error('not blogId');
     }
     const findBlog = blogsRepository.getBlogById(blogId)
-    if (findBlog) {
+    if (!findBlog) {
         throw new Error('not blogId');
     }
     return true;
