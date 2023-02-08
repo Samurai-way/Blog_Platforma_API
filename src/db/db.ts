@@ -1,4 +1,6 @@
 import {MongoClient} from "mongodb";
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 export type PostsType = {
     id: string,
@@ -20,9 +22,11 @@ export const blogs = [] as BlogsType[]
 export const posts = [] as PostsType[]
 
 
-const mongoUri = process.env.mongoURI || "mongodb+srv://oleg_admin:123MuETV1qr@cluster0.tz7rbfv.mongodb.net/?retryWrites=true&w=majority"
+const mongoUri = process.env.mongoURI || process.env.MONGO_URL
 
-
+if (!mongoUri) {
+    throw new Error('URL didnt found')
+}
 const client = new MongoClient(mongoUri)
 const db = client.db('bloggers')
 
