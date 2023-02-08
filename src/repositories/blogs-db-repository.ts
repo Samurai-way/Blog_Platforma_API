@@ -1,8 +1,8 @@
-import {blogs, blogsCollection, BlogsType} from "../db/db";
+import {blogsCollection, BlogsType} from "../db/db";
 
 export const blogsRepository = {
-    async getBlogs(): Promise<BlogsType[] | undefined> {
-        if (blogs) return blogsCollection.find({}).toArray()
+    async getBlogs(): Promise<BlogsType[]> {
+        return blogsCollection.find({}).toArray()
     },
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType> {
         const newBlog: BlogsType = {
@@ -14,7 +14,7 @@ export const blogsRepository = {
         const result = await blogsCollection.insertOne(newBlog)
         return newBlog
     },
-    async getBlogById(id: string) {
+    async getBlogById(id: string): Promise<BlogsType | null> {
         const blog: BlogsType | null = await blogsCollection.findOne({id: id})
         if (blog) {
             return blog
