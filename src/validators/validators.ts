@@ -1,7 +1,7 @@
 import {body} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
-import {blogsRepository} from "../repositories/blogs-repository";
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
 
 export const name = body('name').trim().isLength({min: 1, max: 15}).withMessage('name maxLength: 15')
