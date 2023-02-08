@@ -10,7 +10,7 @@ export type PostsType = {
     blogId: number,
     blogName: string
 }
-
+// const a = 10
 export type BlogsType = {
     id: string,
     name: string,
