@@ -20,7 +20,7 @@ export const blogs = [] as BlogsType[]
 export const posts = [] as PostsType[]
 
 
-const mongoUri = process.env.mongoURI || "mongodb://0.0.0.0:27017"
+const mongoUri = process.env.mongoURI || "mongodb+srv://oleg_admin:123MuETV1qr@cluster0.tz7rbfv.mongodb.net/?retryWrites=true&w=majority"
 
 
 const client = new MongoClient(mongoUri)
