@@ -1,9 +1,10 @@
 import express from 'express'
 import cors from 'express'
 import {routes} from "./routes";
+import {runDb} from "./db/db";
 
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json({}))
