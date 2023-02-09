@@ -6,7 +6,7 @@ export const blogsRepository = {
     },
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType | null> {
         let newBlog: BlogsType = {
-            id: String(+new Date()),
+            _id: String(+new Date()),
             name,
             description,
             websiteUrl,
@@ -17,7 +17,7 @@ export const blogsRepository = {
         const result = await blogsCollection.insertOne(newBlog)
         if (result.insertedId) {
             return {
-                id: newBlog.id,
+                _id: newBlog._id,
                 name: newBlog.name,
                 description: newBlog.description,
                 websiteUrl: newBlog.websiteUrl,

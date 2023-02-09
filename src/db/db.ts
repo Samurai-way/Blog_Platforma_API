@@ -13,7 +13,7 @@ export type PostsType = {
 }
 
 export type BlogsType = {
-    id: string
+    _id: string
     name: string,
     description: string,
     websiteUrl: string,
