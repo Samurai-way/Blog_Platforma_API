@@ -1,12 +1,12 @@
-import {blogsCollection, BlogsType} from "../db/db";
+import {blogsCollection, BlogsType, DB_BlogsType} from "../db/db";
 
 export const blogsRepository = {
     async getBlogs(): Promise<BlogsType[]> {
         return blogsCollection.find({}).toArray()
     },
-    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType | null> {
-        let newBlog: BlogsType = {
-            _id: String(+new Date()),
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<DB_BlogsType | null> {
+        const newBlog: BlogsType = {
+            id: String(+new Date()),
             name,
             description,
             websiteUrl,
@@ -17,7 +17,7 @@ export const blogsRepository = {
         const result = await blogsCollection.insertOne(newBlog)
         if (result.insertedId) {
             return {
-                _id: newBlog._id,
+                id: result.insertedId.toString(),
                 name: newBlog.name,
                 description: newBlog.description,
                 websiteUrl: newBlog.websiteUrl,
@@ -28,7 +28,7 @@ export const blogsRepository = {
         return null
     },
     async getBlogById(id: string): Promise<BlogsType | null> {
-        const blog: BlogsType | null = await blogsCollection.findOne({_id: id}, {projection: {id: false}})
+        const blog: BlogsType | null = await blogsCollection.findOne({id: id})
         if (blog) {
             return blog
         } else {
@@ -36,7 +36,7 @@ export const blogsRepository = {
         }
     },
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-        const result = await blogsCollection.updateOne({_id: id}, {
+        const result = await blogsCollection.updateOne({id: id}, {
             $set: {
                 name: name,
                 description: description,
@@ -46,7 +46,7 @@ export const blogsRepository = {
         return result.matchedCount === 1
     },
     async deleteBlog(id: string): Promise<boolean> {
-        const result = await blogsCollection.deleteOne({_id:id})
+        const result = await blogsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }
 }

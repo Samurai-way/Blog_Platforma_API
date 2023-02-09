@@ -38,6 +38,7 @@ postsRouter.put('/:id', postPostsValidator, async (req: Request, res: Response) 
     const id = req.params.id
     const {title, shortDescription, content, blogId} = req.body
     const updatePost = await postsRepository.updatePostById(id, title, shortDescription, content, blogId)
+    console.log(updatePost)
     if (updatePost) {
         const findPost = await postsRepository.getPostById(id)
         res.status(204).send(findPost)
