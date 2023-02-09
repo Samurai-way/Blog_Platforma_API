@@ -28,7 +28,7 @@ export const blogsRepository = {
         return null
     },
     async getBlogById(id: string): Promise<BlogsType | null> {
-        const blog: BlogsType | null = await blogsCollection.findOne({id: id}, {projection: {_id: false}})
+        const blog: BlogsType | null = await blogsCollection.findOne({id: id}, {projection: {id: false}})
         if (blog) {
             return blog
         } else {
