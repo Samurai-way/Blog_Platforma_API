@@ -4,10 +4,12 @@ import {ObjectId} from "mongodb";
 
 export const postsRepository = {
     async getPosts(): Promise<PostsType[] | undefined> {
-        return await postsCollection.find({}).toArray()
+        return await postsCollection.find({}, {projection: {_id: 0}}).toArray()
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<DB_PostsType | null> {
         const newPost: PostsType = {
+            id: new ObjectId().toString(),
+            _id: new ObjectId(),
             title,
             shortDescription,
             content,
@@ -16,29 +18,16 @@ export const postsRepository = {
             createdAt: new Date().toISOString()
         }
         const result = await postsCollection.insertOne(newPost)
-        if (result.insertedId) {
-            return {
-                id: result.insertedId.toString(),
-                title: newPost.title,
-                shortDescription: newPost.shortDescription,
-                content: newPost.content,
-                blogId: newPost.blogId,
-                blogName: newPost.blogName,
-                createdAt: newPost.createdAt
-            }
-        }
-        return null
+        const {_id, ...postsCopy} = newPost
+        return postsCopy
     },
-    async getPostById(id: string): Promise<PostsType | null> {
-        const post: PostsType | null = await postsCollection.findOne({_id: new ObjectId(id)})
-        if (post) {
-            return post
-        } else {
-            return null
-        }
+    async getPostById(id: string): Promise<PostsType | boolean> {
+        const post: PostsType | null = await postsCollection.findOne({id}, {projection: {_id: 0}})
+        if (!post) return false
+        return post
     },
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-        const result = await postsCollection.updateOne({_id: new ObjectId(id)}, {
+        const result = await postsCollection.updateOne({id}, {
             $set: {
                 title: title, shortDescription: shortDescription, content: content, blogId: blogId
             }
@@ -46,7 +35,7 @@ export const postsRepository = {
         return result.matchedCount === 1
     },
     async deletePostById(id: string): Promise<boolean> {
-        const result = await postsCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await postsCollection.deleteOne({id})
         return result.deletedCount === 1
     }
 }
