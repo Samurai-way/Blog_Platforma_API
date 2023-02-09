@@ -8,14 +8,17 @@ export type PostsType = {
     shortDescription: string,
     content: string,
     blogId: number,
-    blogName: string
+    blogName: string,
+    createdAt: Date
 }
 
 export type BlogsType = {
     id: string,
     name: string,
     description: string,
-    websiteUrl: string
+    websiteUrl: string,
+    createdAt: Date,
+    isMembership: boolean
 }
 
 export const blogs = [] as BlogsType[]
