@@ -8,12 +8,11 @@ export const postsRepository = {
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | null> {
         const blog = await blogsCollection.findOne({id: blogId})
-
         if (!blog) {
             return null
         }
         const newPost: PostsType = {
-            id: (+new Date).toString(),
+            _id: (+new Date).toString(),
             title,
             shortDescription,
             content,
@@ -23,7 +22,7 @@ export const postsRepository = {
         }
         const result = await postsCollection.insertOne(newPost)
         return {
-            id: newPost.id,
+            _id: newPost._id,
             title: newPost.title,
             shortDescription: newPost.shortDescription,
             content: newPost.content,

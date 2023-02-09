@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 export type PostsType = {
-    id: string,
+    _id: string,
     title: string,
     shortDescription: string,
     content: string,
