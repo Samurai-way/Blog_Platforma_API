@@ -13,6 +13,7 @@ blogsRouter.get('/', async (req: Request, res: Response) => {
 blogsRouter.post('/', postBlogValidator, async (req: Request, res: Response) => {
     const {name, description, websiteUrl} = req.body
     const newBlog = await blogsRepository.createBlog(name, description, websiteUrl)
+    console.log(newBlog)
     res.status(201).send(newBlog)
 })
 blogsRouter.get('/:id', async (req: Request, res: Response) => {

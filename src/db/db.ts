@@ -3,19 +3,21 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 export type PostsType = {
+    id: string,
     title: string,
     shortDescription: string,
     content: string,
-    blogId: number,
+    blogId: string,
     blogName: string,
-    createdAt: Date
+    createdAt: string
 }
 
 export type BlogsType = {
+    id: string
     name: string,
     description: string,
     websiteUrl: string,
-    createdAt: Date,
+    createdAt: string,
     isMembership: boolean
 }
 
