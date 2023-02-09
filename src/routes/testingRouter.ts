@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {testingDbRepository} from "../repositories/testing-db-repository";
 
-// let blogs = []
+
 
 export const testingRouter = Router({})
 testingRouter.delete('/', async (req: Request, res: Response) => {

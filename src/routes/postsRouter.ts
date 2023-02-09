@@ -13,16 +13,6 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 postsRouter.post('/', postPostsValidator, async (req: Request, res: Response) => {
     const {title, shortDescription, content, blogId} = req.body
     const createPost = await postsRepository.createPost(title, shortDescription, content, blogId)
-    if(!createPost){
-        return res.status(400).send({
-            "errorsMessages": [
-                {
-                    "message": "Not found blogID",
-                    "field": "blogID"
-                }
-            ]
-        })
-    }
     res.status(201).send(createPost)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
@@ -38,7 +28,6 @@ postsRouter.put('/:id', postPostsValidator, async (req: Request, res: Response) 
     const id = req.params.id
     const {title, shortDescription, content, blogId} = req.body
     const updatePost = await postsRepository.updatePostById(id, title, shortDescription, content, blogId)
-    console.log(updatePost)
     if (updatePost) {
         const findPost = await postsRepository.getPostById(id)
         res.status(204).send(findPost)
