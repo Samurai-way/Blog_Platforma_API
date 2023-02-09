@@ -13,7 +13,7 @@ export type DB_PostsType = {
 }
 
 export type PostsType = {
-    id: string,
+    // id: string,
     title: string,
     shortDescription: string,
     content: string,
@@ -32,7 +32,6 @@ export type DB_BlogsType = {
 }
 
 export type BlogsType = {
-    id: string
     name: string,
     description: string,
     websiteUrl: string,

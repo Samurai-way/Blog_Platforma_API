@@ -8,7 +8,6 @@ export const postsRepository = {
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<DB_PostsType | null> {
         const newPost: PostsType = {
-            id: (+new Date).toString(),
             title,
             shortDescription,
             content,

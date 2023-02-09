@@ -7,7 +7,6 @@ export const blogsRepository = {
     },
     async createBlog(name: string, description: string, websiteUrl: string): Promise<DB_BlogsType | null> {
         const newBlog: BlogsType = {
-            id: String(+new Date()),
             name,
             description,
             websiteUrl,
@@ -30,6 +29,7 @@ export const blogsRepository = {
     },
     async getBlogById(id: string): Promise<BlogsType | null> {
         const blog: BlogsType | null = await blogsCollection.findOne({_id: new ObjectId(id)})
+        console.log(blog)
         if (blog) {
             return blog
         } else {
