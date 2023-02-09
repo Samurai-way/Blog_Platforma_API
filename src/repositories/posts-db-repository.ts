@@ -1,5 +1,4 @@
 import {blogsCollection, postsCollection, PostsType} from "../db/db";
-import {ObjectId} from "mongodb";
 
 
 export const postsRepository = {
@@ -7,7 +6,7 @@ export const postsRepository = {
         return await postsCollection.find({}).toArray()
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostsType | null> {
-        const blog = await blogsCollection.findOne({id: blogId})
+        const blog = await blogsCollection.findOne({_id: blogId})
         if (!blog) {
             return null
         }
@@ -32,7 +31,7 @@ export const postsRepository = {
         }
     },
     async getPostById(id: string): Promise<PostsType | null> {
-        const post: PostsType | null = await postsCollection.findOne({id:id})
+        const post: PostsType | null = await postsCollection.findOne({id: id})
         if (post) {
             return post
         } else {
@@ -40,7 +39,7 @@ export const postsRepository = {
         }
     },
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
-        const result = await postsCollection.updateOne({id:id}, {
+        const result = await postsCollection.updateOne({id: id}, {
             $set: {
                 title: title, shortDescription: shortDescription, content: content, blogId: blogId
             }
@@ -48,7 +47,7 @@ export const postsRepository = {
         return result.matchedCount === 1
     },
     async deletePostById(id: string): Promise<boolean> {
-        const result = await postsCollection.deleteOne({id:id})
+        const result = await postsCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }
 }
