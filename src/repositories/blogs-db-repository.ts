@@ -6,7 +6,6 @@ export const blogsRepository = {
     },
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType> {
         const newBlog: BlogsType = {
-            id: String(+(new Date())),
             name,
             description,
             websiteUrl,

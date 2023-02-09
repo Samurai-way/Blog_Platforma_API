@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 export type PostsType = {
-    id: string,
     title: string,
     shortDescription: string,
     content: string,
@@ -13,7 +12,6 @@ export type PostsType = {
 }
 
 export type BlogsType = {
-    id: string,
     name: string,
     description: string,
     websiteUrl: string,
