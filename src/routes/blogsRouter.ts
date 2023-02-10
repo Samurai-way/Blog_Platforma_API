@@ -32,6 +32,7 @@ blogsRouter.get('/:id/posts', paginationValidator, async (req: Request, res: Res
     const findBlog = await queryRepository.getBlogByID(id)
     if (!findBlog) return res.send(404)
     const findBlogPost = await queryRepository.findBlogPost(pageNumber, pageSize, sortBy, sortDirection, id)
+    res.status(200).send(findBlogPost)
 })
 blogsRouter.put('/:id', postBlogValidator, async (req: Request, res: Response) => {
     const id = req.params.id

@@ -5,6 +5,14 @@ export const postsRepository = {
     async getPosts(): Promise<PostsType[] | undefined> {
         return await postsCollection.find({}, {projection: {_id: 0}}).toArray()
     },
+    async findBlogPost(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
+        const findBlog = await postsCollection
+            .find({blogId: blogId})
+            .sort({[sortBy]: sortDirection})
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+        return findBlog
+    },
     async createPost(newPost: PostsType): Promise<DB_PostsType | null> {
         const result = await postsCollection.insertOne(newPost)
         const {_id, ...postsCopy} = newPost
