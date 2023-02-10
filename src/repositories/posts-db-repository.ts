@@ -1,29 +1,17 @@
 import {DB_PostsType, postsCollection, PostsType} from "../db/db";
-import {ObjectId} from "mongodb";
 
 
 export const postsRepository = {
     async getPosts(): Promise<PostsType[] | undefined> {
         return await postsCollection.find({}, {projection: {_id: 0}}).toArray()
     },
-    async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<DB_PostsType | null> {
-        const newPost: PostsType = {
-            id: new ObjectId().toString(),
-            _id: new ObjectId(),
-            title,
-            shortDescription,
-            content,
-            blogId,
-            blogName: "blog.name",
-            createdAt: new Date().toISOString()
-        }
+    async createPost(newPost: PostsType): Promise<DB_PostsType | null> {
         const result = await postsCollection.insertOne(newPost)
         const {_id, ...postsCopy} = newPost
         return postsCopy
     },
-    async getPostById(id: string): Promise<PostsType | boolean> {
+    async getPostById(id: string): Promise<PostsType | null> {
         const post: PostsType | null = await postsCollection.findOne({id}, {projection: {_id: 0}})
-        if (!post) return false
         return post
     },
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
