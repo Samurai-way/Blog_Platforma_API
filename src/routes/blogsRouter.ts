@@ -2,18 +2,18 @@ import {Request, Response, Router} from "express";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {postBlogValidator} from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
+import {blogsService} from "../domain/blogs-service";
 
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', async (req: Request, res: Response) => {
-    const findBlogs = await blogsRepository.getBlogs()
+    const findBlogs = await blogsService.getBlogs()
     res.status(200).send(findBlogs)
 })
 blogsRouter.post('/', postBlogValidator, async (req: Request, res: Response) => {
     const {name, description, websiteUrl} = req.body
-    const newBlog = await blogsRepository.createBlog(name, description, websiteUrl)
-    console.log(newBlog)
+    const newBlog = await blogsService.createBlog(name, description, websiteUrl)
     res.status(201).send(newBlog)
 })
 blogsRouter.get('/:id', async (req: Request, res: Response) => {

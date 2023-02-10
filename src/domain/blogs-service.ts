@@ -1,14 +1,23 @@
-import {blogsCollection, BlogsType, DB_BlogsType} from "../db/db";
 import {ObjectId} from "mongodb";
+import {blogsCollection, BlogsType, DB_BlogsType} from "../db/db";
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
-export const blogsRepository = {
+export const blogsService = {
     async getBlogs(): Promise<BlogsType[]> {
-        return blogsCollection.find({},{projection: {_id: 0}}).toArray()
+        return await blogsRepository.getBlogs()
     },
-    async createBlog(newBlog: DB_BlogsType): Promise<BlogsType | null> {
-        const result = await blogsCollection.insertOne(newBlog)
-        const {_id, ...blogsCopy} = newBlog
-        return blogsCopy
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType | null> {
+        const newBlog: DB_BlogsType = {
+            id: new ObjectId().toString(),
+            _id: new ObjectId(),
+            name,
+            description,
+            websiteUrl,
+            createdAt: new Date().toISOString(),
+            isMembership: false
+        }
+        const result = await blogsRepository.createBlog(newBlog)
+        return result
     },
     async getBlogById(id: string): Promise<BlogsType | boolean> {
         const blog: BlogsType | null = await blogsCollection.findOne({id}, {projection: {_id: 0}})
