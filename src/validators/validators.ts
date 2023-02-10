@@ -37,7 +37,8 @@ export const pageNumber = body('pageNumber').default(1).toInt(10)
 export const pageSize = body('pageSize').default(10).toInt(10)
 export const sortBy = body('sortBy').default('createdAt').trim()
 export const sortDirection = body('sortDirection').default('desc').trim()
-
+const searchNameTerm = body('searchNameTerm').default(null).trim()
+export const getPaginationValidator = [searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, inputValidationMiddleware]
 export const paginationValidator = [pageNumber, pageSize, sortBy, sortDirection, inputValidationMiddleware]
 export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware, inputValidationMiddleware]
 export const postPostsValidator = [title, shortDescription, content, blogId, basicAuthMiddleware, inputValidationMiddleware]

@@ -18,6 +18,11 @@ export const postsRepository = {
         const {_id, ...postsCopy} = newPost
         return postsCopy
     },
+    async createNewBlogPost(newBlogPost: PostsType): Promise<DB_PostsType | null> {
+        const result = await postsCollection.insertOne(newBlogPost)
+        const {_id, ...newBlogCopy} = newBlogPost
+        return newBlogCopy
+    },
     async getPostById(id: string): Promise<PostsType | null> {
         const post: PostsType | null = await postsCollection.findOne({id}, {projection: {_id: 0}})
         return post

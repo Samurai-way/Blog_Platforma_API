@@ -2,6 +2,14 @@ import {MongoClient, ObjectId, WithId} from "mongodb";
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+export type PaginationItemsType = {
+    pagesCount: number
+    page: number,
+    pageSize: number,
+    totalCount: number,
+    items: PostsType[]
+}
+
 export type DB_PostsType = {
     id: string,
     title: string,

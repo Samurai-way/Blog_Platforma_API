@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {paginationValidator, postBlogValidator} from "../validators/validators";
+import {getPaginationValidator, paginationValidator, postBlogValidator} from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {blogsService} from "../domain/blogs-service";
 import {queryRepository} from "../queryRepository/queryRepository";
@@ -7,8 +7,13 @@ import {queryRepository} from "../queryRepository/queryRepository";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', async (req: Request, res: Response) => {
-    const findBlogs = await blogsService.getBlogs()
+blogsRouter.get('/', getPaginationValidator, async (req: Request, res: Response) => {
+    const searchNameTerm: any = req.query.searchNameTerm
+    const sortBy: any = req.query.sortBy
+    const sortDirection: any = req.query.sortDirection
+    const pageNumber: any = req.query.pageNumber
+    const pageSize: any = req.query.pageSize
+    const findBlogs: any = await blogsService.getBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
     res.status(200).send(findBlogs)
 })
 blogsRouter.post('/', postBlogValidator, async (req: Request, res: Response) => {
@@ -16,8 +21,18 @@ blogsRouter.post('/', postBlogValidator, async (req: Request, res: Response) => 
     const newBlog = await blogsService.createBlog(name, description, websiteUrl)
     res.status(201).send(newBlog)
 })
+blogsRouter.post('/:id/posts', async (req: Request, res: Response) => {
+    const id = req.params.id
+    console.log(id)
+    const {title, shortDescription, content} = req.body
+    const findBlog = await queryRepository.getBlogByID(id)
+    // if (!findBlog) return res.sendStatus(404)
+    const newPost = await queryRepository.newPost(id, title, shortDescription, content)
+    res.status(201).send(newPost)
+})
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id
+    console.log(id)
     const findVideo = await blogsService.getBlogById(id)
     if (!findVideo) return res.send(404)
     res.status(200).send(findVideo)

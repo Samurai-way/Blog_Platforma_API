@@ -1,10 +1,10 @@
 import {ObjectId} from "mongodb";
-import {BlogsType, DB_BlogsType, PostsType} from "../db/db";
+import {BlogsType, DB_BlogsType} from "../db/db";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 
 export const blogsService = {
-    async getBlogs(): Promise<BlogsType[]> {
-        return await blogsRepository.getBlogs()
+    async getBlogs(searchNameTerm: string, sortBy: string, sortDirection: string, pageNumber: number, pageSize: number) {
+        return await blogsRepository.getBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
     },
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType | null> {
         const newBlog: DB_BlogsType = {
