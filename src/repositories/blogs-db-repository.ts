@@ -1,9 +1,8 @@
 import {blogsCollection, BlogsType, DB_BlogsType} from "../db/db";
-import {ObjectId} from "mongodb";
 
 export const blogsRepository = {
     async getBlogs(): Promise<BlogsType[]> {
-        return blogsCollection.find({},{projection: {_id: 0}}).toArray()
+        return blogsCollection.find({}, {projection: {_id: 0}}).toArray()
     },
     async createBlog(newBlog: DB_BlogsType): Promise<BlogsType | null> {
         const result = await blogsCollection.insertOne(newBlog)
