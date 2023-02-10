@@ -10,9 +10,8 @@ export const blogsRepository = {
         const {_id, ...blogsCopy} = newBlog
         return blogsCopy
     },
-    async getBlogById(id: string): Promise<BlogsType | boolean> {
+    async getBlogById(id: string): Promise<BlogsType | null> {
         const blog: BlogsType | null = await blogsCollection.findOne({id}, {projection: {_id: 0}})
-        if (!blog) return false
         return blog
     },
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {

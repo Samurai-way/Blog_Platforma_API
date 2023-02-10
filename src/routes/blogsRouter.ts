@@ -18,7 +18,7 @@ blogsRouter.post('/', postBlogValidator, async (req: Request, res: Response) => 
 })
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id
-    const findVideo = await blogsRepository.getBlogById(id)
+    const findVideo = await blogsService.getBlogById(id)
     if (findVideo) {
         res.status(200).send(findVideo)
     } else {
@@ -28,9 +28,9 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
 blogsRouter.put('/:id', postBlogValidator, async (req: Request, res: Response) => {
     const id = req.params.id
     const {name, description, websiteUrl} = req.body
-    const updateBlog = await blogsRepository.updateBlogById(id, name, description, websiteUrl)
+    const updateBlog = await blogsService.updateBlogById(id, name, description, websiteUrl)
     if (updateBlog) {
-        const blog = await blogsRepository.getBlogById(id)
+        const blog = await blogsService.getBlogById(id)
         res.status(204).send(blog)
     } else {
         res.send(404)
@@ -38,7 +38,7 @@ blogsRouter.put('/:id', postBlogValidator, async (req: Request, res: Response) =
 })
 blogsRouter.delete('/:id', basicAuthMiddleware, async (req: Request, res: Response) => {
     const id = req.params.id
-    const deleteBlog = await blogsRepository.deleteBlog(id)
+    const deleteBlog = await blogsService.deleteBlog(id)
     if (deleteBlog) {
         res.send(204)
     } else {

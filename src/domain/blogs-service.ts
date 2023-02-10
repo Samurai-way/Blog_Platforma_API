@@ -19,23 +19,13 @@ export const blogsService = {
         const result = await blogsRepository.createBlog(newBlog)
         return result
     },
-    async getBlogById(id: string): Promise<BlogsType | boolean> {
-        const blog: BlogsType | null = await blogsCollection.findOne({id}, {projection: {_id: 0}})
-        if (!blog) return false
-        return blog
+    async getBlogById(id: string): Promise<BlogsType | null> {
+        return await blogsRepository.getBlogById(id)
     },
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-        const result = await blogsCollection.updateOne({id}, {
-            $set: {
-                name: name,
-                description: description,
-                websiteUrl: websiteUrl
-            }
-        })
-        return result.matchedCount === 1
+        return await blogsRepository.updateBlogById(id, name, description, websiteUrl)
     },
     async deleteBlog(id: string): Promise<boolean> {
-        const result = await blogsCollection.deleteOne({id})
-        return result.deletedCount === 1
+        return await blogsRepository.deleteBlog(id)
     }
 }
