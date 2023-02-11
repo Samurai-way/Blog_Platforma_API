@@ -43,3 +43,4 @@ export const getPostsPaginationValidator = [pageNumber, pageSize, sortBy, sortDi
 export const paginationValidator = [pageNumber, pageSize, sortBy, sortDirection, inputValidationMiddleware]
 export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware, inputValidationMiddleware]
 export const postPostsValidator = [title, shortDescription, content, blogId, basicAuthMiddleware, inputValidationMiddleware]
+export const postBlogPostsValidator = [title, shortDescription, content, basicAuthMiddleware, inputValidationMiddleware]

@@ -2,8 +2,8 @@ import {Request, Response, Router} from "express";
 import {
     getBlogsPaginationValidator,
     paginationValidator,
-    postBlogValidator,
-    postPostsValidator
+    postBlogPostsValidator,
+    postBlogValidator
 } from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {blogsService} from "../domain/blogs-service";
@@ -23,7 +23,7 @@ blogsRouter.post('/', postBlogValidator, async (req: Request, res: Response) => 
     const newBlog = await blogsService.createBlog(name, description, websiteUrl)
     res.status(201).send(newBlog)
 })
-blogsRouter.post('/:id/posts', postPostsValidator, async (req: Request, res: Response) => {
+blogsRouter.post('/:id/posts', postBlogPostsValidator, async (req: Request, res: Response) => {
     const id = req.params.id
     const {title, shortDescription, content} = req.body
     const findBlog = await queryRepository.getBlogByID(id)
