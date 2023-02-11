@@ -1,4 +1,4 @@
-import {body} from "express-validator";
+import {body, query} from "express-validator";
 import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {blogsRepository} from "../repositories/blogs-db-repository";
@@ -33,11 +33,11 @@ export const blogId = body('blogId').custom(async (value, {req}) => {
     }
     return true;
 }).withMessage('blogId')
-export const pageNumber = body('pageNumber').default(1).toInt(10)
-export const pageSize = body('pageSize').default(10).toInt(10)
-export const sortBy = body('sortBy').default('createdAt').trim()
-export const sortDirection = body('sortDirection').default('desc').trim()
-const searchNameTerm = body('searchNameTerm').default(null).trim()
+export const pageNumber = query('pageNumber').default(1).toInt(10)
+export const pageSize = query('pageSize').default(10).toInt(10)
+export const sortBy = query('sortBy').default('createdAt').trim()
+export const sortDirection = query('sortDirection').default('desc').trim()
+const searchNameTerm = query('searchNameTerm').default(null).trim()
 export const getPaginationValidator = [searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, inputValidationMiddleware]
 export const paginationValidator = [pageNumber, pageSize, sortBy, sortDirection, inputValidationMiddleware]
 export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware, inputValidationMiddleware]
