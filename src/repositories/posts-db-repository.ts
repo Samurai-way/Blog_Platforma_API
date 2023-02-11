@@ -13,13 +13,15 @@ export const postsRepository = {
         const getCountPosts = await postsCollection.countDocuments({})
         return paginator(pageNumber, pageSize, getCountPosts, findAndSortedPosts)
     },
-    async findBlogPost(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
+    async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
         const findBlog = await postsCollection
-            .find({blogId: blogId})
+            .find({blogId})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-        return findBlog
+            .toArray()
+        const getCountPosts = await postsCollection.countDocuments({})
+        return paginator(pageNumber, pageSize, getCountPosts, findBlog)
     },
     async createPost(newPost: PostsType): Promise<DB_PostsType | null> {
         const result = await postsCollection.insertOne(newPost)
