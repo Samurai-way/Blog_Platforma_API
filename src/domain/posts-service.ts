@@ -1,6 +1,7 @@
 import {DB_PostsType, PostsType} from "../db/db";
 import {ObjectId} from "mongodb";
 import {postsRepository} from "../repositories/posts-db-repository";
+import {blogsService} from "./blogs-service";
 
 
 export const postsService = {
@@ -8,6 +9,8 @@ export const postsService = {
         return await postsRepository.getPosts(pageNumber, pageSize, sortBy, sortDirection)
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<DB_PostsType | null> {
+        const blogName = await blogsService.getBlogById(blogId)
+        if (!blogName) return null
         const newPost: PostsType = {
             id: new ObjectId().toString(),
             _id: new ObjectId(),
@@ -15,7 +18,7 @@ export const postsService = {
             shortDescription,
             content,
             blogId,
-            blogName: "blog.name",
+            blogName: blogName.name,
             createdAt: new Date().toISOString()
         }
         const result = await postsRepository.createPost(newPost)
