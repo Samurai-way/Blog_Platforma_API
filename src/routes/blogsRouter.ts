@@ -3,16 +3,13 @@ import {getBlogsPaginationValidator, paginationValidator, postBlogValidator} fro
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {blogsService} from "../domain/blogs-service";
 import {queryRepository} from "../queryRepository/queryRepository";
+import {getPagination} from "../helpers/pagination";
 
 
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', getBlogsPaginationValidator, async (req: Request, res: Response) => {
-    const searchNameTerm: any = req.query.searchNameTerm
-    const sortBy: any = req.query.sortBy
-    const sortDirection: any = req.query.sortDirection
-    const pageNumber: any = req.query.pageNumber
-    const pageSize: any = req.query.pageSize
+    const {searchNameTerm, sortBy, sortDirection, pageNumber, pageSize} = getPagination(req.query)
     const findBlogs: any = await blogsService.getBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
     res.status(200).send(findBlogs)
 })
@@ -23,10 +20,9 @@ blogsRouter.post('/', postBlogValidator, async (req: Request, res: Response) => 
 })
 blogsRouter.post('/:id/posts', async (req: Request, res: Response) => {
     const id = req.params.id
-    console.log(id)
     const {title, shortDescription, content} = req.body
     const findBlog = await queryRepository.getBlogByID(id)
-    // if (!findBlog) return res.sendStatus(404)
+    if (!findBlog) return res.sendStatus(404)
     const newPost = await queryRepository.newPost(id, title, shortDescription, content)
     res.status(201).send(newPost)
 })
@@ -40,14 +36,11 @@ blogsRouter.get('/:id', async (req: Request, res: Response) => {
 })
 blogsRouter.get('/:id/posts', paginationValidator, async (req: Request, res: Response) => {
     const id = req.params.id
-    const sortDirection: any = req.query.sortDirection
-    const sortBy: any = req.query.sortBy
-    const pageSize: any = req.query.pageSize
-    const pageNumber: any = req.query.pageNumber
+    const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
     const findBlog = await queryRepository.getBlogByID(id)
     if (!findBlog) return res.send(404)
     const findBlogPost = await queryRepository.findBlogPost(pageNumber, pageSize, sortBy, sortDirection, id)
-    res.status(200).send(findBlogPost)
+    res.status(200).send(findBlog)
 })
 blogsRouter.put('/:id', postBlogValidator, async (req: Request, res: Response) => {
     const id = req.params.id

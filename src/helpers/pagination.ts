@@ -1,13 +1,15 @@
 export type Pagination = {
+    searchNameTerm?: string
     pageNumber: number
-    pageSize: number,
-    sortBy: string,
-    sortDirection: string,
+    pageSize: number
+    sortBy: string
+    sortDirection: string
 }
-export const getPostsPagination = (query: any): Pagination => {
+export const getPagination = (query: any): Pagination => {
     //validation logic for fields
     return {
         pageNumber: query.pageNumber,
+        searchNameTerm: query.searchNameTerm,
         pageSize: query.pageSize,
         sortBy: query.sortBy,
         sortDirection: query.sortDirection
