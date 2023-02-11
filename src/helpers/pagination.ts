@@ -1,3 +1,5 @@
+import {PostsType} from "../db/db";
+
 export type Pagination = {
     searchNameTerm?: string
     pageNumber: number
@@ -15,6 +17,7 @@ export const getPagination = (query: any): Pagination => {
         sortDirection: query.sortDirection
     }
 }
+
 
 export const paginator = (pageNumber: number, pageSize: number, totalCount: number, items: any) => {
     const pagesCount = Math.ceil(totalCount / pageSize)
