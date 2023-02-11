@@ -20,7 +20,7 @@ export const postsRepository = {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        const getCountPosts = await postsCollection.countDocuments({})
+        const getCountPosts = await postsCollection.countDocuments({blogId})
         return paginator(pageNumber, pageSize, getCountPosts, findBlog)
     },
     async createPost(newPost: PostsType): Promise<DB_PostsType | null> {
