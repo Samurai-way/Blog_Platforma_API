@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {getPaginationValidator, paginationValidator, postBlogValidator} from "../validators/validators";
+import {getBlogsPaginationValidator, paginationValidator, postBlogValidator} from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {blogsService} from "../domain/blogs-service";
 import {queryRepository} from "../queryRepository/queryRepository";
@@ -7,7 +7,7 @@ import {queryRepository} from "../queryRepository/queryRepository";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', getPaginationValidator, async (req: Request, res: Response) => {
+blogsRouter.get('/', getBlogsPaginationValidator, async (req: Request, res: Response) => {
     const searchNameTerm: any = req.query.searchNameTerm
     const sortBy: any = req.query.sortBy
     const sortDirection: any = req.query.sortDirection

@@ -1,9 +1,17 @@
 import {DB_PostsType, postsCollection, PostsType} from "../db/db";
+import {paginator} from "../helpers/pagination";
 
 
 export const postsRepository = {
-    async getPosts(): Promise<PostsType[] | undefined> {
-        return await postsCollection.find({}, {projection: {_id: 0}}).toArray()
+    async getPosts(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any) {
+        const findAndSortedPosts = await postsCollection
+            .find({}, {projection: {_id: 0}})
+            .sort({[sortBy]: sortDirection})
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+            .toArray()
+        const getCountPosts = await postsCollection.countDocuments({})
+        return paginator(pageNumber, pageSize, getCountPosts, findAndSortedPosts)
     },
     async findBlogPost(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
         const findBlog = await postsCollection

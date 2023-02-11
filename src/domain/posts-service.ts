@@ -1,11 +1,11 @@
-import {DB_PostsType, postsCollection, PostsType} from "../db/db";
+import {DB_PostsType, PostsType} from "../db/db";
 import {ObjectId} from "mongodb";
 import {postsRepository} from "../repositories/posts-db-repository";
 
 
 export const postsService = {
-    async getPosts(): Promise<PostsType[] | undefined> {
-        return await postsRepository.getPosts()
+    async getPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
+        return await postsRepository.getPosts(pageNumber, pageSize, sortBy, sortDirection)
     },
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<DB_PostsType | null> {
         const newPost: PostsType = {

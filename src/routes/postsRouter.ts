@@ -1,13 +1,15 @@
 import {Request, Response, Router} from "express";
-import {postPostsValidator} from "../validators/validators";
+import {getPostsPaginationValidator, postPostsValidator} from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {postsService} from "../domain/posts-service";
+import {getPostsPagination} from "../helpers/pagination";
 
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', async (req: Request, res: Response) => {
-    const findPosts = await postsService.getPosts()
+postsRouter.get('/', getPostsPaginationValidator, async (req: Request, res: Response) => {
+    const {pageNumber, pageSize, sortBy, sortDirection} = getPostsPagination(req.query)
+    const findPosts = await postsService.getPosts(pageNumber, pageSize, sortBy, sortDirection)
     res.status(200).send(findPosts)
 })
 postsRouter.post('/', postPostsValidator, async (req: Request, res: Response) => {

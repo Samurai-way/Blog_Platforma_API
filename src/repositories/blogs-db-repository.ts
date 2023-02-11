@@ -1,16 +1,16 @@
 import {blogsCollection, BlogsType, DB_BlogsType} from "../db/db";
-import {pagination} from "../helpers/pagination";
+import {paginator} from "../helpers/pagination";
 
 export const blogsRepository = {
     async getBlogs(searchNameTerm: string, sortBy: any, sortDirection: any, pageNumber: number, pageSize: number) {
-        const findAndSortedBlogs  = await blogsCollection
-            .find({name: {$regex: searchNameTerm}}, {projection: {_id: 0}})
+        const findAndSortedBlogs = await blogsCollection
+            .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {_id: 0}})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray()
         const getCountBlogs = await blogsCollection.countDocuments({name: {$regex: searchNameTerm, $options: "i"}})
-        return pagination(pageNumber, pageSize, getCountBlogs, findAndSortedBlogs)
+        return paginator(pageNumber, pageSize, getCountBlogs, findAndSortedBlogs)
     },
     async createBlog(newBlog: DB_BlogsType): Promise<BlogsType | null> {
         const result = await blogsCollection.insertOne(newBlog)
