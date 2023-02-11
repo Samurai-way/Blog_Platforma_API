@@ -15,7 +15,7 @@ export const postsRepository = {
     },
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
         const findBlog = await postsCollection
-            .find({blogId})
+            .find({blogId}, {projection: {_id: 0}})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
