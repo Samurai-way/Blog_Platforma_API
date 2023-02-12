@@ -33,7 +33,6 @@ blogsRouter.post('/:id/posts', postBlogPostsValidator, async (req: Request, res:
 })
 blogsRouter.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id
-    console.log(id)
     const findVideo = await blogsService.getBlogById(id)
     if (!findVideo) return res.send(404)
     res.status(200).send(findVideo)
