@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "watch": "tsc -w",
-    "dev": "nodemon --inspect dist/index.js"
+    "dev": "nodemon --inspect dist/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "@types/jest": "^29.4.0",
