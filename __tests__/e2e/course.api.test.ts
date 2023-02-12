@@ -1,5 +1,14 @@
+import request from 'supertest'
+import {app} from "../../src";
+
 describe('/api', () => {
-    it('should return 200, and data', () => {
-        expect(1).toBe(1)
+
+    beforeAll(async () => {
+        await request(app).delete('/testing/all-data')
+    })
+
+    it('should return 204, and  delete all-data', async () => {
+        await request(app).get('/blogs')
+            .expect(200)
     })
 })
