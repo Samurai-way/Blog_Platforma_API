@@ -57,7 +57,6 @@ const db = client.db('bloggers')
 export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
 
-
 export const runDb = async () => {
     try {
         await client.connect()
