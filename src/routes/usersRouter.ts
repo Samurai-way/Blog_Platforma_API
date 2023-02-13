@@ -1,7 +1,8 @@
-import {Router} from "express";
+import {Request, Response, Router} from "express";
+import {userPostValidator} from "../validators/validators";
 
 export const usersRouter = Router({})
 
-usersRouter.post('/', (req, res) => {
-
+usersRouter.post('/', userPostValidator, async (req: Request, res: Response) => {
+    const {login, password, email} = req.body
 })
