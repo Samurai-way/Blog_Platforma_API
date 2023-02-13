@@ -12,13 +12,13 @@ export type Pagination = {
 export const getPagination = (query: any): Pagination => {
     //validation logic for fields
     return {
-        searchLoginTerm: query.searchLoginTerm,
-        searchEmailTerm: query.searchEmailTerm,
-        pageNumber: query.pageNumber,
-        searchNameTerm: query.searchNameTerm,
-        pageSize: query.pageSize,
-        sortBy: query.sortBy,
-        sortDirection: query.sortDirection
+        searchLoginTerm: query.searchLoginTerm ? query.searchLoginTerm : '',
+        searchEmailTerm: query.searchEmailTerm ? query.searchEmailTerm : '',
+        pageNumber: query.pageNumber ? query.pageNumber : 1,
+        searchNameTerm: query.searchNameTerm ? query.searchNameTerm : '',
+        pageSize: query.pageSize ? query.pageSize : 10,
+        sortBy: query.sortBy ? query.sortBy : 'createdAt',
+        sortDirection: query.sortDirection ? query.sortDirection : 'desc'
     }
 }
 

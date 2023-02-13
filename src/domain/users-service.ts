@@ -8,8 +8,14 @@ export const usersService = {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     },
-    async checkCredentials(){
-
+    async checkCredentials(loginOrEmail: string, password: string) {
+        const user: DB_User_Type | any = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
+        // console.log(user)
+        if (!user) return false
+        const passwordHash = await this._generationHash(password, user.passwordSalt)
+        // console.log(passwordHash)
+        if (user.passwordHash !== passwordHash) return false
+        return true
     },
     async createUser(login: string, password: string, email: string): Promise<UserType> {
 

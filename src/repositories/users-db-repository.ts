@@ -16,7 +16,8 @@ export const usersRepository = {
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-
+            .toArray()
+        // console.log('findAndSortedUser',findAndSortedUser)
         const getCountUsers = await usersCollection.countDocuments({
             $or: [{
                 login: {
@@ -26,6 +27,11 @@ export const usersRepository = {
             }, {email: {$regex: searchEmailTerm, $options: "i"}}]
         })
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
+    },
+    async findUserByLoginOrEmail(loginOrEmail: string) {
+        const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]})
+        // console.log(user)
+        return user
     },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
         const result = await usersCollection.insertOne(newUser)

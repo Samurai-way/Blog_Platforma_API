@@ -8,7 +8,7 @@ export const usersRouter = Router({})
 
 usersRouter.get('/', usersGetValidator, async (req: Request, res: Response) => {
     const {sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm} = getPagination(req.query)
-    const findValue = usersService.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
+    const findValue = await usersService.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     res.status(200).send(findValue)
 })
 usersRouter.post('/', userPostValidator, async (req: Request, res: Response) => {
