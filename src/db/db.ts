@@ -1,6 +1,24 @@
-import {MongoClient, ObjectId, WithId} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 import * as dotenv from 'dotenv'
+
 dotenv.config()
+export type UserType = {
+    id: string
+    login: string
+    email: string
+    createAt: string
+}
+
+export type DB_User_Type = {
+    id: string,
+    _id: ObjectId,
+    login: string,
+    passwordHash: string
+    passwordSalt: string
+    email: string,
+    createAt: string
+
+}
 
 export type DB_PostsType = {
     id: string,
@@ -10,6 +28,14 @@ export type DB_PostsType = {
     blogId: string,
     blogName: string,
     createdAt: string
+}
+
+export type UsersType = {
+    id: string
+    login: string
+    email: string
+    createdAt: string
+
 }
 
 export type PostsType = {
@@ -56,7 +82,7 @@ const db = client.db('bloggers')
 
 export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
-
+export const usersCollection = db.collection<UsersType>('users')
 export const runDb = async () => {
     try {
         await client.connect()

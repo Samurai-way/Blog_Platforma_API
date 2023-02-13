@@ -68,10 +68,9 @@ export const sortDirection = query('sortDirection')
 const searchNameTerm = query('searchNameTerm')
     .default(null)
     .trim()
-const login = body('login').trim().isLength({min: 3, max: 10}).matches("^[a-zA-Z0-9_-]*$")
-    .withMessage('login error')
-const password = body('password').trim().isLength({min: 6, max: 20}).withMessage('password error')
-const email = body('email').trim().isEmail().matches("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$\n").withMessage('email error')
+const login = body('login').trim().isLength({min: 3, max: 10})
+const password = body('password').trim().isLength({min: 6, max: 20})
+const email = body('email').trim().isEmail()
 export const userPostValidator = [login, password, email, basicAuthMiddleware, inputValidationMiddleware]
 export const getBlogsPaginationValidator = [searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, inputValidationMiddleware]
 export const getPostsPaginationValidator = [pageNumber, pageSize, sortBy, sortDirection, inputValidationMiddleware]

@@ -12,7 +12,7 @@ export const blogsRepository = {
         const getCountBlogs = await blogsCollection.countDocuments({name: {$regex: searchNameTerm, $options: "i"}})
         return paginator(pageNumber, pageSize, getCountBlogs, findAndSortedBlogs)
     },
-    async createBlog(newBlog: DB_BlogsType): Promise<BlogsType | null> {
+    async createBlog(newBlog: DB_BlogsType): Promise<BlogsType> {
         const result = await blogsCollection.insertOne(newBlog)
         const {_id, ...blogsCopy} = newBlog
         return blogsCopy
