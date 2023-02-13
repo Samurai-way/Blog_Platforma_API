@@ -1,5 +1,5 @@
 import {body, query} from "express-validator";
-import {inputValidationMiddleware} from "../middlewares/input-validation-middleware";
+import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 
@@ -68,13 +68,22 @@ export const sortDirection = query('sortDirection')
 const searchNameTerm = query('searchNameTerm')
     .default(null)
     .trim()
+const searchLoginTerm = query('searchLoginTerm')
+    .default(null)
+    .trim()
+const searchEmailTerm = query('searchLoginTerm')
+    .default(null)
+    .trim()
+
 const login = body('login').trim().isLength({min: 3, max: 10})
 const password = body('password').trim().isLength({min: 6, max: 20})
 const email = body('email').trim().isEmail()
-export const userPostValidator = [login, password, email, basicAuthMiddleware, inputValidationMiddleware]
-export const getBlogsPaginationValidator = [searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, inputValidationMiddleware]
-export const getPostsPaginationValidator = [pageNumber, pageSize, sortBy, sortDirection, inputValidationMiddleware]
-export const paginationValidator = [pageNumber, pageSize, sortBy, sortDirection, inputValidationMiddleware]
-export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware, inputValidationMiddleware]
-export const postPostsValidator = [title, shortDescription, content, blogId, basicAuthMiddleware, inputValidationMiddleware]
-export const postBlogPostsValidator = [title, shortDescription, content, basicAuthMiddleware, inputValidationMiddleware]
+
+export const usersGetValidator = [sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm, ExpressErrorValidator]
+export const userPostValidator = [login, password, email, basicAuthMiddleware, ExpressErrorValidator]
+export const getBlogsPaginationValidator = [searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, ExpressErrorValidator]
+export const getPostsPaginationValidator = [pageNumber, pageSize, sortBy, sortDirection, ExpressErrorValidator]
+export const paginationValidator = [pageNumber, pageSize, sortBy, sortDirection, ExpressErrorValidator]
+export const postBlogValidator = [name, description, websiteUrl, basicAuthMiddleware, ExpressErrorValidator]
+export const postPostsValidator = [title, shortDescription, content, blogId, basicAuthMiddleware, ExpressErrorValidator]
+export const postBlogPostsValidator = [title, shortDescription, content, basicAuthMiddleware, ExpressErrorValidator]

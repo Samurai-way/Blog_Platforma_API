@@ -4,7 +4,6 @@ import {DB_User_Type, UserType} from "../db/db";
 import {usersRepository} from "../repositories/users-db-repository";
 
 
-
 export const usersService = {
     async createUser(login: string, password: string, email: string): Promise<UserType> {
 
@@ -22,9 +21,11 @@ export const usersService = {
         }
         return usersRepository.createUser(newUser)
     },
+    async deleteUser(id: string): Promise<boolean> {
+        return await usersRepository.deleteUser(id)
+    },
     async _generationHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
-        console.log('hash', +hash)
         return hash
     }
 }
