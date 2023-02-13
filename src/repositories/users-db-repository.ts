@@ -29,7 +29,7 @@ export const usersRepository = {
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
     },
     async findUserByLoginOrEmail(loginOrEmail: string) {
-        const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]})
+        const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
         // console.log(user)
         return user
     },
