@@ -16,7 +16,7 @@ export type DB_User_Type = {
     passwordHash: string
     passwordSalt: string
     email: string,
-    createAt: string
+    createdAt: string
 
 }
 

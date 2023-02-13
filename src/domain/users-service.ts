@@ -29,7 +29,7 @@ export const usersService = {
             email,
             passwordHash,
             passwordSalt,
-            createAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
         }
         return usersRepository.createUser(newUser)
     },
