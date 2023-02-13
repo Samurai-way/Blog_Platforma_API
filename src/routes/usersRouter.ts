@@ -1,12 +1,15 @@
 import {Request, Response, Router} from "express";
-import {userPostValidator} from "../validators/validators";
+import {userPostValidator, usersGetValidator} from "../validators/validators";
 import {usersService} from "../domain/users-service";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
+import {getPagination} from "../helpers/pagination";
 
 export const usersRouter = Router({})
 
-usersRouter.get('/', async (req: Request, res: Response) => {
-
+usersRouter.get('/', usersGetValidator, async (req: Request, res: Response) => {
+    const {sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm} = getPagination(req.query)
+    const findValue = usersService.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
+    res.status(200).send(findValue)
 })
 usersRouter.post('/', userPostValidator, async (req: Request, res: Response) => {
     const {login, password, email} = req.body

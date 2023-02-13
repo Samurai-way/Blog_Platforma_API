@@ -2,6 +2,8 @@ import {PostsType} from "../db/db";
 
 export type Pagination = {
     searchNameTerm?: string
+    searchEmailTerm?: string,
+    searchLoginTerm?: string
     pageNumber: number
     pageSize: number
     sortBy: string
@@ -10,6 +12,8 @@ export type Pagination = {
 export const getPagination = (query: any): Pagination => {
     //validation logic for fields
     return {
+        searchLoginTerm: query.searchLoginTerm,
+        searchEmailTerm: query.searchEmailTerm,
         pageNumber: query.pageNumber,
         searchNameTerm: query.searchNameTerm,
         pageSize: query.pageSize,

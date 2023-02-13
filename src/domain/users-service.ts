@@ -5,6 +5,12 @@ import {usersRepository} from "../repositories/users-db-repository";
 
 
 export const usersService = {
+    async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
+        return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
+    },
+    async checkCredentials(){
+
+    },
     async createUser(login: string, password: string, email: string): Promise<UserType> {
 
         const passwordSalt = await bcrypt.genSalt(10)
