@@ -14,7 +14,6 @@ export type DB_User_Type = {
     _id: ObjectId,
     login: string,
     passwordHash: string
-    passwordSalt: string
     email: string,
     createdAt: string
 
@@ -31,9 +30,11 @@ export type DB_PostsType = {
 }
 
 export type UsersType = {
-    id: string
-    login: string
-    email: string
+    id: string,
+    _id: ObjectId,
+    login: string,
+    passwordHash: string
+    email: string,
     createdAt: string
 
 }

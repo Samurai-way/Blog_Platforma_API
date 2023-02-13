@@ -18,8 +18,7 @@ export const blogsRepository = {
         return blogsCopy
     },
     async getBlogById(id: string): Promise<BlogsType | null> {
-        const blog: BlogsType | null = await blogsCollection.findOne({id}, {projection: {_id: 0}})
-        return blog
+        return blogsCollection.findOne({id}, {projection: {_id: 0}})
     },
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
         const result = await blogsCollection.updateOne({id}, {

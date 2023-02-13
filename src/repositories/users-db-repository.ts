@@ -12,7 +12,7 @@ export const usersRepository = {
                             $options: "i"
                         }
                     }]
-            }, {projection: {_id: 0, passwordHash: 0, passwordSalt: 0}})
+            }, {projection: {_id: 0, passwordHash: 0}})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
@@ -29,13 +29,11 @@ export const usersRepository = {
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
     },
     async findUserByLoginOrEmail(loginOrEmail: string) {
-        const user = await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
-        // console.log(user)
-        return user
+        return usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
         const result = await usersCollection.insertOne(newUser)
-        const {_id, passwordHash, passwordSalt, ...newUserCopy} = newUser
+        const {_id, passwordHash, ...newUserCopy} = newUser
         return newUserCopy
     },
     async deleteUser(id: string): Promise<boolean> {
