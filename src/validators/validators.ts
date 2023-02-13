@@ -75,7 +75,7 @@ const searchEmailTerm = query('searchLoginTerm')
     .default('')
     .trim()
 
-const login = body('login').trim().isLength({min: 3, max: 10})
+const login = body('login').trim().isLength({min: 3, max: 10}).matches('^[a-zA-Z0-9_-]*$')
 const password = body('password').trim().isLength({min: 6, max: 20})
 const email = body('email').trim().isEmail()
 
