@@ -15,7 +15,7 @@ export const postsRepository = {
     },
     async createPostComment(newComment: CommentDBModalType): Promise<CommentsType> {
         const result = await commentsCollection.insertOne(newComment)
-        const {_id, ...comment} = newComment
+        const {_id, postId, ...comment} = newComment
         return comment
     },
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
@@ -39,8 +39,7 @@ export const postsRepository = {
         return newBlogCopy
     },
     async getPostById(id: string): Promise<PostsType | null> {
-        const post: PostsType | null = await postsCollection.findOne({id}, {projection: {_id: 0}})
-        return post
+        return await postsCollection.findOne({id}, {projection: {_id: 0}})
     },
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         const result = await postsCollection.updateOne({id}, {

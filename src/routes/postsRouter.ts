@@ -3,6 +3,7 @@ import {getPostsPaginationValidator, postCommentsValidator, postPostsValidator} 
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {postsService} from "../domain/posts-service";
 import {getPagination} from "../helpers/pagination";
+import {commentsService} from "../domain/comments-service";
 
 
 export const postsRouter = Router({})
@@ -16,6 +17,14 @@ postsRouter.post('/', postPostsValidator, async (req: Request, res: Response) =>
     const {title, shortDescription, content, blogId} = req.body
     const createPost = await postsService.createPost(title, shortDescription, content, blogId)
     res.status(201).send(createPost)
+})
+
+postsRouter.get('/:postID/comments', async (req: Request, res: Response) => {
+    const postID = req.params.postID
+    const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
+    const findComments = await commentsService.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
+    if (!findComments) return res.send(404)
+    res.status(200).send(findComments)
 })
 postsRouter.post('/:postID/comments', postCommentsValidator, async (req: Request, res: Response) => {
     const postID = req.params.postID

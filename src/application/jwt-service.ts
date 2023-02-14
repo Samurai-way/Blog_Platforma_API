@@ -3,9 +3,8 @@ import jwt from 'jsonwebtoken'
 import {settings} from "./settings";
 
 export const jwtService = {
-    async createJWT(user: DB_User_Type): Promise<string> {
-        const token = jwt.sign({userID: user.id}, settings.JWT_SECRET, {expiresIn: '1h'})
-        return token
+    createJWT(user: DB_User_Type): string {
+        return  jwt.sign({userID: user.id}, settings.JWT_SECRET, {expiresIn: '1h'})
     },
     async getUserIDByToken(token: string) {
         try {

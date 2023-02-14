@@ -32,6 +32,7 @@ export const postsService = {
         const newComment: CommentDBModalType = {
             id: new ObjectId().toString(),
             _id: new ObjectId(),
+            postId: findPostByID.id,
             content,
             commentatorInfo: {
                 userId: user.id,
@@ -39,7 +40,7 @@ export const postsService = {
             },
             createdAt: new Date().toISOString(),
         }
-        return await postsRepository.createPostComment(newComment)
+        return await postsRepository.createPostComment({...newComment})
     },
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         return await postsRepository.updatePostById(id, title, shortDescription, content, blogId)

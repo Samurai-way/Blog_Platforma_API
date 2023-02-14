@@ -16,8 +16,7 @@ export const blogsService = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        const result = await blogsRepository.createBlog(newBlog)
-        return result
+        return await blogsRepository.createBlog(newBlog)
     },
     async getBlogById(id: string): Promise<BlogsType | null> {
         return await blogsRepository.getBlogById(id)
