@@ -31,7 +31,6 @@ commentsRouter.put('/:commentId', authMiddleware, contentForComments, ExpressErr
     const getCommentById = await commentsService.getCommentById(commentID)
     if (!getCommentById) return res.sendStatus(404)
     const updatedComment = await commentsService.updateCommentById(commentID, content, user)
-    console.log('updatedComment',updatedComment)
     if (!updatedComment) return res.sendStatus(403)
     res.send(204)
 })
