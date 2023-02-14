@@ -9,7 +9,8 @@ export const commentsRouter = Router({})
 
 commentsRouter.get('/:commentId', authMiddleware, async (req: Request, res: Response) => {
     const commentId = req.params.commentId
-    const getCommentById = commentsService.getCommentById(commentId)
+    const getCommentById = await commentsService.getCommentById(commentId)
+    console.log('getCommentById',getCommentById)
     if (!getCommentById) return res.sendStatus(404)
     res.status(200).send(getCommentById)
 })
