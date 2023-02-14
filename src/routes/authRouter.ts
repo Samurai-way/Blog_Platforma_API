@@ -3,26 +3,20 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/authMiddleware";
 import {usersRepository} from "../repositories/users-db-repository";
-import {AboutUserType} from "../db/db";
 
 
 export const authRouter = Router({})
 
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
     const user = req.user?.id
-    console.log('user', user)
-    if(!user){
-        res.sendStatus(401)
-        return
-    }
+    // console.log('user', user)
+    if (!user) return res.sendStatus(401)
     const userInfo = await usersRepository.findUserByID(user)
-    if (!userInfo) return res.status(404)
-    const aboutUser: AboutUserType = {
+    res.status(200).send({
         email: userInfo?.email,
         login: userInfo?.login,
         userId: userInfo?.id
-    }
-    res.status(200).send(aboutUser)
+    })
 })
 authRouter.post('/login', async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body

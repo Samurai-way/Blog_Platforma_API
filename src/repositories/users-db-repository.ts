@@ -32,9 +32,8 @@ export const usersRepository = {
         return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
     async findUserByID(id: string) {
-        console.log('id', id)
-        const users = await usersCollection.find({}).toArray()
-        console.log('users', users)
+        // console.log('id', id)
+        // console.log('users', users)
         return await usersCollection.findOne({id})
     },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
