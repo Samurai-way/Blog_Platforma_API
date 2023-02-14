@@ -31,6 +31,9 @@ export const usersRepository = {
     async findUserByLoginOrEmail(loginOrEmail: string) {
         return usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
+    async findUserByID(id: string): Promise<DB_User_Type | null> {
+        return usersCollection.findOne({id}, {projection: {_id: 0}})
+    },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
         const result = await usersCollection.insertOne(newUser)
         const {_id, passwordHash, ...newUserCopy} = newUser

@@ -33,8 +33,8 @@ export const usersService = {
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
-    async findUserById(id: ObjectId){
-
+    async findUserById(id: string){
+        return await usersRepository.findUserByID(id)
     },
     async _generationHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
