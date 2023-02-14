@@ -8,12 +8,12 @@ export const usersService = {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<boolean> {
+    async checkCredentials(loginOrEmail: string, password: string): Promise<DB_User_Type | boolean> {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!user) return false
         const value = await bcrypt.compare(password, user.passwordHash);
         if (!value) return false
-        return true
+        return user
     },
     async createUser(login: string, password: string, email: string): Promise<UserType> {
 
@@ -32,9 +32,6 @@ export const usersService = {
     },
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
-    },
-    async findUserById(id: string){
-        return await usersRepository.findUserByID(id)
     },
     async _generationHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)

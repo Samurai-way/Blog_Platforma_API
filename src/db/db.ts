@@ -2,6 +2,13 @@ import {MongoClient, ObjectId} from "mongodb";
 import * as dotenv from 'dotenv'
 
 dotenv.config()
+
+export type AboutUserType = {
+    email:string
+    login: string
+    userId: string
+}
+
 export type UserType = {
     id: string
     login: string

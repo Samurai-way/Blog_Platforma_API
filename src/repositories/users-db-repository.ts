@@ -29,10 +29,13 @@ export const usersRepository = {
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
     },
     async findUserByLoginOrEmail(loginOrEmail: string) {
-        return usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
+        return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
-    async findUserByID(id: string): Promise<DB_User_Type | null> {
-        return usersCollection.findOne({id}, {projection: {_id: 0}})
+    async findUserByID(id: string) {
+        console.log('id', id)
+        const users = await usersCollection.find({}).toArray()
+        console.log('users', users)
+        return await usersCollection.findOne({id})
     },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
         const result = await usersCollection.insertOne(newUser)
