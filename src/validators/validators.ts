@@ -2,6 +2,7 @@ import {body, query} from "express-validator";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {blogsRepository} from "../repositories/blogs-db-repository";
+import {authMiddleware} from "../middlewares/authMiddleware";
 
 
 export const name = body('name')
@@ -85,7 +86,8 @@ const searchEmailTerm = query('searchLoginTerm')
 const login = body('login').trim().isLength({min: 3, max: 10}).matches('^[a-zA-Z0-9_-]*$')
 const password = body('password').trim().isLength({min: 6, max: 20})
 const email = body('email').trim().isEmail()
-
+const contentForComments = body('content').trim().isLength({min: 20, max: 300})
+export const postCommentsValidator = [authMiddleware, contentForComments, ExpressErrorValidator]
 export const usersGetValidator = [sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm, ExpressErrorValidator]
 export const userPostValidator = [login, password, email, basicAuthMiddleware, ExpressErrorValidator]
 export const getBlogsPaginationValidator = [searchNameTerm, sortBy, sortDirection, pageNumber, pageSize, ExpressErrorValidator]

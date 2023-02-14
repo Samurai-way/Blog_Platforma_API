@@ -86,6 +86,17 @@ export type CommentsType = {
     createdAt: string
 }
 
+export type CommentDBModalType = {
+    _id: ObjectId,
+    id: string,
+    content: string,
+    commentatorInfo: {
+        userId: string
+        userLogin: string
+    },
+    createdAt: string
+}
+
 export const blogs = [] as BlogsType[]
 export const posts = [] as PostsType[]
 

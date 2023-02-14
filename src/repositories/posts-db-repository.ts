@@ -1,4 +1,4 @@
-import {DB_PostsType, postsCollection, PostsType} from "../db/db";
+import {CommentDBModalType, commentsCollection, CommentsType, DB_PostsType, postsCollection, PostsType} from "../db/db";
 import {paginator} from "../helpers/pagination";
 
 
@@ -12,6 +12,11 @@ export const postsRepository = {
             .toArray()
         const getCountPosts = await postsCollection.countDocuments({})
         return paginator(pageNumber, pageSize, getCountPosts, findAndSortedPosts)
+    },
+    async createPostComment(newComment: CommentDBModalType): Promise<CommentsType> {
+        const result = await commentsCollection.insertOne(newComment)
+        const {_id, ...comment} = newComment
+        return comment
     },
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
         const findBlog = await postsCollection
