@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 export type AboutUserType = {
-    email:string
+    email: string
     login: string
     userId: string
 }
@@ -76,6 +76,16 @@ export type BlogsType = {
     isMembership: boolean
 }
 
+export type CommentsType = {
+    id: string
+    content: string
+    commentatorInfo: {
+        userId: string
+        userLogin: string
+    },
+    createdAt: string
+}
+
 export const blogs = [] as BlogsType[]
 export const posts = [] as PostsType[]
 
@@ -91,6 +101,8 @@ const db = client.db('bloggers')
 export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<UsersType>('users')
+export const commentsCollection = db.collection<CommentsType>('comments')
+
 export const runDb = async () => {
     try {
         await client.connect()

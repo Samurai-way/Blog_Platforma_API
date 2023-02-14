@@ -3,6 +3,7 @@ import {getPostsPaginationValidator, postPostsValidator} from "../validators/val
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {postsService} from "../domain/posts-service";
 import {getPagination} from "../helpers/pagination";
+import {authMiddleware} from "../middlewares/authMiddleware";
 
 
 export const postsRouter = Router({})
@@ -16,6 +17,10 @@ postsRouter.post('/', postPostsValidator, async (req: Request, res: Response) =>
     const {title, shortDescription, content, blogId} = req.body
     const createPost = await postsService.createPost(title, shortDescription, content, blogId)
     res.status(201).send(createPost)
+})
+postsRouter.post('/postID/comments', authMiddleware, async (req: Request, res: Response) => {
+    const postID = req.params.postID
+
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id
