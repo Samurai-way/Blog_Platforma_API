@@ -4,7 +4,7 @@ import {settings} from "./settings";
 import {ObjectId} from "mongodb";
 
 export const jwtService = {
-    async createJWT(user: DB_User_Type) {
+    async createJWT(user: DB_User_Type): Promise<string> {
         const token = jwt.sign({userID: user._id}, settings.JWT_SECRET, {expiresIn: '1h'})
         return token
     },
