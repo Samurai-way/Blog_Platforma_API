@@ -1,4 +1,4 @@
-import {CommentDBModalType, DB_PostsType, DB_User_Type, postsCollection, PostsType} from "../db/db";
+import {CommentDBModalType, DB_PostsType, DB_User_Type, PostsType} from "../db/db";
 import {ObjectId} from "mongodb";
 import {postsRepository} from "../repositories/posts-db-repository";
 import {blogsService} from "./blogs-service";
@@ -21,15 +21,14 @@ export const postsService = {
             blogName: blogName.name,
             createdAt: new Date().toISOString()
         }
-        const result = await postsRepository.createPost(newPost)
-        return result
+        return await postsRepository.createPost(newPost)
     },
     async getPostById(id: string): Promise<PostsType | null> {
         return await postsRepository.getPostById(id)
     },
     async createPostComment(postID: string, user: DB_User_Type, content: string) {
         const findPostByID = await postsService.getPostById(postID)
-        if(!findPostByID) return null
+        if (!findPostByID) return null
         const newComment: CommentDBModalType = {
             id: new ObjectId().toString(),
             _id: new ObjectId(),

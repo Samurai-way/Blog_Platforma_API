@@ -28,29 +28,20 @@ postsRouter.post('/:postID/comments', postCommentsValidator, async (req: Request
 postsRouter.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id
     const findPost = await postsService.getPostById(id)
-    if (findPost) {
-        res.status(200).send(findPost)
-    } else {
-        res.send(404)
-    }
+    if (!findPost) return res.send(404)
+    res.status(200).send(findPost)
 })
 postsRouter.put('/:id', postPostsValidator, async (req: Request, res: Response) => {
     const id = req.params.id
     const {title, shortDescription, content, blogId} = req.body
     const updatePost = await postsService.updatePostById(id, title, shortDescription, content, blogId)
-    if (updatePost) {
-        const findPost = await postsService.getPostById(id)
-        res.status(204).send(findPost)
-    } else {
-        res.send(404)
-    }
+    if (!updatePost) return res.send(404)
+    const findPost = await postsService.getPostById(id)
+    res.status(204).send(findPost)
 })
 postsRouter.delete('/:id', basicAuthMiddleware, async (req: Request, res: Response) => {
     const id = req.params.id
     const deletePost = await postsService.deletePostById(id)
-    if (deletePost) {
-        res.send(204)
-    } else {
-        res.send(404)
-    }
+    if (!deletePost) return res.send(404)
+    res.send(204)
 })
