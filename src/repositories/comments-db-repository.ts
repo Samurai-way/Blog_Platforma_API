@@ -16,11 +16,11 @@ export const commentsRepository = {
         return await commentsCollection.findOne({id}, {projection: {_id: 0}})
     },
     async deleteCommentByID(commentID: string, user: DB_User_Type): Promise<boolean> {
-        const result = await commentsCollection.deleteOne({id: commentID})
+        const result = await commentsCollection.deleteOne({id: commentID, 'commentatorInfo.userId': user.id})
         return result.deletedCount === 1
     },
     async updateCommentById(commentId: string, content: string, user: DB_User_Type): Promise<boolean> {
-        const result = await commentsCollection.updateOne({id: commentId, userId: user.id}, {
+        const result = await commentsCollection.updateOne({id: commentId, 'commentatorInfo.userId' : user.id}, {
             $set: {content}
         })
         return result.matchedCount === 1
