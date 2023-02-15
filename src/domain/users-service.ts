@@ -17,7 +17,7 @@ export const usersService = {
         if (!value) return null
         return user
     },
-    async createUser(login: string, password: string, email: string): Promise<UserType> {
+    async createUser(login: string, password: string, email: string): Promise<UserType | null> {
 
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generationHash(password, passwordSalt)
@@ -46,10 +46,17 @@ export const usersService = {
             await emailService.sendEmail(email, "confirm code", bodyTextMessage)
         } catch (error) {
             console.log(error)
+            return null
         }
     },
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
+    },
+    async confirmEmail(code: string) {
+
+    },
+    async findUserByCode(code: string): Promise<DB_User_Type | any> {
+        return await usersRepository.findUserByCode(code)
     },
     async _generationHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)

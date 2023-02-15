@@ -34,6 +34,9 @@ export const usersRepository = {
     async findUserByID(id: string) {
         return await usersCollection.findOne({id})
     },
+    async findUserByCode(code: string) {
+        return await usersCollection.findOne({'confirmationCode.confirmationCode': code})
+    },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
         const result = await usersCollection.insertOne(newUser)
         const {_id, passwordHash, ...newUserCopy} = newUser

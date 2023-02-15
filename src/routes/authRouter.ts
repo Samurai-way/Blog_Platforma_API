@@ -30,9 +30,26 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
 authRouter.post('/registration', login, password, email, ExpressErrorValidator, async (req: Request, res: Response) => {
     const {login, password, email} = req.body
+    const findByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(login)
+
+    if (findByLoginOrEmail?.login === login) return res.status(400).send([{message: 'Invalid login', field: "login"}])
+    if (findByLoginOrEmail?.email === email) return res.status(400).send([{message: 'Invalid email', field: "email"}])
+
     const user = await usersService.createUser(login, password, email)
+    if (!user) return res.sendStatus(404)
     res.status(204).send(`<h1>Thank for your registration</h1>
        <p>To finish registration please follow the link below:
           <a href='https://somesite.com/confirm-email?code=your_confirmation_code'>complete registration</a>
       </p>`)
+})
+
+authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
+    const code = req.body.code
+    const error = {"errorsMessages": [{message: code, field: code}]}
+
+    const findUserByCode = await usersService.findUserByCode(code)
+    if (!findUserByCode) return res.status(400).send(error)
+    if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
+    await usersService.confirmEmail(code)
+    res.send(204)
 })
