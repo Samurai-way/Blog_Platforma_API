@@ -20,9 +20,15 @@ export type DB_User_Type = {
     id: string,
     _id: ObjectId,
     login: string,
-    passwordHash: string
+    passwordHash: string,
     email: string,
-    createdAt: string
+    createdAt: string,
+    emailConfirmation: {
+        confirmationCode: string,
+        expirationDate: Date,
+        isConfirmed: boolean
+    }
+
 
 }
 

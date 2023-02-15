@@ -6,7 +6,7 @@ export const emailRepository = {
             service: 'gmail',
             auth:{
                 user: 'user2023newTestPerson@gmail.com',
-                pass: '1q2w3e4r5tniki'
+                pass: 'chucmvqgtpkxstks'
             }
         })
 
