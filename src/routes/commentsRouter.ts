@@ -7,7 +7,7 @@ import {contentForComments} from "../validators/validators";
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/:commentId', authMiddleware, async (req: Request, res: Response) => {
+commentsRouter.get('/:commentId', async (req: Request, res: Response) => {
     const commentId = req.params.commentId
     const getCommentById = await commentsService.getCommentById(commentId)
     if (!getCommentById) return res.send(404)
