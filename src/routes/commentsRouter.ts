@@ -10,7 +10,7 @@ export const commentsRouter = Router({})
 commentsRouter.get('/:commentId', authMiddleware, async (req: Request, res: Response) => {
     const commentId = req.params.commentId
     const getCommentById = await commentsService.getCommentById(commentId)
-    if (!getCommentById) return res.sendStatus(404)
+    if (!getCommentById) return res.send(404)
     res.status(200).send(getCommentById)
 })
 
@@ -18,9 +18,9 @@ commentsRouter.delete('/:commentId', authMiddleware, async (req: Request, res: R
     const commentID = req.params.commentId
     const user = req.user!
     const getCommentByID = await commentsRepository.getCommentById(commentID)
-    if (!getCommentByID) return res.sendStatus(404)
+    if (!getCommentByID) return res.send(404)
     const deletedComment = await commentsService.deleteCommentByID(commentID, user)
-    if (!deletedComment) return res.sendStatus(403)
+    if (!deletedComment) return res.send(403)
     res.send(204)
 })
 

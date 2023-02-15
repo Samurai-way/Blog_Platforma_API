@@ -13,7 +13,6 @@ export const commentsRepository = {
         return paginator(pageNumber, pageSize, getCountComments, findAndSortedComments)
     },
     async getCommentById(id: string) {
-        console.log('id', id)
         return await commentsCollection.findOne({id}, {projection: {_id: 0}})
     },
     async deleteCommentByID(commentID: string, user: DB_User_Type): Promise<boolean> {

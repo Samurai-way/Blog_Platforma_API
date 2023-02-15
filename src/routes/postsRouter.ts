@@ -31,7 +31,7 @@ postsRouter.post('/:postID/comments', postCommentsValidator, async (req: Request
     const content = req.body.content
     const user = req.user!
     const createdComment = await postsService.createPostComment(postID, user, content)
-    if (!createdComment) return res.sendStatus(404)
+    if (!createdComment) return res.send(404)
     res.status(201).send(createdComment)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
