@@ -9,7 +9,7 @@ export const commentsRepository = {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .toArray()
-        const getCountComments = await commentsCollection.countDocuments({})
+        const getCountComments = await commentsCollection.countDocuments({postId: postID})
         return paginator(pageNumber, pageSize, getCountComments, findAndSortedComments)
     },
     async getCommentById(id: string) {
