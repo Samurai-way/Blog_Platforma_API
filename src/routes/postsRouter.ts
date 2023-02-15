@@ -30,7 +30,6 @@ postsRouter.post('/:postID/comments', postCommentsValidator, async (req: Request
     const postID = req.params.postID
     const content = req.body.content
     const user = req.user!
-    console.log('user', user)
     const createdComment = await postsService.createPostComment(postID, user, content)
     if (!createdComment) return res.send(404)
     res.status(201).send(createdComment)
