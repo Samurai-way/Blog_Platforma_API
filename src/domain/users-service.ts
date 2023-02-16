@@ -54,6 +54,12 @@ export const usersService = {
         }
         return result
     },
+    async findUserByEmail(email: string): Promise<any> {
+        return await usersRepository.findUserByEmail(email)
+    },
+    async findUserByLogin(login: string){
+        return await usersRepository.findUserByLoginOrEmail(login)
+    },
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
