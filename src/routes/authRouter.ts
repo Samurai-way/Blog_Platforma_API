@@ -37,9 +37,9 @@ authRouter.post('/registration', login, password, email, ExpressErrorValidator, 
     const findByEmail = await usersService.findUserByEmail(email)
 
     if (findByLogin?.login === login) return res.status(400).send({
-        "errorsMessages": [{"message": "Invalid login", "field": "login"}]})
+        errorsMessages: [{message: login, field: login}]})
     if (findByEmail?.email === email) return res.status(400).send({
-        "errorsMessages": [{"message": "Invalid login", "field": "login"}]})
+        errorsMessages: [{message: email, field: email}]})
     const user = await usersService.createUser(login, password, email)
     if (!user) return res.sendStatus(404)
     res.send(204)
@@ -48,7 +48,7 @@ authRouter.post('/registration', login, password, email, ExpressErrorValidator, 
 authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
     const code = req.body.code
     // console.log('code', code)
-    const error = {"errorsMessages": [{message: code, field: code}]}
+    const error = {errorsMessages: [{message: code, field: code}]}
     const findUserByCode = await usersService.findUserByCode(code)
     if (!findUserByCode) return res.status(400).send(error)
     if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
