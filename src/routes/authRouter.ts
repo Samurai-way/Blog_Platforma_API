@@ -5,7 +5,6 @@ import {authMiddleware} from "../middlewares/authMiddleware";
 import {usersRepository} from "../repositories/users-db-repository";
 import {email, login, password} from "../validators/validators";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
-import {queryRepository} from "../queryRepository/queryRepository";
 
 
 export const authRouter = Router({})
@@ -31,35 +30,34 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 
 authRouter.post('/registration', login, password, email, ExpressErrorValidator, async (req: Request, res: Response) => {
     const {login, password, email} = req.body
-    const findByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(login)
-
-    if (findByLoginOrEmail?.login === login) return res.status(400).send([{message: 'Invalid login', field: "login"}])
-    if (findByLoginOrEmail?.email === email) return res.status(400).send([{message: 'Invalid email', field: "email"}])
+    const findByEmailOfLogin = await usersRepository.findUserByLoginOrEmail(login)
+    if (findByEmailOfLogin?.login === login) return res.status(400).send([{message: 'Invalid login', field: "login"}])
+    if (findByEmailOfLogin?.email === email) return res.status(400).send([{message: 'Invalid email', field: "email"}])
 
     const user = await usersService.createUser(login, password, email)
     if (!user) return res.sendStatus(404)
     res.send(204)
 })
 
-authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
-    const code = req.body.code
-    console.log('code', code)
-    const error = {"errorsMessages": [{message: code, field: code}]}
-
-    const findUserByCode = await usersService.findUserByCode(code)
-    if (!findUserByCode) return res.status(400).send(error)
-    if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
-    await usersService.confirmEmail(code)
-    res.send(204)
-})
-authRouter.post('/registration-email-resending', email, ExpressErrorValidator, async (req: Request, res: Response) => {
-    const email = req.body.email
-    const findUserByEmail: any = await usersRepository.findUserByEmail(email)
-    // @ts-ignore
-    if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) {
-        return res.status(400).send({errorsMessages: [{message: email, field: email}]})
-    } else {
-        await queryRepository.resendingEmail(email, findUserByEmail)
-        return res.sendStatus(204)
-    }
-})
+// authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
+//     const code = req.body.code
+//     console.log('code', code)
+//     const error = {"errorsMessages": [{message: code, field: code}]}
+//
+//     const findUserByCode = await usersService.findUserByCode(code)
+//     if (!findUserByCode) return res.status(400).send(error)
+//     if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
+//     await usersService.confirmEmail(code)
+//     res.send(204)
+// })
+// authRouter.post('/registration-email-resending', email, ExpressErrorValidator, async (req: Request, res: Response) => {
+//     const email = req.body.email
+//     const findUserByEmail: any = await usersRepository.findUserByEmail(email)
+//     // @ts-ignore
+//     if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) {
+//         return res.status(400).send({errorsMessages: [{message: email, field: email}]})
+//     } else {
+//         await queryRepository.resendingEmail(email, findUserByEmail)
+//         return res.sendStatus(204)
+//     }
+// })

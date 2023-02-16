@@ -53,9 +53,9 @@ export const usersService = {
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
-    async confirmEmail(code: string) {
-
-    },
+    // async confirmEmail(code: string) {
+    //
+    // },
     async findUserByCode(code: string): Promise<DB_User_Type | any> {
         return await usersRepository.findUserByCode(code)
     },
