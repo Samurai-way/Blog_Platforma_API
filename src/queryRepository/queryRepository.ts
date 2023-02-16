@@ -51,7 +51,7 @@ export const queryRepository = {
         }
         await usersRepository.updateUserConfirmationDate(newEmailConfirmation)
         const bodyTextMessage = `https://somesite.com/confirm-email?code=${newEmailConfirmation.emailConfirmation.confirmationCode}`
-        await emailService.sendEmail(email, "confirm email", bodyTextMessage)
+        await emailService.sendEmail(email,"confirm email", bodyTextMessage)
         return
     }
 }

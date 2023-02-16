@@ -31,14 +31,15 @@ export const usersRepository = {
     async findUserByLoginOrEmail(loginOrEmail: string) {
         return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
-    // async findUserByPassword(password: string) {
-    //     return await usersCollection.findOne({password})
-    // },
+    async findUserByEmail(email: string): Promise<any> {
+        return await usersCollection.findOne({email})
+    },
     async findUserByID(id: string) {
         return await usersCollection.findOne({id})
     },
     async findUserByCode(code: string) {
-        return await usersCollection.findOne({'confirmationCode.confirmationCode': code})
+        // console.log('code', code)
+        return await usersCollection.findOne({'emailConfirmation.confirmationCode': code})
     },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
         // console.log('newUser', newUser)
@@ -55,6 +56,10 @@ export const usersRepository = {
                     'emailConfirmation.isConfirmed': user.emailConfirmation.isConfirmed
                 }
         })
+        return updateUser.matchedCount === 1
+    },
+    async updateUserConfirmation(id: string) {
+        const updateUser = await usersCollection.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return updateUser.matchedCount === 1
     },
     async deleteUser(id: string): Promise<boolean> {

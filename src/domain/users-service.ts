@@ -53,9 +53,12 @@ export const usersService = {
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
-    // async confirmEmail(code: string) {
-    //
-    // },
+    async confirmEmail(code: string, user: DB_User_Type) {
+        if(user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed){
+            const result = usersRepository.updateUserConfirmation(user.id)
+            return result
+        }
+    },
     async findUserByCode(code: string): Promise<DB_User_Type | any> {
         return await usersRepository.findUserByCode(code)
     },
