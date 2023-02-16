@@ -5,6 +5,7 @@ import {authMiddleware} from "../middlewares/authMiddleware";
 import {usersRepository} from "../repositories/users-db-repository";
 import {email, login, password} from "../validators/validators";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
+import {queryRepository} from "../queryRepository/queryRepository";
 
 
 export const authRouter = Router({})
@@ -37,14 +38,12 @@ authRouter.post('/registration', login, password, email, ExpressErrorValidator, 
 
     const user = await usersService.createUser(login, password, email)
     if (!user) return res.sendStatus(404)
-    res.status(204).send(`<h1>Thank for your registration</h1>
-       <p>To finish registration please follow the link below:
-          <a href='https://somesite.com/confirm-email?code=your_confirmation_code'>complete registration</a>
-      </p>`)
+    res.send(204)
 })
 
 authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
     const code = req.body.code
+    console.log('code', code)
     const error = {"errorsMessages": [{message: code, field: code}]}
 
     const findUserByCode = await usersService.findUserByCode(code)
@@ -52,4 +51,15 @@ authRouter.post('/registration-confirmation', async (req: Request, res: Response
     if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
     await usersService.confirmEmail(code)
     res.send(204)
+})
+authRouter.post('/registration-email-resending', email, ExpressErrorValidator, async (req: Request, res: Response) => {
+    const email = req.body.email
+    const findUserByEmail: any = await usersRepository.findUserByEmail(email)
+    // @ts-ignore
+    if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) {
+        return res.status(400).send({errorsMessages: [{message: email, field: email}]})
+    } else {
+        await queryRepository.resendingEmail(email, findUserByEmail)
+        return res.sendStatus(204)
+    }
 })

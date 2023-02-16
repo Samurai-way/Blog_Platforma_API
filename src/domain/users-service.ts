@@ -40,7 +40,7 @@ export const usersService = {
                 isConfirmed: false
             }
         }
-        return await usersRepository.createUser(newUser)
+        const result = await usersRepository.createUser(newUser)
         try {
             const bodyTextMessage = `https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}`
             await emailService.sendEmail(email, "confirm code", bodyTextMessage)
@@ -48,6 +48,7 @@ export const usersService = {
             console.log(error)
             return null
         }
+        return result
     },
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
