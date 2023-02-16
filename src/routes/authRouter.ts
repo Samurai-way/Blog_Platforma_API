@@ -30,10 +30,14 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 })
 
 authRouter.post('/registration', login, password, email, ExpressErrorValidator, async (req: Request, res: Response) => {
+
     const {login, password, email} = req.body
-    const findByEmailOfLogin = await usersRepository.findUserByLoginOrEmail(login)
-    if (findByEmailOfLogin?.login === login) return res.status(400).send([{message: 'Invalid login', field: "login"}])
-    if (findByEmailOfLogin?.email === email) return res.status(400).send([{message: 'Invalid email', field: "email"}])
+
+    const findByLogin = await usersRepository.findUserByLoginOrEmail(login)
+    const findByEmail = await usersRepository.findUserByEmail(email)
+
+    if (findByLogin?.login === login) return res.status(400).send([{message: 'Invalid login', field: "login"}])
+    if (findByEmail?.email === email) return res.status(400).send([{message: 'Invalid email', field: "email"}])
     const user = await usersService.createUser(login, password, email)
     if (!user) return res.sendStatus(404)
     res.send(204)

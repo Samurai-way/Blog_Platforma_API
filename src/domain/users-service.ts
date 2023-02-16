@@ -46,7 +46,6 @@ export const usersService = {
        <p>To finish registration please follow the link below:
           <a href='https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}'>complete registration</a>
       </p>`
-
                 // `https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}`
             await emailService.sendEmail(email, "confirm code", bodyTextMessage)
         } catch (error) {
