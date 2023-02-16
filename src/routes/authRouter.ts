@@ -36,8 +36,10 @@ authRouter.post('/registration', login, password, email, ExpressErrorValidator, 
     const findByLogin = await usersService.findUserByLogin(login)
     const findByEmail = await usersService.findUserByEmail(email)
 
-    if (findByLogin?.login === login) return res.status(400).send([{message: 'Invalid login', field: "login"}])
-    if (findByEmail?.email === email) return res.status(400).send([{message: 'Invalid email', field: "email"}])
+    if (findByLogin?.login === login) return res.status(400).send({
+        errorsMessages: [{message: "Invalid login", field: "login"}]})
+    if (findByEmail?.email === email) return res.status(400).send({
+        errorsMessages: [{message: "Invalid login", field: "login"}]})
     const user = await usersService.createUser(login, password, email)
     if (!user) return res.sendStatus(404)
     res.send(204)
