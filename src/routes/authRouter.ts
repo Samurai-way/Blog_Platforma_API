@@ -60,8 +60,9 @@ authRouter.post('/registration-email-resending', email, ExpressErrorValidator, a
     const email = req.body.email
     // console.log('email', email)
     const findUserByEmail = await usersRepository.findUserByEmail(email)
-    if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) {
-        return res.status(400).send({errorsMessages: [{message: email, field: email}]})
+    // console.log('findUserByEmail', findUserByEmail)
+    if (findUserByEmail.emailConfirmation.isConfirmed) {
+        return res.status(400).send({errorsMessages: [{message: email, field: "email"}]})
     } else {
         await queryRepository.resendingEmail(email, findUserByEmail)
         return res.sendStatus(204)
