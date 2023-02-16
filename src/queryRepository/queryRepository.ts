@@ -50,8 +50,17 @@ export const queryRepository = {
             }
         }
         await usersRepository.updateUserConfirmationDate(newEmailConfirmation)
-        const bodyTextMessage = `https://somesite.com/confirm-email?code=${newEmailConfirmation.emailConfirmation.confirmationCode}`
-        await emailService.sendEmail(email,"confirm email", bodyTextMessage)
+        try {
+            const bodyTextMessage = `<h1>Thank for your registration</h1>
+       <p>To finish registration please follow the link below:
+          <a href='https://somesite.com/confirm-email?code=${newEmailConfirmation.emailConfirmation.confirmationCode}'>complete registration</a>
+      </p>`
+            // `https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}`
+            await emailService.sendEmail(email, "confirm code", bodyTextMessage)
+        } catch (error) {
+            console.log(error)
+            return null
+        }
         return
     }
 }

@@ -67,7 +67,7 @@ export const usersService = {
         if(user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed){
             const result = usersRepository.updateUserConfirmation(user.id)
             return result
-            console.log('result', result)
+            // console.log('result', result)
         }
     },
     async findUserByCode(code: string): Promise<DB_User_Type | any> {
