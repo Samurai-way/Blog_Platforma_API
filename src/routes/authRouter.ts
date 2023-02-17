@@ -29,7 +29,7 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     if (!checkResult) return res.sendStatus(401)
     const token = jwtService.createJWT(checkResult)
 
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: false, secure: false})
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: token.accessToken})
 })
 
@@ -39,7 +39,7 @@ authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, r
 
     const newTokenPair = jwtService.createJWT(user)
     await jwtService.addRefreshTokenInBlackList(refreshToken)
-    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: false, secure: false})
+    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: newTokenPair.accessToken})
 })
 
