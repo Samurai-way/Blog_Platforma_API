@@ -12,7 +12,7 @@ export const usersRepository = {
                             $options: "i"
                         }
                     }]
-            }, {projection: {_id: 0, passwordHash: 0}})
+            }, {projection: {_id: 0, passwordHash: 0, emailConfirmation: 0}})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
