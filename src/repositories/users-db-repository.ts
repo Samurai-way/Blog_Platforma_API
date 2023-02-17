@@ -47,7 +47,7 @@ export const usersRepository = {
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
         // console.log('newUser', newUser)
         const result = await usersCollection.insertOne(newUser)
-        const {_id, passwordHash, ...newUserCopy} = newUser
+        const {_id, passwordHash, emailConfirmation, ...newUserCopy} = newUser
         return newUserCopy
     },
     async updateUserConfirmationDate(user: DB_User_Type) {
