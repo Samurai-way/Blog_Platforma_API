@@ -91,6 +91,6 @@ authRouter.post('/registration-email-resending', email, ExpressErrorValidator, a
 authRouter.post('/logout', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken!
     await jwtService.addRefreshTokenInBlackList(refreshToken)
-    await jwtService.getUserIDByToken(refreshToken)
+    // await jwtService.getUserIDByToken(refreshToken)
     res.sendStatus(204)
 })
