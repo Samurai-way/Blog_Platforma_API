@@ -26,7 +26,14 @@ authRouter.post('/login', async (req: Request, res: Response) => {
     const checkResult = await usersService.checkCredentials(loginOrEmail, password)
     if (!checkResult) return res.sendStatus(401)
     const token = jwtService.createJWT(checkResult)
+    // const refreshToken = jwtService.createJWT(checkResult)
+    // res.cookie('refreshToken', refreshToken, {httpOnly: true})
     res.status(200).send({accessToken: token})
+})
+
+authRouter.post('/refresh-token', async (req: Request, res: Response) => {
+    const result = req.cookies
+    console.log('result', result)
 })
 
 authRouter.post('/registration', login, password, email, ExpressErrorValidator, async (req: Request, res: Response) => {
@@ -64,7 +71,12 @@ authRouter.post('/registration-email-resending', email, ExpressErrorValidator, a
     // console.log('email', email)
     const findUserByEmail = await usersService.findUserByEmail(email)
     // console.log('findUserByEmail', findUserByEmail)
-    if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) return res.status(400).send({errorsMessages: [{message: email, field: "email"}]})
+    if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) return res.status(400).send({
+        errorsMessages: [{
+            message: email,
+            field: "email"
+        }]
+    })
     await queryRepository.resendingEmail(email, findUserByEmail)
     return res.sendStatus(204)
 })

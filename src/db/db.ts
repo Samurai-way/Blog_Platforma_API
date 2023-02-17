@@ -3,11 +3,15 @@ import * as dotenv from 'dotenv'
 
 dotenv.config()
 
-export type AboutUserType = {
-    email: string
-    login: string
-    userId: string
+export type TokenType = {
+    refreshToken: string
 }
+
+// export type AboutUserType = {
+//     email: string
+//     login: string
+//     userId: string
+// }
 
 export type UserType = {
     id: string
@@ -120,6 +124,7 @@ export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<UsersType>('users')
 export const commentsCollection = db.collection<CommentsType>('comments')
+export const tokenCollection = db.collection<TokenType>('tokens')
 
 export const runDb = async () => {
     try {
