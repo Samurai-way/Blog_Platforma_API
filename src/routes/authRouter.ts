@@ -6,6 +6,7 @@ import {usersRepository} from "../repositories/users-db-repository";
 import {email, login, password} from "../validators/validators";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {queryRepository} from "../queryRepository/queryRepository";
+import {refreshTokenMiddleware} from "../middlewares/refreshTokenMiddleware";
 
 
 export const authRouter = Router({})
@@ -24,16 +25,22 @@ authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
 authRouter.post('/login', async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
     const checkResult = await usersService.checkCredentials(loginOrEmail, password)
+
     if (!checkResult) return res.sendStatus(401)
     const token = jwtService.createJWT(checkResult)
-    // const refreshToken = jwtService.createJWT(checkResult)
-    // res.cookie('refreshToken', refreshToken, {httpOnly: true})
-    res.status(200).send({accessToken: token})
+
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: false, secure: false})
+    res.status(200).send({accessToken: token.accessToken})
 })
 
-authRouter.post('/refresh-token', async (req: Request, res: Response) => {
-    const result = req.cookies
-    console.log('result', result)
+authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken!
+    const user = req.user!
+
+    const newTokenPair = jwtService.createJWT(user)
+    await jwtService.addRefreshTokenInBlackList(refreshToken)
+    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: false, secure: false})
+    res.status(200).send({accessToken: newTokenPair.accessToken})
 })
 
 authRouter.post('/registration', login, password, email, ExpressErrorValidator, async (req: Request, res: Response) => {
@@ -59,7 +66,7 @@ authRouter.post('/registration-confirmation', async (req: Request, res: Response
     // console.log('code', code)
     const error = {errorsMessages: [{message: code, field: "code"}]}
     const findUserByCode = await usersService.findUserByCode(code)
-    console.log('findUserByCode', findUserByCode)
+    // console.log('findUserByCode', findUserByCode)
     if (!findUserByCode) return res.status(400).send(error)
     if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
     await usersService.confirmEmail(code, findUserByCode)
@@ -79,4 +86,11 @@ authRouter.post('/registration-email-resending', email, ExpressErrorValidator, a
     })
     await queryRepository.resendingEmail(email, findUserByEmail)
     return res.sendStatus(204)
+})
+
+authRouter.post('/logout', refreshTokenMiddleware, async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken!
+    await jwtService.addRefreshTokenInBlackList(refreshToken)
+    await jwtService.getUserIDByToken(refreshToken)
+    res.sendStatus(204)
 })

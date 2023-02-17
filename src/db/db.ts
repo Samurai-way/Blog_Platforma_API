@@ -1,4 +1,4 @@
-import {MongoClient, ObjectId} from "mongodb";
+import {MongoClient, ObjectId, WithId} from "mongodb";
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -19,6 +19,7 @@ export type UserType = {
     email: string
     createAt: string
 }
+
 
 export type DB_User_Type = {
     id: string,
@@ -122,9 +123,9 @@ const db = client.db('bloggers')
 
 export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
-export const usersCollection = db.collection<UsersType>('users')
+export const usersCollection = db.collection<DB_User_Type>('users')
 export const commentsCollection = db.collection<CommentsType>('comments')
-export const tokenCollection = db.collection<TokenType>('tokens')
+export const tokensCollection = db.collection<TokenType>('tokens')
 
 export const runDb = async () => {
     try {
@@ -134,4 +135,49 @@ export const runDb = async () => {
         console.log('! Not to connect to server')
         await client.close()
     }
+}
+
+type createBlog = {
+    name: string
+}
+
+type blog = {
+    id: string
+    name: string
+}
+
+type blogDb = WithId<blog>
+
+
+type createUser = {
+    login: string
+    email: string
+    password: string
+}
+
+type updateUser = {
+    login: string
+    email: string
+    password: string
+}
+
+type userDb = {
+    _id: ObjectId
+    id: string
+    login: string
+    email: string
+    password: string
+
+    createdAt: string
+
+    balance: number
+}
+
+type userViewModel = {
+
+    id: string
+    login: string
+    email: string
+
+    createdAt: string
 }

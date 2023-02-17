@@ -4,12 +4,16 @@ import {settings} from "./settings";
 import {jwtRepository} from "../repositories/jwt-db-repository";
 
 export const jwtService = {
-    createJWT(user: DB_User_Type): string {
-        return jwt.sign({userID: user.id}, settings.JWT_SECRET, {expiresIn: '1000s'})
-        return jwt.sign({userID: user.id}, settings.JWT_REFRESH, {expiresIn: '2000s'})
+    createJWT(user: DB_User_Type) {
+        const accessToken =  jwt.sign({userID: user.id}, settings.JWT_SECRET, {expiresIn: '10s'})
+        const refreshToken = jwt.sign({userID: user.id}, settings.JWT_SECRET, {expiresIn: '20s'})
+        return {accessToken, refreshToken}
     },
-    async addRefreshToken(refreshToken: string) {
-        await jwtRepository.addRefreshToken({refreshToken})
+    async addRefreshTokenInBlackList(refreshToken: string) {
+        await jwtRepository.addRefreshTokenInBlackList(refreshToken)
+    },
+    async findTokenInBlackList(refreshToken: string){
+        return  jwtRepository.findTokenInBlackList(refreshToken)
     },
     async getUserIDByToken(token: string) {
         try {

@@ -11,12 +11,24 @@ export const usersService = {
         return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     },
     async checkCredentials(loginOrEmail: string, password: string): Promise<any | null> { // DB_User_Type fix any type
-        const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
-        if (!user) return null
-        const value = await bcrypt.compare(password, user.passwordHash);
+        const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
+        if (!findUserByLoginOrEmail) return null
+        const value = await bcrypt.compare(password, findUserByLoginOrEmail.passwordHash);
         if (!value) return null
-        return user
+        return findUserByLoginOrEmail
     },
+    // async loginUser(loginOrEmail: string, password: string): Promise<any> {
+    //     const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
+    //     if (!findUserByLoginOrEmail) return false
+    //     const passwordSalt = findUserByLoginOrEmail.passwordHash.slice(0, 29)
+    //     const passwordHash = await bcrypt.hash(password, passwordSalt)
+    //     const checkCredentials = await usersRepository.loginUser(loginOrEmail, passwordHash)
+    //     if (!checkCredentials) return false
+    //     const createJWT = await jwtService.createJWT(checkCredentials.id as any)
+    //     // await userSessionService.createNewUserSession()
+    //     console.log('createJWT', createJWT)
+    //     return createJWT
+    // },
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
 
         const passwordSalt = await bcrypt.genSalt(10)
@@ -46,7 +58,7 @@ export const usersService = {
        <p>To finish registration please follow the link below:
           <a href='https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}'>complete registration</a>
       </p>`
-                // `https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}`
+            // `https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}`
             await emailService.sendEmail(email, "confirm code", bodyTextMessage)
         } catch (error) {
             console.log(error)
@@ -57,14 +69,14 @@ export const usersService = {
     async findUserByEmail(email: string): Promise<any> {
         return await usersRepository.findUserByEmail(email)
     },
-    async findUserByLogin(login: string){
+    async findUserByLogin(login: string) {
         return await usersRepository.findUserByLoginOrEmail(login)
     },
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
     },
     async confirmEmail(code: string, user: DB_User_Type) {
-        if(user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed){
+        if (user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed) {
             const result = usersRepository.updateUserConfirmation(user.id)
             return result
             // console.log('result', result)

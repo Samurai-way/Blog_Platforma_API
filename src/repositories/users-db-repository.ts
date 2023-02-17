@@ -28,13 +28,16 @@ export const usersRepository = {
         })
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
     },
+    // async loginUser(loginOrEmail: string, passwordHash: string){
+    //   return usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}], passwordHash})
+    // },
     async findUserByLoginOrEmail(loginOrEmail: string) {
         return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
     async findUserByEmail(email: string) {
         return await usersCollection.findOne({email})
     },
-    async findUserByID(id: string) {
+    async findUserByID(id: string): Promise<DB_User_Type | null> {
         return await usersCollection.findOne({id})
     },
     async findUserByCode(code: string) {

@@ -1,7 +1,10 @@
-import {tokenCollection, TokenType} from "../db/db";
+import {tokensCollection, TokenType} from "../db/db";
 
 export const jwtRepository = {
-    async addRefreshToken(refreshToken: TokenType) {
-        return tokenCollection.insertMany(refreshToken)
+    async addRefreshTokenInBlackList(refreshToken: string) {
+        return tokensCollection.insertOne({refreshToken})
+    },
+    async findTokenInBlackList(refreshToken: string){
+        return tokensCollection.findOne({refreshToken})
     }
 }
