@@ -63,14 +63,12 @@ authRouter.post('/registration', login, password, email, ExpressErrorValidator, 
 
 authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
     const code = req.body.code
-    // console.log('code', code)
     const error = {errorsMessages: [{message: code, field: "code"}]}
     const findUserByCode = await usersService.findUserByCode(code)
-    // console.log('findUserByCode', findUserByCode)
     if (!findUserByCode) return res.status(400).send(error)
     if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
     await usersService.confirmEmail(code, findUserByCode)
-    // console.log('findUserByCode', findUserByCode)
+
     res.send(204)
 })
 authRouter.post('/registration-email-resending', email, ExpressErrorValidator, async (req: Request, res: Response) => {
