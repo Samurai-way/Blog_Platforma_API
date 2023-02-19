@@ -14,7 +14,7 @@ export const usersSessionRepository = {
         return deleteAllSession.deletedCount === 1
     },
     async deleteDeviceByDeviceID(userID: string, deviceId: any) {
-        const result = await usersSessionCollection.deleteOne({userID, deviceId})
+        const result = await usersSessionCollection.deleteOne({userId: userID, deviceId: deviceId})
         return result.deletedCount === 1
     },
     async findDeviceByDeviceId(deviceId: string) {

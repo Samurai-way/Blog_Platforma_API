@@ -36,7 +36,7 @@ authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: R
     if (!checkResult) return res.sendStatus(401)
     const token = jwtService.createJWT(checkResult)
     // console.log('token', token)
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: token.accessToken})
 })
 
@@ -46,7 +46,7 @@ authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, r
 
     const newTokenPair = jwtService.createJWT(user)
     await jwtService.addRefreshTokenInBlackList(refreshToken)
-    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: newTokenPair.accessToken})
 })
 
