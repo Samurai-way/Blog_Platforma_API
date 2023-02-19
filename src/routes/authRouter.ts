@@ -50,7 +50,7 @@ authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, r
     res.status(200).send({accessToken: newTokenPair.accessToken})
 })
 
-authRouter.post('/registration', login, password, email, ExpressErrorValidator, async (req: Request, res: Response) => {
+authRouter.post('/registration', login, password, email, requestAttemptsMiddleware, ExpressErrorValidator, async (req: Request, res: Response) => {
 
     const {login, password, email} = req.body
 
@@ -68,7 +68,7 @@ authRouter.post('/registration', login, password, email, ExpressErrorValidator, 
     res.send(204)
 })
 
-authRouter.post('/registration-confirmation', async (req: Request, res: Response) => {
+authRouter.post('/registration-confirmation', requestAttemptsMiddleware, async (req: Request, res: Response) => {
     const code = req.body.code
     const error = {errorsMessages: [{message: code, field: "code"}]}
     const findUserByCode = await usersService.findUserByCode(code)
@@ -78,7 +78,7 @@ authRouter.post('/registration-confirmation', async (req: Request, res: Response
 
     res.send(204)
 })
-authRouter.post('/registration-email-resending', email, ExpressErrorValidator, async (req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', requestAttemptsMiddleware, email, ExpressErrorValidator, async (req: Request, res: Response) => {
     const email = req.body.email
     const findUserByEmail = await usersService.findUserByEmail(email)
     if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) return res.status(400).send({
