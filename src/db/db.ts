@@ -116,6 +116,12 @@ export type UsersSessionType = {
     deviceId: "string"
 }
 
+export type AttemptsType = {
+    userIP: string
+    url: string
+    time: string
+}
+
 export const blogs = [] as BlogsType[]
 export const posts = [] as PostsType[]
 
@@ -132,6 +138,8 @@ export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<DB_User_Type>('users')
 export const usersSessionCollection = db.collection<UsersSessionType>('usersSessionCollection')
+
+export const attemptsCollection = db.collection<AttemptsType>('attemptsCollection')
 export const commentsCollection = db.collection<CommentsType>('comments')
 export const tokensCollection = db.collection<TokenType>('tokens')
 

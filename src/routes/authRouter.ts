@@ -7,6 +7,7 @@ import {email, login, password} from "../validators/validators";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {queryRepository} from "../queryRepository/queryRepository";
 import {refreshTokenMiddleware} from "../middlewares/refreshTokenMiddleware";
+import {requestAttemptsMiddleware} from "../middlewares/requestAttemptsMiddleware";
 
 
 export const authRouter = Router({})
@@ -22,8 +23,10 @@ authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
         userId: userInfo?.id
     })
 })
-authRouter.post('/login', async (req: Request, res: Response) => {
+authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
+    const ip = req.ip
+    const title = req.headers['user-agent'] || "browser not found"
     const checkResult = await usersService.checkCredentials(loginOrEmail, password)
 
     if (!checkResult) return res.sendStatus(401)
