@@ -12,13 +12,31 @@ export const jwtService = {
     async addRefreshTokenInBlackList(refreshToken: string) {
         await jwtRepository.addRefreshTokenInBlackList(refreshToken)
     },
+    // async decodeJWT(token: string): Promise<T> {
+    //     try {
+    //         const accessToken = this.jwtService.decode(token) as T
+    //         const iat = new Date(0)
+    //         iat.setUTCSeconds(accessToken['iat'])
+    //
+    //         const exp = new Date(0)
+    //         exp.setUTCSeconds(accessToken['exp'])
+    //
+    //         return {
+    //             ...accessToken,
+    //             iat,
+    //             exp
+    //         }
+    //     } catch {
+    //         return null
+    //     }
+    // },
     async findTokenInBlackList(refreshToken: string) {
         return jwtRepository.findTokenInBlackList(refreshToken)
     },
     async getUserIDByToken(token: string) {
         try {
             const res: any = jwt.verify(token, settings.JWT_SECRET)
-            return res.userID
+            return res
         } catch (error) {
             return null
         }

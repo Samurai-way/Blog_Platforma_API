@@ -12,23 +12,23 @@ export const usersService = {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     },
-    async checkCredentials(loginOrEmail: string, password: string): Promise<any> { // DB_User_Type fix any type
+    async checkCredentials(loginOrEmail: string, password: string) { // DB_User_Type fix any type
         const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!findUserByLoginOrEmail) return null
         const value = await bcrypt.compare(password, findUserByLoginOrEmail.passwordHash);
         if (!value) return null
         return findUserByLoginOrEmail
     },
-    async loginUser(loginOrEmail: string, password: string, ip: string, title: string): Promise<any> {
+    async loginUser(loginOrEmail: string, password: string, ip: string, title: string) {
         const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!findUserByLoginOrEmail) return false
         const passwordSalt = findUserByLoginOrEmail.passwordHash.slice(0, 29)
         const passwordHash = await bcrypt.hash(password, passwordSalt)
-        const checkCredentials = await this.loginUser(loginOrEmail, passwordHash, ip, title)
+        const checkCredentials = await usersRepository.loginUser(loginOrEmail, passwordHash)
         if (!checkCredentials) return false
 
         const deviceId = new ObjectId().toString()
-        const createJWT = jwtService.createJWT(checkCredentials.id, deviceId)
+        const createJWT = jwtService.createJWT(checkCredentials.id as any, deviceId)
         await userSessionService.createNewUserSession(ip, title, deviceId, findUserByLoginOrEmail, createJWT)
         // console.log('createJWT', createJWT)
         return createJWT

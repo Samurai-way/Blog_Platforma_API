@@ -28,9 +28,9 @@ export const usersRepository = {
         })
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
     },
-    // async loginUser(loginOrEmail: string, passwordHash: string){
-    //   return usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}], passwordHash})
-    // },
+    async loginUser(loginOrEmail: string, passwordHash: string){
+      return usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}], passwordHash})
+    },
     async findUserByLoginOrEmail(loginOrEmail: string) {
         return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },

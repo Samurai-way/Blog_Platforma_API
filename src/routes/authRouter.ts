@@ -24,10 +24,12 @@ authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
 })
 authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
+    // console.log('loginOrEmail', loginOrEmail, 'password', password)
     const ip = req.ip
     const title = req.headers['user-agent'] || "browser not found"
-    const loginUser = await usersService.loginUser(loginOrEmail, password, ip, title)
 
+    const loginUser = await usersService.loginUser(loginOrEmail, password, ip, title)
+    // console.log('loginUser', loginUser)
     if (!loginUser) return res.sendStatus(401)
     const checkResult = await usersService.checkCredentials(loginOrEmail, password)
 

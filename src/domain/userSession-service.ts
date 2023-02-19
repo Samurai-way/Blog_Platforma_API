@@ -1,10 +1,12 @@
 import {DB_User_Type, TokenType, UserSessionsType} from "../db/db";
 import {jwtService} from "../application/jwt-service";
+import {usersSessionRepository} from "../repositories/usersSession-db-repository";
 
 export const userSessionService = {
     async createNewUserSession(ip: string, title: string, deviceId: string, user: DB_User_Type, token: TokenType) {
         const checkToken = await jwtService.getUserIDByToken(token.refreshToken)
         const iatToken = checkToken.iat * 1000
+        // console.log('iatToken', iatToken)
 
         const newSession: UserSessionsType = {
             ip,
@@ -13,6 +15,6 @@ export const userSessionService = {
             deviceId,
             userId: user.id
         }
-        // return
+        return usersSessionRepository.createNewUserSession(newSession)
     }
 }
