@@ -32,16 +32,19 @@ securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Req
 securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
     const deviceId = req.params.id
-    if (!deviceId) return res.sendStatus(404)
-    // console.log('deviceId', deviceId)
     const deviceByDeviceId = await usersSessionRepository.findDeviceByDeviceId(deviceId)
+
     if (!deviceByDeviceId) return res.sendStatus(404)
+
     const getDataFromToken = await jwtService.getUserIDByToken(refreshToken)
     const userID = getDataFromToken.userID
+
     const findDeviceByUserId = await usersSessionRepository.findDeviceByUserId(userID)
-    // console.log('findDeviceByUserId', findDeviceByUserId)
+
     if (!findDeviceByUserId) return res.sendStatus(404)
     if (findDeviceByUserId.userId !== userID) return res.sendStatus(403)
+
     await usersSessionRepository.deleteDeviceByDeviceID(userID, deviceId)
+
     res.sendStatus(204)
 })

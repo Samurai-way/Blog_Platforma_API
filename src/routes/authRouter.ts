@@ -24,18 +24,16 @@ authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
 })
 authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
-    // console.log('loginOrEmail', loginOrEmail, 'password', password)
     const ip = req.ip
     const title = req.headers['user-agent'] || "browser not found"
 
     const loginUser = await usersService.loginUser(loginOrEmail, password, ip, title)
-    // console.log('loginUser', loginUser)
     if (!loginUser) return res.sendStatus(401)
     const checkResult = await usersService.checkCredentials(loginOrEmail, password)
 
     if (!checkResult) return res.sendStatus(401)
     const token = jwtService.createJWT(checkResult)
-    // console.log('token', token)
+
     res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: token.accessToken})
 })
@@ -53,7 +51,7 @@ authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, r
 authRouter.post('/registration', login, password, email, requestAttemptsMiddleware, ExpressErrorValidator, async (req: Request, res: Response) => {
 
     const {login, password, email} = req.body
-true
+
     const findByLogin = await usersService.findUserByLogin(login)
     const findByEmail = await usersService.findUserByEmail(email)
 
@@ -64,6 +62,7 @@ true
         errorsMessages: [{message: email, field: "email"}]
     })
     const user = await usersService.createUser(login, password, email)
+
     if (!user) return res.sendStatus(404)
     res.send(204)
 })
