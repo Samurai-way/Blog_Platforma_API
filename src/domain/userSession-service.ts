@@ -17,6 +17,9 @@ export const userSessionService = {
         }
         return usersSessionRepository.createNewUserSession(newSession)
     },
+    async deleteAllDevice(userId: string, deviceId: any){
+        return usersSessionRepository.deleteAllDevice(userId, deviceId)
+    }
     // async getSessionByUserID(userID: string){
     //     return usersSessionRepository.getSessionByUserID(userID)
     // }
