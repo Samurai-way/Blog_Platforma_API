@@ -14,7 +14,6 @@ export const authRouter = Router({})
 
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
     const user = req.user?.id
-    // console.log('user', user)
     if (!user) return res.sendStatus(401)
     const userInfo = await usersRepository.findUserByID(user)
     res.status(200).send({
@@ -76,9 +75,7 @@ authRouter.post('/registration-confirmation', async (req: Request, res: Response
 })
 authRouter.post('/registration-email-resending', email, ExpressErrorValidator, async (req: Request, res: Response) => {
     const email = req.body.email
-    // console.log('email', email)
     const findUserByEmail = await usersService.findUserByEmail(email)
-    // console.log('findUserByEmail', findUserByEmail)
     if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) return res.status(400).send({
         errorsMessages: [{
             message: email,
@@ -92,6 +89,5 @@ authRouter.post('/registration-email-resending', email, ExpressErrorValidator, a
 authRouter.post('/logout', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken!
     await jwtService.addRefreshTokenInBlackList(refreshToken)
-    // await jwtService.getUserIDByToken(refreshToken)
     res.sendStatus(204)
 })

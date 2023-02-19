@@ -5,6 +5,8 @@ import {usersRepository} from "../repositories/users-db-repository";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {emailService} from "./email-service";
+import {jwtService} from "../application/jwt-service";
+import {userSessionService} from "./userSession-service";
 
 export const usersService = {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
@@ -17,18 +19,18 @@ export const usersService = {
         if (!value) return null
         return findUserByLoginOrEmail
     },
-    // async loginUser(loginOrEmail: string, password: string): Promise<any> {
-    //     const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
-    //     if (!findUserByLoginOrEmail) return false
-    //     const passwordSalt = findUserByLoginOrEmail.passwordHash.slice(0, 29)
-    //     const passwordHash = await bcrypt.hash(password, passwordSalt)
-    //     const checkCredentials = await usersRepository.loginUser(loginOrEmail, passwordHash)
-    //     if (!checkCredentials) return false
-    //     const createJWT = await jwtService.createJWT(checkCredentials.id as any)
-    //     // await userSessionService.createNewUserSession()
-    //     console.log('createJWT', createJWT)
-    //     return createJWT
-    // },
+    async loginUser(loginOrEmail: string, password: string): Promise<any> {
+        const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
+        if (!findUserByLoginOrEmail) return false
+        const passwordSalt = findUserByLoginOrEmail.passwordHash.slice(0, 29)
+        const passwordHash = await bcrypt.hash(password, passwordSalt)
+        const checkCredentials = await this.loginUser(loginOrEmail, passwordHash)
+        if (!checkCredentials) return false
+        const createJWT = jwtService.createJWT(checkCredentials.id)
+        // await userSessionService.createNewUserSession()
+        console.log('createJWT', createJWT)
+        return createJWT
+    },
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
 
         const passwordSalt = await bcrypt.genSalt(10)

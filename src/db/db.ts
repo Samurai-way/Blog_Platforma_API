@@ -1,4 +1,4 @@
-import {MongoClient, ObjectId, WithId} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -7,11 +7,6 @@ export type TokenType = {
     refreshToken: string
 }
 
-// export type AboutUserType = {
-//     email: string
-//     login: string
-//     userId: string
-// }
 
 export type UserType = {
     id: string
@@ -122,6 +117,14 @@ export type AttemptsType = {
     time: string
 }
 
+export type UserSessionsType = {
+    ip: string,
+    title: string,
+    lastActiveDate: number,
+    deviceId: string,
+    userId: string,
+}
+
 export const blogs = [] as BlogsType[]
 export const posts = [] as PostsType[]
 
@@ -153,47 +156,3 @@ export const runDb = async () => {
     }
 }
 
-type createBlog = {
-    name: string
-}
-
-type blog = {
-    id: string
-    name: string
-}
-
-type blogDb = WithId<blog>
-
-
-type createUser = {
-    login: string
-    email: string
-    password: string
-}
-
-type updateUser = {
-    login: string
-    email: string
-    password: string
-}
-
-type userDb = {
-    _id: ObjectId
-    id: string
-    login: string
-    email: string
-    password: string
-
-    createdAt: string
-
-    balance: number
-}
-
-type userViewModel = {
-
-    id: string
-    login: string
-    email: string
-
-    createdAt: string
-}
