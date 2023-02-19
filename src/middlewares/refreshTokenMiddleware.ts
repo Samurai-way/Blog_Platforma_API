@@ -7,11 +7,11 @@ export const refreshTokenMiddleware = async (req: Request, res: Response, next: 
     // console.log('refreshToken', refreshToken)
     if (!refreshToken) return res.sendStatus(401)
 
-    const userId = await jwtService.getUserIDByToken(refreshToken)
-    // console.log('checkVerifyToken', userId)
-    if (!userId) return res.sendStatus(401)
+    const userID = await jwtService.getUserIDByToken(refreshToken)
+    // console.log('checkVerifyToken', userID)
+    if (!userID) return res.sendStatus(401)
 
-    const findUserById = await usersRepository.findUserByID(userId)
+    const findUserById = await usersRepository.findUserByID(userID.userID)
     // console.log('findUserById', findUserById)
     if (!findUserById) return res.sendStatus(401)
 

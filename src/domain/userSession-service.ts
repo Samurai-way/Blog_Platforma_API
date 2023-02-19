@@ -16,5 +16,9 @@ export const userSessionService = {
             userId: user.id
         }
         return usersSessionRepository.createNewUserSession(newSession)
-    }
+    },
+    // async getSessionByUserID(userID: string){
+    //     return usersSessionRepository.getSessionByUserID(userID)
+    // }
 }
+

@@ -35,8 +35,8 @@ authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: R
 
     if (!checkResult) return res.sendStatus(401)
     const token = jwtService.createJWT(checkResult)
-
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
+    // console.log('token', token)
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: token.accessToken})
 })
 
