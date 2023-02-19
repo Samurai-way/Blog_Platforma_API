@@ -15,7 +15,7 @@ securityDevicesRouter.get('/devices', refreshTokenMiddleware, async (req: Reques
     const userId = getDeviceDataByToken.userID
     // console.log('userId', userId)
     const getSessionByUserID = await usersSessionRepository.getSessionByUserID(userId)
-    console.log('getSessionByUserID', getSessionByUserID)
+    // console.log('getSessionByUserID', getSessionByUserID)
     res.status(200).send(getSessionByUserID)
 })
 
@@ -26,5 +26,21 @@ securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Req
     const deviceId = getDeviceDataByToken.deviceId
 
     await userSessionService.deleteAllDevice(userId, deviceId)
+    res.sendStatus(204)
+})
+
+securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken
+    const deviceId = req.params.id
+    // console.log('deviceId', deviceId)
+    const deviceByDeviceId = await usersSessionRepository.findDeviceByDeviceId(deviceId)
+    if (!deviceByDeviceId) return res.sendStatus(404)
+    const getDataFromToken = await jwtService.getUserIDByToken(refreshToken)
+    const userID = getDataFromToken.userID
+    const findDeviceByUserId = await usersSessionRepository.findDeviceByUserId(userID)
+    // console.log('findDeviceByUserId', findDeviceByUserId)
+    if (!findDeviceByUserId) return res.sendStatus(404)
+    if (findDeviceByUserId.userId !== userID) return res.sendStatus(403)
+    await usersSessionRepository.deleteDeviceByDeviceID(userID, deviceId)
     res.sendStatus(204)
 })

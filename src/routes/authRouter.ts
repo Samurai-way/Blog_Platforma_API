@@ -46,7 +46,7 @@ authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, r
 
     const newTokenPair = jwtService.createJWT(user)
     await jwtService.addRefreshTokenInBlackList(refreshToken)
-    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: newTokenPair.accessToken})
 })
 

@@ -5,6 +5,7 @@ export const jwtRepository = {
         return tokensCollection.insertOne({refreshToken})
     },
     async findTokenInBlackList(refreshToken: string){
+        console.log('refreshToken', refreshToken)
         return tokensCollection.findOne({refreshToken})
     }
 }
