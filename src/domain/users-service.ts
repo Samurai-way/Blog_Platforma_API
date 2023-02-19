@@ -19,12 +19,12 @@ export const usersService = {
         if (!value) return null
         return findUserByLoginOrEmail
     },
-    async loginUser(loginOrEmail: string, password: string): Promise<any> {
+    async loginUser(loginOrEmail: string, password: string, ip: string, title: string): Promise<any> {
         const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!findUserByLoginOrEmail) return false
         const passwordSalt = findUserByLoginOrEmail.passwordHash.slice(0, 29)
         const passwordHash = await bcrypt.hash(password, passwordSalt)
-        const checkCredentials = await this.loginUser(loginOrEmail, passwordHash)
+        const checkCredentials = await this.loginUser(loginOrEmail, passwordHash, ip, title)
         if (!checkCredentials) return false
         const createJWT = jwtService.createJWT(checkCredentials.id)
         // await userSessionService.createNewUserSession()
