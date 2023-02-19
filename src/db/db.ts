@@ -109,6 +109,13 @@ export type CommentDBModalType = {
     createdAt: string
 }
 
+export type UsersSessionType = {
+    ip: "string",
+    title: "string",
+    lastActiveDate: "string",
+    deviceId: "string"
+}
+
 export const blogs = [] as BlogsType[]
 export const posts = [] as PostsType[]
 
@@ -124,6 +131,7 @@ const db = client.db('bloggers')
 export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<DB_User_Type>('users')
+export const usersSessionCollection = db.collection<UsersSessionType>('usersSessionCollection')
 export const commentsCollection = db.collection<CommentsType>('comments')
 export const tokensCollection = db.collection<TokenType>('tokens')
 
