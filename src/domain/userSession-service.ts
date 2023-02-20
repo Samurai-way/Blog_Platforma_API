@@ -12,7 +12,7 @@ export const userSessionService = {
         }
         return usersSessionRepository.createNewUserSession(newSession)
     },
-    async updateSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string){
+    async updateSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {
         const newSession: UserSessionsType = {
             ip,
             title,
@@ -24,6 +24,9 @@ export const userSessionService = {
     },
     async deleteAllDevice(userId: string, deviceId: any) {
         return usersSessionRepository.deleteAllDevice(userId, deviceId)
+    },
+    async deleteDeviceByDeviceID(userId: string, deviceId: string) {
+        return usersSessionRepository.deleteDeviceByDeviceID(userId, deviceId)
     }
 }
 

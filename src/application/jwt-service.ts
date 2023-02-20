@@ -10,7 +10,7 @@ export const jwtService = {
         return {accessToken, refreshToken}
     },
     async addRefreshTokenInBlackList(refreshToken: string) {
-        await jwtRepository.addRefreshTokenInBlackList(refreshToken)
+        return jwtRepository.addRefreshTokenInBlackList(refreshToken)
     },
     async getJwtPayloadFromRefreshToken(token: string) {
         try {

@@ -3,7 +3,6 @@ import {refreshTokenMiddleware} from "../middlewares/refreshTokenMiddleware";
 import {jwtService} from "../application/jwt-service";
 import {usersSessionRepository} from "../repositories/usersSession-db-repository";
 import {userSessionService} from "../domain/userSession-service";
-import {requestAttemptsMiddleware} from "../middlewares/requestAttemptsMiddleware";
 
 
 export const securityDevicesRouter = Router({})
@@ -11,11 +10,9 @@ export const securityDevicesRouter = Router({})
 securityDevicesRouter.get('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
     const userId = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
-
     const getSessionsByUserID = await usersSessionRepository.getSessionByUserID(userId.userID)
     res.status(200).send(getSessionsByUserID)
 })
-
 
 securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
@@ -30,18 +27,13 @@ securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, async (req:
     const refreshToken = req.cookies.refreshToken
     const deviceId = req.params.id
     const deviceByDeviceId = await usersSessionRepository.findDeviceByDeviceId(deviceId)
-
     if (!deviceByDeviceId) return res.sendStatus(404)
-
     const getDataFromToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
     const userID = getDataFromToken.userID
-
     const findDeviceByUserId = await usersSessionRepository.findDeviceByUserId(userID)
-
     if (!findDeviceByUserId) return res.sendStatus(404)
     if (findDeviceByUserId.userId !== userID) return res.sendStatus(403)
-
     const deletedSession = await usersSessionRepository.deleteDeviceByDeviceID(userID, deviceId)
-    if(!deletedSession) return res.sendStatus(403)
+    if (!deletedSession) return res.sendStatus(403)
     res.sendStatus(204)
 })
