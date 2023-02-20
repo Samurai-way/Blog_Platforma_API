@@ -23,10 +23,10 @@ export const userSessionService = {
         }
         return usersSessionRepository.updateUserSession(newSession)
     },
-    async deleteAllDevice(userId: string, deviceId: any) {
+    async deleteAllDevice(userId: string, deviceId: string) {
         return usersSessionRepository.deleteAllDevice(userId, deviceId)
     },
-    async findDevicesByDeviceId(deviceId: string, refreshToken: string) {
+    async findDevicesByDeviceId(deviceId: string) {
         return usersSessionRepository.findDeviceByDeviceId(deviceId)
     },
     async deleteDeviceByDeviceID(userId: string, deviceId: string) {

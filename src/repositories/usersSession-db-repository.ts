@@ -7,7 +7,7 @@ export const usersSessionRepository = {
     async getSessionByUserID(userId: string) {
         return usersSessionCollection.find({userId}, {projection: {_id: 0, userId: 0}}).toArray()
     },
-    async deleteAllDevice(userId: string, deviceId: undefined): Promise<boolean> {
+    async deleteAllDevice(userId: string, deviceId: string): Promise<boolean> {
         const deleteAllSession = await usersSessionCollection.deleteMany({userId, deviceId: {$ne: deviceId}})
         return deleteAllSession.deletedCount === 1
     },

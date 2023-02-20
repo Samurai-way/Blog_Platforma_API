@@ -27,7 +27,7 @@ securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, async (req:
     const refreshToken = req.cookies.refreshToken
     const deviceId = req.params.id
 
-    const findDevicesByDeviceId = await userSessionService.findDevicesByDeviceId(deviceId, refreshToken)
+    const findDevicesByDeviceId = await userSessionService.findDevicesByDeviceId(deviceId)
     if (!findDevicesByDeviceId) return res.sendStatus(404)
 
     const findDeviceByUserId = await userSessionService.findDeviceByUserId(refreshToken)
