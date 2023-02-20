@@ -8,12 +8,11 @@ import {userSessionService} from "../domain/userSession-service";
 export const securityDevicesRouter = Router({})
 
 securityDevicesRouter.get('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
-    // const refreshToken = req.cookies.refreshToken
-    // const userId = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
-    //
-    // const getSessionsByUserID = await usersSessionRepository.getSessionByUserID(userId.userID)
-    res.status(200).send({message: 'hello'})
-    // send(getSessionsByUserID)
+    const refreshToken = req.cookies.refreshToken
+    const userId = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
+
+    const getSessionsByUserID = await usersSessionRepository.getSessionByUserID(userId.userID)
+    res.status(200).send(getSessionsByUserID)
 })
 
 securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
