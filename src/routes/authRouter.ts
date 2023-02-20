@@ -31,7 +31,7 @@ authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: R
     const token = await authService.login(loginOrEmail, password, ip, title)
     if (!token) return res.sendStatus(401)
 
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: false, secure: false})
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: token.accessToken})
 })
 
@@ -43,7 +43,7 @@ authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, r
 
     const newTokenPair = await authService.refreshToken(user, deviceId, ip, title)
 
-    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: false, secure: false})
+    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
     res.status(200).send({accessToken: newTokenPair.accessToken})
 })
 
