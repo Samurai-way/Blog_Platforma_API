@@ -7,6 +7,7 @@ export const jwtService = {
     createJWT(user: DB_User_Type, deviceId?: string) {
         const accessToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '10s'})
         const refreshToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '20s'})
+        // console.log('deviceId', deviceId)
         return {accessToken, refreshToken}
     },
     async addRefreshTokenInBlackList(refreshToken: string) {

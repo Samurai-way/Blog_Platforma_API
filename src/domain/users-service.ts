@@ -30,7 +30,6 @@ export const usersService = {
         const deviceId = new ObjectId().toString()
         const createJWT = jwtService.createJWT(checkCredentials.id as any, deviceId)
         await userSessionService.createNewUserSession(ip, title, deviceId, findUserByLoginOrEmail, createJWT)
-        // console.log('createJWT', createJWT)
         return createJWT
     },
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
