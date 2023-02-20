@@ -3,6 +3,7 @@ import {refreshTokenMiddleware} from "../middlewares/refreshTokenMiddleware";
 import {jwtService} from "../application/jwt-service";
 import {usersSessionRepository} from "../repositories/usersSession-db-repository";
 import {userSessionService} from "../domain/userSession-service";
+import {requestAttemptsMiddleware} from "../middlewares/requestAttemptsMiddleware";
 
 
 export const securityDevicesRouter = Router({})
@@ -14,6 +15,7 @@ securityDevicesRouter.get('/devices', refreshTokenMiddleware, async (req: Reques
     const getSessionsByUserID = await usersSessionRepository.getSessionByUserID(userId.userID)
     res.status(200).send(getSessionsByUserID)
 })
+
 
 securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
@@ -39,7 +41,7 @@ securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, async (req:
     if (!findDeviceByUserId) return res.sendStatus(404)
     if (findDeviceByUserId.userId !== userID) return res.sendStatus(403)
 
-    await usersSessionRepository.deleteDeviceByDeviceID(userID, deviceId)
-
+    const deletedSession = await usersSessionRepository.deleteDeviceByDeviceID(userID, deviceId)
+    if(!deletedSession) return res.sendStatus(403)
     res.sendStatus(204)
 })

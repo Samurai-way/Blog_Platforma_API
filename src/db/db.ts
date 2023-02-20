@@ -108,7 +108,7 @@ export type CommentDBModalType = {
 export type AttemptsType = {
     userIP: string
     url: string
-    time: string
+    time: Date
 }
 
 export type UserSessionsType = {
