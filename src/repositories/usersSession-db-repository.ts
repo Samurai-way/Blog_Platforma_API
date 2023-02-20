@@ -18,14 +18,16 @@ export const usersSessionRepository = {
     async findDeviceByDeviceId(deviceId: string) {
         return usersSessionCollection.findOne({deviceId})
     },
-    async findOneByDeviceIdUserIdAndLastActiveDate(userId: string, deviceId: string, lastActiveDate: string){
-        // console.log(lastActiveDate)
+    async findOneByDeviceIdUserIdAndLastActiveDate(userId: string, deviceId: string, lastActiveDate: string) {
         return usersSessionCollection.findOne({userId, deviceId, lastActiveDate})
     },
-    async findDeviceByUserId(userId: string): Promise<any> {
+    async findDeviceByUserId(userId: string) {
         return usersSessionCollection.findOne({userId})
     },
-    updateUserSession(newSession: UserSessionsType) {
-        return usersSessionCollection.updateOne({userId: newSession.userId, deviceId: newSession.deviceId}, {$set: newSession})
+    async updateUserSession(newSession: UserSessionsType) {
+        return usersSessionCollection.updateOne({
+            userId: newSession.userId,
+            deviceId: newSession.deviceId
+        }, {$set: newSession})
     }
 }
