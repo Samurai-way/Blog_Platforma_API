@@ -104,12 +104,6 @@ export type CommentDBModalType = {
     createdAt: string
 }
 
-export type UsersSessionType = {
-    ip: "string",
-    title: "string",
-    lastActiveDate: "string",
-    deviceId: "string"
-}
 
 export type AttemptsType = {
     userIP: string
@@ -120,7 +114,7 @@ export type AttemptsType = {
 export type UserSessionsType = {
     ip: string,
     title: string,
-    lastActiveDate: number,
+    lastActiveDate: string,
     deviceId: string,
     userId: string,
 }
@@ -140,7 +134,7 @@ const db = client.db('bloggers')
 export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<DB_User_Type>('users')
-export const usersSessionCollection = db.collection<UsersSessionType>('usersSessionCollection')
+export const usersSessionCollection = db.collection<UserSessionsType>('usersSessionCollection')
 
 export const attemptsCollection = db.collection<AttemptsType>('attemptsCollection')
 export const commentsCollection = db.collection<CommentsType>('comments')

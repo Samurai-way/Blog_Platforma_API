@@ -1,27 +1,29 @@
-import {DB_User_Type, TokenType, UserSessionsType} from "../db/db";
-import {jwtService} from "../application/jwt-service";
+import {UserSessionsType} from "../db/db";
 import {usersSessionRepository} from "../repositories/usersSession-db-repository";
 
 export const userSessionService = {
-    async createNewUserSession(ip: string, title: string, deviceId: string, user: DB_User_Type, token: TokenType) {
-        const checkToken = await jwtService.getUserIDByToken(token.refreshToken)
-        const iatToken = checkToken.iat * 1000
-        // console.log('iatToken', iatToken)
-
+    async createNewUserSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {
         const newSession: UserSessionsType = {
             ip,
             title,
-            lastActiveDate: iatToken,
+            lastActiveDate,
             deviceId,
-            userId: user.id
+            userId
         }
         return usersSessionRepository.createNewUserSession(newSession)
     },
-    async deleteAllDevice(userId: string, deviceId: any){
+    async updateSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string){
+        const newSession: UserSessionsType = {
+            ip,
+            title,
+            lastActiveDate,
+            deviceId,
+            userId
+        }
+        return usersSessionRepository.updateUserSession(newSession)
+    },
+    async deleteAllDevice(userId: string, deviceId: any) {
         return usersSessionRepository.deleteAllDevice(userId, deviceId)
     }
-    // async getSessionByUserID(userID: string){
-    //     return usersSessionRepository.getSessionByUserID(userID)
-    // }
 }
 

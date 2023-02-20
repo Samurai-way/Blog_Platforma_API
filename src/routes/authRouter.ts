@@ -8,6 +8,7 @@ import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {queryRepository} from "../queryRepository/queryRepository";
 import {refreshTokenMiddleware} from "../middlewares/refreshTokenMiddleware";
 import {requestAttemptsMiddleware} from "../middlewares/requestAttemptsMiddleware";
+import {authService} from "../domain/auth-service";
 
 
 export const authRouter = Router({})
@@ -26,25 +27,23 @@ authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: R
     const {loginOrEmail, password} = req.body
     const ip = req.ip
     const title = req.headers['user-agent'] || "browser not found"
-true
-    const loginUser = await usersService.loginUser(loginOrEmail, password, ip, title)
-    if (!loginUser) return res.sendStatus(401)
-    const checkResult = await usersService.checkCredentials(loginOrEmail, password)
 
-    if (!checkResult) return res.sendStatus(401)
-    const token = jwtService.createJWT(checkResult)
+    const token = await authService.login(loginOrEmail, password, ip, title)
+    if (!token) return res.sendStatus(401)
 
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: token.accessToken})
 })
 
 authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, res: Response) => {
-    const refreshToken = req.cookies.refreshToken!
+    const deviceId = req.deviceId!
     const user = req.user!
+    const ip = req.ip
+    const title = req.headers['user-agent'] || "browser not found"
 
-    const newTokenPair = jwtService.createJWT(user)
-    await jwtService.addRefreshTokenInBlackList(refreshToken)
-    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
+    const newTokenPair = await authService.refreshToken(user, deviceId, ip, title)
+
+    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: newTokenPair.accessToken})
 })
 

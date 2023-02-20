@@ -38,7 +38,7 @@ export const usersRepository = {
         return await usersCollection.findOne({email})
     },
     async findUserByID(id: string): Promise<DB_User_Type | null> {
-        console.log('id', id)
+        // console.log('id', id)
         return await usersCollection.findOne({id})
     },
     async findUserByCode(code: string) {

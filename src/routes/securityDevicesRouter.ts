@@ -9,7 +9,7 @@ export const securityDevicesRouter = Router({})
 
 securityDevicesRouter.get('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
-    const getDeviceDataByToken = await jwtService.getUserIDByToken(refreshToken)
+    const getDeviceDataByToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
     const userId = getDeviceDataByToken.userID
     const getSessionByUserID = await usersSessionRepository.getSessionByUserID(userId)
     res.status(200).send(getSessionByUserID)
@@ -17,7 +17,7 @@ securityDevicesRouter.get('/devices', refreshTokenMiddleware, async (req: Reques
 
 securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
-    const getDeviceDataByToken = await jwtService.getUserIDByToken(refreshToken)
+    const getDeviceDataByToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
     const userId = getDeviceDataByToken.userID
     const deviceId = getDeviceDataByToken.deviceId
 
@@ -32,7 +32,7 @@ securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, async (req:
 
     if (!deviceByDeviceId) return res.sendStatus(404)
 
-    const getDataFromToken = await jwtService.getUserIDByToken(refreshToken)
+    const getDataFromToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
     const userID = getDataFromToken.userID
 
     const findDeviceByUserId = await usersSessionRepository.findDeviceByUserId(userID)

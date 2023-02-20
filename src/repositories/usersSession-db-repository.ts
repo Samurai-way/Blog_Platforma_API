@@ -1,7 +1,7 @@
-import {usersSessionCollection} from "../db/db";
+import {UserSessionsType, usersSessionCollection} from "../db/db";
 
 export const usersSessionRepository = {
-    async createNewUserSession(userSession: any) {
+    async createNewUserSession(userSession: UserSessionsType) {
         await usersSessionCollection.insertOne(userSession)
     },
     async getSessionByUserID(userId: string) {
@@ -11,14 +11,21 @@ export const usersSessionRepository = {
         const deleteAllSession = await usersSessionCollection.deleteMany({userId, deviceId: {$ne: deviceId}})
         return deleteAllSession.deletedCount === 1
     },
-    async deleteDeviceByDeviceID(userID: string, deviceId: any) {
-        const result = await usersSessionCollection.deleteOne({userId: userID, deviceId: deviceId})
+    async deleteDeviceByDeviceID(userId: string, deviceId: string) {
+        const result = await usersSessionCollection.deleteOne({userId, deviceId: deviceId})
         return result.deletedCount === 1
     },
     async findDeviceByDeviceId(deviceId: string) {
-        return usersSessionCollection.findOne({deviceId} as any)
+        return usersSessionCollection.findOne({deviceId})
+    },
+    async findOneByDeviceIdUserIdAndLastActiveDate(userId: string, deviceId: string, lastActiveDate: string){
+        // console.log(lastActiveDate)
+        return usersSessionCollection.findOne({userId, deviceId, lastActiveDate})
     },
     async findDeviceByUserId(userId: string): Promise<any> {
         return usersSessionCollection.findOne({userId})
+    },
+    updateUserSession(newSession: UserSessionsType) {
+        return usersSessionCollection.updateOne({userId: newSession.userId, deviceId: newSession.deviceId}, {$set: newSession})
     }
 }
