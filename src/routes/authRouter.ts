@@ -30,7 +30,7 @@ authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: R
     const title = req.headers['user-agent'] || "browser not found"
     const token = await authService.login(loginOrEmail, password, ip, title)
     if (!token) return res.sendStatus(401)
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', token.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: token.accessToken})
 })
 
@@ -40,9 +40,10 @@ authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, r
     const ip = req.ip
     const title = req.headers['user-agent'] || "browser not found"
     const newTokenPair = await authService.refreshToken(user, deviceId, ip, title)
-    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
+    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: false, secure: false})
     res.status(200).send({accessToken: newTokenPair.accessToken})
 })
+
 
 authRouter.post('/registration', login, password, email, requestAttemptsMiddleware, ExpressErrorValidator, async (req: Request, res: Response) => {
     const {login, password, email} = req.body

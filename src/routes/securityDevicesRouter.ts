@@ -17,8 +17,8 @@ securityDevicesRouter.get('/devices', refreshTokenMiddleware, async (req: Reques
 securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
     const getDeviceDataByToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
-    const userId = getDeviceDataByToken.userID
-    const deviceId = getDeviceDataByToken.deviceId
+    const {userId, deviceId} = getDeviceDataByToken
+    // const  = getDeviceDataByToken.deviceId
     await userSessionService.deleteAllDevice(userId, deviceId)
     res.sendStatus(204)
 })
@@ -26,14 +26,15 @@ securityDevicesRouter.delete('/devices', refreshTokenMiddleware, async (req: Req
 securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken
     const deviceId = req.params.id
-    const deviceByDeviceId = await usersSessionRepository.findDeviceByDeviceId(deviceId)
-    if (!deviceByDeviceId) return res.sendStatus(404)
-    const getDataFromToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
-    const userID = getDataFromToken.userID
-    const findDeviceByUserId = await usersSessionRepository.findDeviceByUserId(userID)
+
+    const findDevicesByDeviceId = await userSessionService.findDevicesByDeviceId(deviceId, refreshToken)
+    if (!findDevicesByDeviceId) return res.sendStatus(404)
+
+    const findDeviceByUserId = await userSessionService.findDeviceByUserId(refreshToken)
     if (!findDeviceByUserId) return res.sendStatus(404)
-    if (findDeviceByUserId.userId !== userID) return res.sendStatus(403)
-    const deletedSession = await usersSessionRepository.deleteDeviceByDeviceID(userID, deviceId)
+    if (findDeviceByUserId.findDeviceByUserId?.userId !== findDeviceByUserId.userID) return res.sendStatus(403)
+
+    const deletedSession = await userSessionService.deleteDeviceByDeviceID(findDeviceByUserId.userID, deviceId)
     if (!deletedSession) return res.sendStatus(403)
     res.sendStatus(204)
 })
