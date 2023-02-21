@@ -5,6 +5,7 @@ import {
     DB_BlogsType,
     DB_PostsType,
     DB_User_Type,
+    RecoveryCodeType,
     TokenType,
     UserSessionsType
 } from "./index";
@@ -72,4 +73,9 @@ export const AttemptsSchema = new mongoose.Schema<AttemptsType>({
     userIP: String,
     url: String,
     time: Date
+})
+
+export const RecoveryCodeSchema = new mongoose.Schema<RecoveryCodeType>({
+    email: String,
+    recoveryCode: String
 })

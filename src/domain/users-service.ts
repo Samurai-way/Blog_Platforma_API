@@ -4,7 +4,7 @@ import {usersRepository} from "../repositories/users-db-repository";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {emailService} from "./email-service";
-import {DB_User_Type, UserType} from "../types";
+import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
 
 
 export const usersService = {
@@ -54,8 +54,28 @@ export const usersService = {
         }
         return result
     },
-    async findUserByEmail(email: string): Promise<any> {
-        return await usersRepository.findUserByEmail(email)
+    async findUserByEmail(email: string) {
+        return usersRepository.findUserByEmail(email)
+    },
+    async findUserByEmailAndSendHimLetter(email: string) {
+        const findUserByEmail = await usersRepository.findUserByEmail(email)
+        if (!findUserByEmail) return null
+        const recoveryCode: RecoveryCodeType = {
+            email: email,
+            recoveryCode: uuidv4()
+        }
+        const result = await usersRepository.addRecoveryUserCode(recoveryCode)
+        try {
+            const message = `<h1>Password recovery</h1>
+       <p>To finish password recovery please follow the link below:
+          <a href='https://somesite.com/password-recovery?recoveryCode=${recoveryCode.recoveryCode}'>recovery password</a>
+      </p>`
+            await emailService.sendEmail(email, "recovery code", message)
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+        return result
     },
     async findUserByLogin(login: string) {
         return await usersRepository.findUserByLoginOrEmail(login)

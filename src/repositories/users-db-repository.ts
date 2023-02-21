@@ -1,6 +1,6 @@
 import {paginator} from "../helpers/pagination";
-import {UsersModel} from "../db/db";
-import {DB_User_Type, UserType} from "../types";
+import {RecoveryCodeModel, UsersModel} from "../db/db";
+import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
 
 export const usersRepository = {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
@@ -28,9 +28,6 @@ export const usersRepository = {
         })
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
     },
-    // async loginUser(loginOrEmail: string, passwordHash: string) {
-    //     return UsersModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}], passwordHash})
-    // },
     async findUserByLoginOrEmail(loginOrEmail: string) {
         return UsersModel.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
@@ -66,5 +63,8 @@ export const usersRepository = {
     async deleteUser(id: string): Promise<boolean> {
         const result = await UsersModel.deleteOne({id})
         return result.deletedCount === 1
+    },
+    async addRecoveryUserCode(recoveryCode: RecoveryCodeType) {
+        return RecoveryCodeModel.insertMany(recoveryCode)
     }
 }

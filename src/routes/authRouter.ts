@@ -90,3 +90,10 @@ authRouter.post('/logout', refreshTokenMiddleware, async (req: Request, res: Res
     await userSessionService.deleteDeviceByDeviceID(userID, deviceId)
     res.sendStatus(204)
 })
+
+authRouter.post('/password-recovery', email, requestAttemptsMiddleware, ExpressErrorValidator, async (req: Request, res: Response) => {
+    const email = req.body.email
+    const findUserByEmailAndSendHimLetter = await usersService.findUserByEmailAndSendHimLetter(email)
+    if (!findUserByEmailAndSendHimLetter) return res.sendStatus(404)
+    res.sendStatus(204)
+})

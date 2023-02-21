@@ -1,6 +1,11 @@
 import {DB_User_Type} from "../db/db";
 import {ObjectId} from "mongodb";
 
+export type RecoveryCodeType = {
+    email: string
+    recoveryCode: string
+}
+
 export type TokenType = {
     refreshToken: string
 }
