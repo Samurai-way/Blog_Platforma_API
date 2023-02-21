@@ -3,7 +3,7 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/authMiddleware";
 import {usersRepository} from "../repositories/users-db-repository";
-import {email, login, password} from "../validators/validators";
+import {email, login, newPassword, password} from "../validators/validators";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {queryRepository} from "../queryRepository/queryRepository";
 import {refreshTokenMiddleware} from "../middlewares/refreshTokenMiddleware";
@@ -96,4 +96,8 @@ authRouter.post('/password-recovery', email, requestAttemptsMiddleware, ExpressE
     const findUserByEmailAndSendHimLetter = await usersService.findUserByEmailAndSendHimLetter(email)
     if (!findUserByEmailAndSendHimLetter) return res.sendStatus(404)
     res.sendStatus(204)
+})
+
+authRouter.post('/new-password', newPassword, requestAttemptsMiddleware, ExpressErrorValidator, async (req: Request, res: Response) => {
+
 })

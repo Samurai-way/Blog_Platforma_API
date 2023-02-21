@@ -86,6 +86,8 @@ const searchEmailTerm = query('searchLoginTerm')
 export const login = body('login').trim().isLength({min: 3, max: 10}).matches('^[a-zA-Z0-9_-]*$')
 export const password = body('password').trim().isLength({min: 6, max: 20})
 export const email = body('email').trim().isEmail()
+export const newPassword = body('newPassword').trim().isLength({min: 6, max: 20})
+
 export const contentForComments = body('content').trim().isLength({min: 20, max: 300})
 export const postCommentsValidator = [authMiddleware, contentForComments, ExpressErrorValidator]
 export const usersGetValidator = [sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm, ExpressErrorValidator]
