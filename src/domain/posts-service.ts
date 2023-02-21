@@ -1,8 +1,7 @@
-import {CommentDBModalType, DB_PostsType, DB_User_Type, PostsType} from "../db/db";
 import {ObjectId} from "mongodb";
 import {postsRepository} from "../repositories/posts-db-repository";
 import {blogsService} from "./blogs-service";
-import {usersService} from "./users-service";
+import {CommentDBModalType, DB_PostsType, DB_User_Type, PostsType} from "../types";
 
 
 export const postsService = {

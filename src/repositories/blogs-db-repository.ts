@@ -1,5 +1,7 @@
-import {BlogsModel, BlogsType, DB_BlogsType} from "../db/db";
+
 import {paginator} from "../helpers/pagination";
+import {BlogsType, DB_BlogsType} from "../types";
+import {BlogsModel} from "../db/db";
 
 export const blogsRepository = {
     async getBlogs(searchNameTerm: string, sortBy: any, sortDirection: any, pageNumber: number, pageSize: number) {

@@ -1,9 +1,10 @@
-import {DB_User_Type, usersCollection, UserType} from "../db/db";
 import {paginator} from "../helpers/pagination";
+import {UsersModel} from "../db/db";
+import {DB_User_Type, UserType} from "../types";
 
 export const usersRepository = {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
-        const findAndSortedUser = await usersCollection
+        const findAndSortedUser = await UsersModel
             .find({
                 $or: [
                     {login: {$regex: searchLoginTerm, $options: "i"}}, {
@@ -12,13 +13,12 @@ export const usersRepository = {
                             $options: "i"
                         }
                     }]
-            }, {projection: {_id: 0, passwordHash: 0, emailConfirmation: 0}})
+            }, {_id: 0, passwordHash: 0, emailConfirmation: 0, __v: 0})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .toArray()
-        // console.log('findAndSortedUser',findAndSortedUser)
-        const getCountUsers = await usersCollection.countDocuments({
+            .lean()
+        const getCountUsers = await UsersModel.countDocuments({
             $or: [{
                 login: {
                     $regex: searchLoginTerm,
@@ -28,31 +28,28 @@ export const usersRepository = {
         })
         return paginator(pageNumber, pageSize, getCountUsers, findAndSortedUser)
     },
-    async loginUser(loginOrEmail: string, passwordHash: string){
-      return usersCollection.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}], passwordHash})
-    },
+    // async loginUser(loginOrEmail: string, passwordHash: string) {
+    //     return UsersModel.findOne({$or: [{login: loginOrEmail}, {email: loginOrEmail}], passwordHash})
+    // },
     async findUserByLoginOrEmail(loginOrEmail: string) {
-        return await usersCollection.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
+        return UsersModel.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
     async findUserByEmail(email: string) {
-        return await usersCollection.findOne({email})
+        return UsersModel.findOne({email})
     },
     async findUserByID(id: string): Promise<DB_User_Type | null> {
-        // console.log('id', id)
-        return await usersCollection.findOne({id})
+        return UsersModel.findOne({id})
     },
     async findUserByCode(code: string) {
-        // console.log('code', code)
-        return await usersCollection.findOne({'emailConfirmation.confirmationCode': code})
+        return UsersModel.findOne({'emailConfirmation.confirmationCode': code})
     },
     async createUser(newUser: DB_User_Type | any): Promise<UserType> {
-        // console.log('newUser', newUser)
-        const result = await usersCollection.insertOne(newUser)
+        const result = await UsersModel.insertMany(newUser)
         const {_id, passwordHash, emailConfirmation, ...newUserCopy} = newUser
         return newUserCopy
     },
     async updateUserConfirmationDate(user: DB_User_Type) {
-        const updateUser = await usersCollection.updateOne({id: user.id}, {
+        const updateUser = await UsersModel.updateOne({id: user.id}, {
             $set:
                 {
                     'emailConfirmation.confirmationCode': user.emailConfirmation.confirmationCode,
@@ -63,11 +60,11 @@ export const usersRepository = {
         return updateUser.matchedCount === 1
     },
     async updateUserConfirmation(id: string) {
-        const updateUser = await usersCollection.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        const updateUser = await UsersModel.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return updateUser.matchedCount === 1
     },
     async deleteUser(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne({id})
+        const result = await UsersModel.deleteOne({id})
         return result.deletedCount === 1
     }
 }

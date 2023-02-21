@@ -1,5 +1,3 @@
-import {PostsType} from "../db/db";
-
 export type Pagination = {
     searchNameTerm?: string
     searchEmailTerm?: string,

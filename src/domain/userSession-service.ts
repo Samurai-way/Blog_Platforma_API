@@ -1,6 +1,6 @@
-import {UserSessionsType} from "../db/db";
 import {usersSessionRepository} from "../repositories/usersSession-db-repository";
 import {jwtService} from "../application/jwt-service";
+import {UserSessionsType} from "../types";
 
 export const userSessionService = {
     async createNewUserSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {

@@ -1,7 +1,7 @@
-import {DB_User_Type} from "../db/db";
-import jwt, {JwtPayload} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import {settings} from "./settings";
 import {jwtRepository} from "../repositories/jwt-db-repository";
+import {DB_User_Type} from "../types";
 
 export const jwtService = {
     createJWT(user: DB_User_Type, deviceId: string) {
@@ -22,6 +22,6 @@ export const jwtService = {
     },
     getLastActiveDateFromToken(refreshToken: string): string {
         const payload: any = jwt.decode(refreshToken)
-        return  new Date(payload.iat * 1000).toISOString()
+        return new Date(payload.iat * 1000).toISOString()
     }
 }

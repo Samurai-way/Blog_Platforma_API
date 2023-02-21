@@ -1,26 +1,27 @@
-import {commentsCollection, DB_User_Type} from "../db/db";
 import {paginator} from "../helpers/pagination";
+import {CommentsModel} from "../db/db";
+import {DB_User_Type} from "../types";
 
 export const commentsRepository = {
     async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any) {
-        const findAndSortedComments = await commentsCollection
-            .find({postId: postID}, {projection: {_id: 0, postId: 0}})
+        const findAndSortedComments = await CommentsModel
+            .find({postId: postID}, {_id: 0, postId: 0, __v: 0})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .toArray()
-        const getCountComments = await commentsCollection.countDocuments({postId: postID})
+            .lean()
+        const getCountComments = await CommentsModel.countDocuments({postId: postID})
         return paginator(pageNumber, pageSize, getCountComments, findAndSortedComments)
     },
     async getCommentById(id: string) {
-        return await commentsCollection.findOne({id}, {projection: {_id: 0, postId: 0}})
+        return CommentsModel.findOne({id}, {_id: 0, postId: 0, __v: 0})
     },
     async deleteCommentByID(commentID: string, user: DB_User_Type): Promise<boolean> {
-        const result = await commentsCollection.deleteOne({id: commentID, 'commentatorInfo.userId': user.id})
+        const result = await CommentsModel.deleteOne({id: commentID, 'commentatorInfo.userId': user.id})
         return result.deletedCount === 1
     },
     async updateCommentById(commentId: string, content: string, user: DB_User_Type): Promise<boolean> {
-        const result = await commentsCollection.updateOne({id: commentId, 'commentatorInfo.userId' : user.id}, {
+        const result = await CommentsModel.updateOne({id: commentId, 'commentatorInfo.userId': user.id}, {
             $set: {content}
         })
         return result.matchedCount === 1

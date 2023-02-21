@@ -1,12 +1,12 @@
 import {blogsService} from "../domain/blogs-service";
 import {postsRepository} from "../repositories/posts-db-repository";
 import {ObjectId} from "mongodb";
-import {DB_User_Type, PostsType} from "../db/db";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {usersRepository} from "../repositories/users-db-repository";
 import {emailService} from "../domain/email-service";
+import {DB_User_Type, PostsType} from "../types";
 
 export const queryRepository = {
     async getBlogByID(id: string) {
@@ -55,7 +55,6 @@ export const queryRepository = {
        <p>To finish registration please follow the link below:
           <a href='https://somesite.com/confirm-email?code=${newEmailConfirmation.emailConfirmation.confirmationCode}'>complete registration</a>
       </p>`
-            // `https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}`
             await emailService.sendEmail(email, "confirm code", bodyTextMessage)
         } catch (error) {
             console.log(error)

@@ -1,22 +1,23 @@
 import {
-    attemptsCollection,
-    blogsCollection,
-    commentsCollection,
-    postsCollection,
-    tokensCollection,
-    usersCollection,
-    usersSessionCollection
+    AttemptsModel,
+    BlogsModel,
+    CommentsModel,
+    PostsModel,
+    TokensModel,
+    UsersModel,
+    UsersSessionModel
 } from "../db/db";
+
 
 export const testingDbRepository = {
     async deleteAllData(): Promise<boolean> {
-        const clearBlogs = await blogsCollection.deleteMany({})
-        const clearPosts = await postsCollection.deleteMany({})
-        const clearUsers = await usersCollection.deleteMany({})
-        const clearComments = await commentsCollection.deleteMany({})
-        const clearSession = await usersSessionCollection.deleteMany({})
-        const clearAttempts = await attemptsCollection.deleteMany({})
-        const clearTokens = await tokensCollection.deleteMany({})
+        const clearBlogs = await BlogsModel.deleteMany({})
+        const clearPosts = await PostsModel.deleteMany({})
+        const clearUsers = await UsersModel.deleteMany({})
+        const clearComments = await CommentsModel.deleteMany({})
+        const clearSession = await UsersSessionModel.deleteMany({})
+        const clearAttempts = await AttemptsModel.deleteMany({})
+        const clearTokens = await TokensModel.deleteMany({})
         return clearBlogs.deletedCount === 1
             && clearPosts.deletedCount === 1
             && clearUsers.deletedCount === 1

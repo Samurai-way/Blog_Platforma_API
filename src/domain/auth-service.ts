@@ -2,7 +2,7 @@ import {usersService} from "./users-service";
 import {ObjectId} from "mongodb";
 import {jwtService} from "../application/jwt-service";
 import {userSessionService} from "./userSession-service";
-import {DB_User_Type} from "../db/db";
+import {DB_User_Type} from "../types";
 
 
 export const authService = {

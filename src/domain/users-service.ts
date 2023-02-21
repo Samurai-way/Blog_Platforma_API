@@ -1,42 +1,22 @@
 import {ObjectId} from "mongodb";
 import bcrypt from "bcrypt";
-import {DB_User_Type, UserType} from "../db/db";
 import {usersRepository} from "../repositories/users-db-repository";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {emailService} from "./email-service";
-import {jwtService} from "../application/jwt-service";
-import {userSessionService} from "./userSession-service";
+import {DB_User_Type, UserType} from "../types";
+
 
 export const usersService = {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     },
-    async checkCredentials(loginOrEmail: string, password: string) { // DB_User_Type fix any type
-        const findUserByLoginOrEmail = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
-        if (!findUserByLoginOrEmail) return null
-        const value = await bcrypt.compare(password, findUserByLoginOrEmail.passwordHash);
-        if (!value) return null
-        return findUserByLoginOrEmail
-    },
     async checkUserCredentials(loginOrEmail: string, password: string) {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!user) return null
-
         const isPasswordsMatch = bcrypt.compare(password, user.passwordHash)
         if (!isPasswordsMatch) return null
         return user
-        // const passwordSalt = findUserByLoginOrEmail.passwordHash.slice(0, 29)
-        // const passwordHash = await bcrypt.hash(password, passwordSalt)
-        // const checkCredentials = await usersRepository.loginUser(loginOrEmail, passwordHash)
-
-        // if (!checkCredentials) return false
-        //
-        // const deviceId = new ObjectId().toString()
-        // const createJWT = jwtService.createJWT(checkCredentials.id as any, deviceId)
-        // await userSessionService.createNewUserSession(ip, title, deviceId, findUserByLoginOrEmail, createJWT)
-        // return createJWT
-        // return  true
     },
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
 
@@ -67,7 +47,6 @@ export const usersService = {
        <p>To finish registration please follow the link below:
           <a href='https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}'>complete registration</a>
       </p>`
-            // `https://somesite.com/confirm-email?code=${newUser.emailConfirmation.confirmationCode}`
             await emailService.sendEmail(email, "confirm code", bodyTextMessage)
         } catch (error) {
             console.log(error)
@@ -88,7 +67,6 @@ export const usersService = {
         if (user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed) {
             const result = usersRepository.updateUserConfirmation(user.id)
             return result
-            // console.log('result', result)
         }
     },
     async findUserByCode(code: string): Promise<DB_User_Type | any> {

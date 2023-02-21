@@ -1,6 +1,7 @@
 import {commentsRepository} from "../repositories/comments-db-repository";
 import {postsRepository} from "../repositories/posts-db-repository";
-import {DB_User_Type} from "../db/db";
+import {DB_User_Type} from "../types";
+
 
 export const commentsService = {
     async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {

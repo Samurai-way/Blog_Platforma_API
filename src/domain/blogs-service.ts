@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
-import {BlogsType, DB_BlogsType} from "../db/db";
 import {blogsRepository} from "../repositories/blogs-db-repository";
+import {BlogsType, DB_BlogsType} from "../types";
 
 export const blogsService = {
     async getBlogs(searchNameTerm: any, sortBy: any, sortDirection: string, pageNumber: number, pageSize: number) {
