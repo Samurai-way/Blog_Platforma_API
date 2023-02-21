@@ -1,27 +1,27 @@
-import {blogsCollection, BlogsType, DB_BlogsType} from "../db/db";
+import {BlogsModel, BlogsType, DB_BlogsType} from "../db/db";
 import {paginator} from "../helpers/pagination";
 
 export const blogsRepository = {
     async getBlogs(searchNameTerm: string, sortBy: any, sortDirection: any, pageNumber: number, pageSize: number) {
-        const findAndSortedBlogs = await blogsCollection
-            .find({name: {$regex: searchNameTerm, $options: 'i'}}, {projection: {_id: 0}})
+        const findAndSortedBlogs = await BlogsModel
+            .find({name: {$regex: searchNameTerm, $options: 'i'}}, {_id: 0, __v: 0})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .toArray()
-        const getCountBlogs = await blogsCollection.countDocuments({name: {$regex: searchNameTerm, $options: "i"}})
+            .lean()
+        const getCountBlogs = await BlogsModel.countDocuments({name: {$regex: searchNameTerm, $options: "i"}})
         return paginator(pageNumber, pageSize, getCountBlogs, findAndSortedBlogs)
     },
     async createBlog(newBlog: DB_BlogsType): Promise<BlogsType> {
-        const result = await blogsCollection.insertOne(newBlog)
+        const result = await BlogsModel.insertMany(newBlog)
         const {_id, ...blogsCopy} = newBlog
         return blogsCopy
     },
     async getBlogById(id: string): Promise<BlogsType | null> {
-        return blogsCollection.findOne({id}, {projection: {_id: 0}})
+        return BlogsModel.findOne({id}, {_id: 0, __v: 0})
     },
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-        const result = await blogsCollection.updateOne({id}, {
+        const result = await BlogsModel.updateOne({id}, {
             $set: {
                 name: name,
                 description: description,
@@ -31,7 +31,7 @@ export const blogsRepository = {
         return result.matchedCount === 1
     },
     async deleteBlog(id: string): Promise<boolean> {
-        const result = await blogsCollection.deleteOne({id})
+        const result = await BlogsModel.deleteOne({id})
         return result.deletedCount === 1
     }
 }

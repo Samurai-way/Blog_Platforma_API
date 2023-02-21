@@ -1,5 +1,7 @@
 import {MongoClient, ObjectId} from "mongodb";
 import * as dotenv from 'dotenv'
+import * as mongoose from "mongoose";
+import {BlogsType} from "../types/mongooseShema";
 
 dotenv.config()
 
@@ -127,6 +129,7 @@ if (!mongoUri) {
 const client = new MongoClient(mongoUri)
 const db = client.db('bloggers')
 
+export const BlogsModel = mongoose.model('blogs', BlogsType)
 export const blogsCollection = db.collection<BlogsType>('blogs')
 export const postsCollection = db.collection<PostsType>('posts')
 export const usersCollection = db.collection<DB_User_Type>('users')
@@ -138,11 +141,13 @@ export const tokensCollection = db.collection<TokenType>('tokens')
 
 export const runDb = async () => {
     try {
-        await client.connect()
+        // await client.connect()
+        await mongoose.connect(mongoUri, {dbName: 'bloggers-local'})
         console.log('Connected successfully')
     } catch {
         console.log('! Not to connect to server')
-        await client.close()
+        // await client.close()
+        await mongoose.disconnect()
     }
 }
 
