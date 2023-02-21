@@ -119,10 +119,6 @@ export type UserSessionsType = {
     userId: string,
 }
 
-export const blogs = [] as BlogsType[]
-export const posts = [] as PostsType[]
-
-
 const mongoUri = process.env.mongoURI || process.env.MONGO_URL
 
 if (!mongoUri) {
