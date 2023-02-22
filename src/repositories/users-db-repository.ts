@@ -66,5 +66,11 @@ export const usersRepository = {
     },
     async addRecoveryUserCode(recoveryCode: RecoveryCodeType) {
         return RecoveryCodeModel.insertMany(recoveryCode)
+    },
+    async findUserByRecoveryCode(recoveryCode: string) {
+        return RecoveryCodeModel.findOne({recoveryCode})
+    },
+    async updateUserHash(email: string, passwordHash: string){
+        return UsersModel.updateOne({email}, {$set: {passwordHash: passwordHash}})
     }
 }

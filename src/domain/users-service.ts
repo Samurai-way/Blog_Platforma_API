@@ -95,5 +95,13 @@ export const usersService = {
     async _generationHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
         return hash
+    },
+    async findUserRecoveryCodeAndChangeNewPassword(newPassword: string, recoveryCode: string) {
+        const findUserRecoveryCode = await usersRepository.findUserByRecoveryCode(recoveryCode)
+        if (!findUserRecoveryCode) return null
+        const passwordSalt = await bcrypt.genSalt(10)
+        const hash = await this._generationHash(newPassword, passwordSalt)
+        const updateUserHash = await usersRepository.updateUserHash(findUserRecoveryCode.email, hash)
+        return updateUserHash
     }
 }
