@@ -14,8 +14,9 @@ export const usersService = {
     async checkUserCredentials(loginOrEmail: string, password: string) {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!user) return null
-        const isPasswordsMatch = bcrypt.compare(password, user.passwordHash)
+        const isPasswordsMatch = await bcrypt.compare(password, user.passwordHash)
         if (!isPasswordsMatch) return null
+        console.log('user', user)
         return user
     },
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
