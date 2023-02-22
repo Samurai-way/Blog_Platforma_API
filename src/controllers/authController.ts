@@ -13,7 +13,8 @@ class AuthController {
             userId: userInfo?.id
         })
     }
-    async loginUser(req: Request, res: Response){
+
+    async loginUser(req: Request, res: Response) {
         const {loginOrEmail, password} = req.body
         const ip = req.ip
         const title = req.headers['user-agent'] || "browser not found"
@@ -23,5 +24,16 @@ class AuthController {
         res.status(200).send({accessToken: token.accessToken})
     }
 
+    async refreshToken(req: Request, res: Response) {
+        const deviceId = req.deviceId!
+        const user = req.user!
+        const ip = req.ip
+        const title = req.headers['user-agent'] || "browser not found"
+        const newTokenPair = await authService.refreshToken(user, deviceId, ip, title)
+        res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
+        res.status(200).send({accessToken: newTokenPair.accessToken})
+    }
+
 }
+
 export const authController = new AuthController()

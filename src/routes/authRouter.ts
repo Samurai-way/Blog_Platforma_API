@@ -17,15 +17,7 @@ export const authRouter = Router({})
 authRouter.get('/me', authMiddleware, authController.getUser)
 authRouter.post('/login', requestAttemptsMiddleware, authController.loginUser)
 
-authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, res: Response) => {
-    const deviceId = req.deviceId!
-    const user = req.user!
-    const ip = req.ip
-    const title = req.headers['user-agent'] || "browser not found"
-    const newTokenPair = await authService.refreshToken(user, deviceId, ip, title)
-    res.cookie('refreshToken', newTokenPair.refreshToken, {httpOnly: true, secure: true})
-    res.status(200).send({accessToken: newTokenPair.accessToken})
-})
+authRouter.post('/refresh-token', refreshTokenMiddleware, authController.refreshToken)
 
 
 authRouter.post('/registration', login, password, email, requestAttemptsMiddleware, ExpressErrorValidator, async (req: Request, res: Response) => {
