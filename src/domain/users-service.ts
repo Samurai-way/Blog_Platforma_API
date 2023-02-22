@@ -58,8 +58,8 @@ export const usersService = {
         return usersRepository.findUserByEmail(email)
     },
     async findUserByEmailAndSendHimLetter(email: string) {
-        const findUserByEmail = await usersRepository.findUserByEmail(email)
-        if (!findUserByEmail) return null
+        // const findUserByEmail = await usersRepository.findUserByEmail(email)
+        // if (!findUserByEmail) return null
         const recoveryCode: RecoveryCodeType = {
             email: email,
             recoveryCode: uuidv4()
