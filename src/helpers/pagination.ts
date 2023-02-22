@@ -1,12 +1,14 @@
-export type Pagination = {
-    searchNameTerm?: string
-    searchEmailTerm?: string,
-    searchLoginTerm?: string
-    pageNumber: number
-    pageSize: number
-    sortBy: string
-    sortDirection: string
+export class Pagination {
+    constructor(public searchNameTerm: string,
+                public searchEmailTerm: string,
+                public searchLoginTerm: string,
+                public pageNumber: number,
+                public pageSize: number,
+                public sortBy: string,
+                public sortDirection: string) {
+    }
 }
+
 export const getPagination = (query: any): Pagination => {
     //validation logic for fields
     return {
