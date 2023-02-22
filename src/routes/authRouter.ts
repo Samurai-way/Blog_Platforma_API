@@ -100,6 +100,8 @@ authRouter.post('/password-recovery', requestAttemptsMiddleware, email, ExpressE
 authRouter.post('/new-password', requestAttemptsMiddleware, newPassword, ExpressErrorValidator, async (req: Request, res: Response) => {
     const {newPassword, recoveryCode} = req.body
     const findUserRecoveryCodeAndChangeNewPassword = await usersService.findUserRecoveryCodeAndChangeNewPassword(newPassword, recoveryCode)
-    if (!findUserRecoveryCodeAndChangeNewPassword) return res.sendStatus(400)
+    if (!findUserRecoveryCodeAndChangeNewPassword) return res.status(400).send({
+        errorsMessages: [{message: recoveryCode, field: "recoveryCode"}]
+    })
     res.sendStatus(204)
 })
