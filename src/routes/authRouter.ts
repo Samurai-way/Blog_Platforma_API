@@ -15,17 +15,7 @@ import {authController} from "../controllers/authController";
 export const authRouter = Router({})
 
 authRouter.get('/me', authMiddleware, authController.getUser)
-
-
-authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: Response) => {
-    const {loginOrEmail, password} = req.body
-    const ip = req.ip
-    const title = req.headers['user-agent'] || "browser not found"
-    const token = await authService.login(loginOrEmail, password, ip, title)
-    if (!token) return res.sendStatus(401)
-    res.cookie('refreshToken', token.refreshToken, {httpOnly: true, secure: true})
-    res.status(200).send({accessToken: token.accessToken})
-})
+authRouter.post('/login', requestAttemptsMiddleware, authController.loginUser)
 
 authRouter.post('/refresh-token', refreshTokenMiddleware, async (req: Request, res: Response) => {
     const deviceId = req.deviceId!
