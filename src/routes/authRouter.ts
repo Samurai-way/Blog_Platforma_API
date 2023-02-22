@@ -2,7 +2,6 @@ import {Request, Response, Router} from "express";
 import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {authMiddleware} from "../middlewares/authMiddleware";
-import {usersRepository} from "../repositories/users-db-repository";
 import {email, login, newPassword, password} from "../validators/validators";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {queryRepository} from "../queryRepository/queryRepository";
@@ -10,20 +9,14 @@ import {refreshTokenMiddleware} from "../middlewares/refreshTokenMiddleware";
 import {requestAttemptsMiddleware} from "../middlewares/requestAttemptsMiddleware";
 import {authService} from "../domain/auth-service";
 import {userSessionService} from "../domain/userSession-service";
+import {authController} from "../controllers/authController";
 
 
 export const authRouter = Router({})
 
-authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
-    const user = req.user?.id
-    if (!user) return res.sendStatus(401)
-    const userInfo = await usersRepository.findUserByID(user)
-    res.status(200).send({
-        email: userInfo?.email,
-        login: userInfo?.login,
-        userId: userInfo?.id
-    })
-})
+authRouter.get('/me', authMiddleware, authController.getUser)
+
+
 authRouter.post('/login', requestAttemptsMiddleware, async (req: Request, res: Response) => {
     const {loginOrEmail, password} = req.body
     const ip = req.ip
@@ -100,6 +93,11 @@ authRouter.post('/password-recovery', requestAttemptsMiddleware, email, ExpressE
 authRouter.post('/new-password', requestAttemptsMiddleware, newPassword, ExpressErrorValidator, async (req: Request, res: Response) => {
     const {newPassword, recoveryCode} = req.body
     const findUserRecoveryCodeAndChangeNewPassword = await usersService.findUserRecoveryCodeAndChangeNewPassword(newPassword, recoveryCode)
-    if (!findUserRecoveryCodeAndChangeNewPassword) return res.status(400).send({errorsMessages: [{message: "Error", field: "recoveryCode"}]})
+    if (!findUserRecoveryCodeAndChangeNewPassword) return res.status(400).send({
+        errorsMessages: [{
+            message: "Error",
+            field: "recoveryCode"
+        }]
+    })
     res.sendStatus(204)
 })
