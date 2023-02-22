@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {commentsService} from "../domain/comments-service";
 import {commentsRepository} from "../repositories/comments-db-repository";
 
-class CommentsControllers {
+class CommentsController {
     async getCommentsById(req: Request, res: Response){
         const commentId = req.params.commentId
         const getCommentById = await commentsService.getCommentById(commentId)
@@ -30,4 +30,4 @@ class CommentsControllers {
     }
 }
 
-export const commentsControllers = new CommentsControllers()
+export const commentsControllers = new CommentsController()
