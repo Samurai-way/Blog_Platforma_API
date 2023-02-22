@@ -16,7 +16,6 @@ export const usersService = {
         if (!user) return null
         const isPasswordsMatch = await bcrypt.compare(password, user.passwordHash)
         if (!isPasswordsMatch) return null
-        console.log('user', user)
         return user
     },
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
