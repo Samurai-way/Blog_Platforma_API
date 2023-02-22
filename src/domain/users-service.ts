@@ -6,18 +6,19 @@ import add from 'date-fns/add'
 import {emailService} from "./email-service";
 import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
 
-
-export const usersService = {
+class UsersService {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
-    },
+    }
+
     async checkUserCredentials(loginOrEmail: string, password: string) {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!user) return null
         const isPasswordsMatch = await bcrypt.compare(password, user.passwordHash)
         if (!isPasswordsMatch) return null
         return user
-    },
+    }
+
     async createUser(login: string, password: string, email: string): Promise<UserType | null> {
 
         const passwordSalt = await bcrypt.genSalt(10)
@@ -53,13 +54,13 @@ export const usersService = {
             return null
         }
         return result
-    },
+    }
+
     async findUserByEmail(email: string) {
         return usersRepository.findUserByEmail(email)
-    },
+    }
+
     async findUserByEmailAndSendHimLetter(email: string) {
-        // const findUserByEmail = await usersRepository.findUserByEmail(email)
-        // if (!findUserByEmail) return null
         const recoveryCode: RecoveryCodeType = {
             email: email,
             recoveryCode: uuidv4()
@@ -76,26 +77,32 @@ export const usersService = {
             return null
         }
         return result
-    },
+    }
+
     async findUserByLogin(login: string) {
         return await usersRepository.findUserByLoginOrEmail(login)
-    },
+    }
+
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.deleteUser(id)
-    },
+    }
+
     async confirmEmail(code: string, user: DB_User_Type) {
         if (user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed) {
             const result = usersRepository.updateUserConfirmation(user.id)
             return result
         }
-    },
+    }
+
     async findUserByCode(code: string): Promise<DB_User_Type | any> {
         return await usersRepository.findUserByCode(code)
-    },
+    }
+
     async _generationHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
         return hash
-    },
+    }
+
     async findUserRecoveryCodeAndChangeNewPassword(newPassword: string, recoveryCode: string) {
         const findUserRecoveryCode = await usersRepository.findUserByRecoveryCode(recoveryCode)
         if (!findUserRecoveryCode) return null
@@ -105,3 +112,5 @@ export const usersService = {
         return updateUserHash
     }
 }
+
+export const usersService = new UsersService()
