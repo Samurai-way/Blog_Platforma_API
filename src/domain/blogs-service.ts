@@ -1,11 +1,12 @@
 import {ObjectId} from "mongodb";
-import {blogsRepository} from "../repositories/blogs-db-repository";
 import {BlogsType, DB_BlogsType} from "../types";
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
-export const blogsService = {
+class BlogsService {
     async getBlogs(searchNameTerm: any, sortBy: any, sortDirection: string, pageNumber: number, pageSize: number) {
         return await blogsRepository.getBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
-    },
+    }
+
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType | null> {
         const newBlog: DB_BlogsType = {
             id: new ObjectId().toString(),
@@ -17,14 +18,19 @@ export const blogsService = {
             isMembership: false
         }
         return await blogsRepository.createBlog(newBlog)
-    },
+    }
+
     async getBlogById(id: string): Promise<BlogsType | null> {
         return await blogsRepository.getBlogById(id)
-    },
+    }
+
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
         return await blogsRepository.updateBlogById(id, name, description, websiteUrl)
-    },
+    }
+
     async deleteBlog(id: string): Promise<boolean> {
         return await blogsRepository.deleteBlog(id)
     }
 }
+
+export const blogsService = new BlogsService()
