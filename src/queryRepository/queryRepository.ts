@@ -8,13 +8,13 @@ import {usersRepository} from "../repositories/users-db-repository";
 import {emailService} from "../domain/email-service";
 import {DB_User_Type, PostsType} from "../types";
 
-export const queryRepository = {
+class QueryRepository {
     async getBlogByID(id: string) {
         return await blogsService.getBlogById(id)
-    },
+    }
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, blogId: string) {
         return await postsRepository.findBlogPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, blogId)
-    },
+    }
     async newPost(blogId: string, title: string, shortDescription: string, content: string) {
         const blogName = await blogsRepository.getBlogById(blogId)
         if (!blogName) return false
@@ -30,7 +30,7 @@ export const queryRepository = {
         }
         const result = await postsRepository.createNewBlogPost(newBlogPost)
         return result
-    },
+    }
     async resendingEmail(email: string, user: DB_User_Type) {
         const code = uuidv4()
         const newEmailConfirmation: DB_User_Type = {
@@ -63,3 +63,5 @@ export const queryRepository = {
         return
     }
 }
+
+export const queryRepository = new QueryRepository()
