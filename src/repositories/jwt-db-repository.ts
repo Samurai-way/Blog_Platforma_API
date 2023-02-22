@@ -1,7 +1,9 @@
 import {TokensModel} from "../db/db";
 
-export const jwtRepository = {
+class JwtRepository {
     async addRefreshTokenInBlackList(refreshToken: string) {
         return TokensModel.insertMany({refreshToken})
     }
 }
+
+export const jwtRepository = new JwtRepository()
