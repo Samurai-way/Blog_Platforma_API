@@ -1,9 +1,6 @@
-import {Request, Response, Router} from "express";
-import {testingService} from "../domain/testing-service";
+import {Router} from "express";
+import {testingController} from "../controllers/testingController";
 
 
 export const testingRouter = Router({})
-testingRouter.delete('/', async (req: Request, res: Response) => {
-    const result = await testingService.deleteAllData()
-    res.status(204).send(result)
-})
+testingRouter.delete('/', testingController.delete)
