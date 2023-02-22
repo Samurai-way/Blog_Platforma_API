@@ -2,7 +2,7 @@ import {usersSessionRepository} from "../repositories/usersSession-db-repository
 import {jwtService} from "../application/jwt-service";
 import {UserSessionsType} from "../types";
 
-export const userSessionService = {
+class UserSessionService {
     async createNewUserSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {
         const newSession: UserSessionsType = {
             ip,
@@ -12,7 +12,8 @@ export const userSessionService = {
             userId
         }
         return usersSessionRepository.createNewUserSession(newSession)
-    },
+    }
+
     async updateSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {
         const newSession: UserSessionsType = {
             ip,
@@ -22,16 +23,20 @@ export const userSessionService = {
             userId
         }
         return usersSessionRepository.updateUserSession(newSession)
-    },
+    }
+
     async deleteAllDevice(userId: string, deviceId: string) {
         return usersSessionRepository.deleteAllDevice(userId, deviceId)
-    },
+    }
+
     async findDevicesByDeviceId(deviceId: string) {
         return usersSessionRepository.findDeviceByDeviceId(deviceId)
-    },
+    }
+
     async deleteDeviceByDeviceID(userId: string, deviceId: string) {
         return usersSessionRepository.deleteDeviceByDeviceID(userId, deviceId)
-    },
+    }
+
     async findDeviceByUserId(refreshToken: string) {
         const getDataFromToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
         const userID = getDataFromToken.userID
@@ -40,3 +45,4 @@ export const userSessionService = {
     }
 }
 
+export const userSessionService = new UserSessionService()
