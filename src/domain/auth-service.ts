@@ -4,8 +4,7 @@ import {jwtService} from "../application/jwt-service";
 import {userSessionService} from "./userSession-service";
 import {DB_User_Type} from "../types";
 
-
-export const authService = {
+class AuthService {
     async login(loginOrEmail: string, password: string, ip: string, title: string) {
         const user = await usersService.checkUserCredentials(loginOrEmail, password)
         if (!user) return null
@@ -14,7 +13,8 @@ export const authService = {
         const lastActiveDate = jwtService.getLastActiveDateFromToken(refreshToken)
         await userSessionService.createNewUserSession(ip, title, deviceId, user.id, lastActiveDate)
         return {accessToken, refreshToken}
-    },
+    }
+
     async refreshToken(user: DB_User_Type, deviceId: string, ip: string, title: string) {
         const {accessToken, refreshToken} = jwtService.createJWT(user, deviceId)
         const lastActiveDate = jwtService.getLastActiveDateFromToken(refreshToken)
@@ -22,3 +22,5 @@ export const authService = {
         return {accessToken, refreshToken}
     }
 }
+
+export const authService = new AuthService()
