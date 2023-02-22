@@ -3,11 +3,11 @@ import {postsRepository} from "../repositories/posts-db-repository";
 import {blogsService} from "./blogs-service";
 import {CommentDBModalType, DB_PostsType, DB_User_Type, PostsType} from "../types";
 
-
-export const postsService = {
+class PostsService {
     async getPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
         return await postsRepository.getPosts(pageNumber, pageSize, sortBy, sortDirection)
-    },
+    }
+
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<DB_PostsType | null> {
         const blogName = await blogsService.getBlogById(blogId)
         if (!blogName) return null
@@ -22,10 +22,12 @@ export const postsService = {
             createdAt: new Date().toISOString()
         }
         return await postsRepository.createPost(newPost)
-    },
+    }
+
     async getPostById(id: string): Promise<PostsType | null> {
         return await postsRepository.getPostById(id)
-    },
+    }
+
     async createPostComment(postID: string, user: DB_User_Type, content: string) {
         const findPostByID = await postsService.getPostById(postID)
         if (!findPostByID) return null
@@ -41,11 +43,15 @@ export const postsService = {
             createdAt: new Date().toISOString(),
         }
         return await postsRepository.createPostComment({...newComment})
-    },
+    }
+
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {
         return await postsRepository.updatePostById(id, title, shortDescription, content, blogId)
-    },
+    }
+
     async deletePostById(id: string): Promise<boolean> {
         return await postsRepository.deletePostById(id)
     }
 }
+
+export const postsService = new PostsService()
