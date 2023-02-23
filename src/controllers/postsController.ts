@@ -3,12 +3,10 @@ import {getPagination} from "../helpers/pagination";
 import {PostsService} from "../domain/posts-service";
 import {CommentsService} from "../domain/comments-service";
 
-class PostsController {
-    postsService: PostsService;
+export class PostsController {
     commentsService: CommentsService;
 
-    constructor() {
-        this.postsService = new PostsService()
+    constructor(protected postsService: PostsService) {
         this.commentsService = new CommentsService()
     }
 
@@ -65,4 +63,3 @@ class PostsController {
     }
 }
 
-export const postsController = new PostsController()
