@@ -2,7 +2,7 @@ import {paginator} from "../helpers/pagination";
 import {CommentsModel} from "../db/db";
 import {DB_User_Type} from "../types";
 
-class CommentsRepository {
+export class CommentsRepository {
     async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any) {
         const findAndSortedComments = await CommentsModel
             .find({postId: postID}, {_id: 0, postId: 0, __v: 0})
@@ -27,4 +27,3 @@ class CommentsRepository {
         return result.matchedCount === 1
     }
 }
-export const commentsRepository = new CommentsRepository()

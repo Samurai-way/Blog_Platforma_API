@@ -6,6 +6,6 @@ import {commentsControllers} from "../controllers/commentsController";
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/:commentId', commentsControllers.getCommentsById)
-commentsRouter.delete('/:commentId', authMiddleware, commentsControllers.deleteCommentById)
-commentsRouter.put('/:commentId', authMiddleware, contentForComments, ExpressErrorValidator, commentsControllers.updateCommentById)
+commentsRouter.get('/:commentId', commentsControllers.getCommentsById.bind(commentsControllers))
+commentsRouter.delete('/:commentId', authMiddleware, commentsControllers.deleteCommentById.bind(commentsControllers))
+commentsRouter.put('/:commentId', authMiddleware, contentForComments, ExpressErrorValidator, commentsControllers.updateCommentById.bind(commentsControllers))
