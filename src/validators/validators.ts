@@ -1,8 +1,8 @@
 import {body, query} from "express-validator";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
-import {blogsRepository} from "../repositories/blogs-db-repository";
 import {authMiddleware} from "../middlewares/authMiddleware";
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
 
 export const name = body('name')

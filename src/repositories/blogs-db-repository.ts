@@ -2,7 +2,7 @@ import {paginator} from "../helpers/pagination";
 import {BlogsType, DB_BlogsType} from "../types";
 import {BlogsModel} from "../db/db";
 
-class BlogsRepository {
+export class BlogsRepository {
     async getBlogs(searchNameTerm: string, sortBy: any, sortDirection: any, pageNumber: number, pageSize: number) {
         const findAndSortedBlogs = await BlogsModel
             .find({name: {$regex: searchNameTerm, $options: 'i'}}, {_id: 0, __v: 0})

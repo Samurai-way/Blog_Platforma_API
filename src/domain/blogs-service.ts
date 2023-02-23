@@ -1,13 +1,19 @@
 import {ObjectId} from "mongodb";
 import {BlogsType, DB_BlogsType} from "../types";
-import {blogsRepository} from "../repositories/blogs-db-repository";
+import {BlogsRepository} from "../repositories/blogs-db-repository";
 
 class BlogsService {
-    async getBlogs(searchNameTerm: any, sortBy: any, sortDirection: string, pageNumber: number, pageSize: number) {
-        return await blogsRepository.getBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+    blogsRepository: BlogsRepository
+
+    constructor() {
+        this.blogsRepository = new BlogsRepository()
     }
 
-    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType | null> {
+    async getBlogs(searchNameTerm: any, sortBy: any, sortDirection: string, pageNumber: number, pageSize: number) {
+        return this.blogsRepository.getBlogs(searchNameTerm, sortBy, sortDirection, pageNumber, pageSize)
+    }
+
+    createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsType | null> {
         const newBlog: DB_BlogsType = {
             id: new ObjectId().toString(),
             _id: new ObjectId(),
@@ -17,19 +23,19 @@ class BlogsService {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        return await blogsRepository.createBlog(newBlog)
+        return this.blogsRepository.createBlog(newBlog)
     }
 
     async getBlogById(id: string): Promise<BlogsType | null> {
-        return await blogsRepository.getBlogById(id)
+        return this.blogsRepository.getBlogById(id)
     }
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
-        return await blogsRepository.updateBlogById(id, name, description, websiteUrl)
+        return this.blogsRepository.updateBlogById(id, name, description, websiteUrl)
     }
 
     async deleteBlog(id: string): Promise<boolean> {
-        return await blogsRepository.deleteBlog(id)
+        return this.blogsRepository.deleteBlog(id)
     }
 }
 
