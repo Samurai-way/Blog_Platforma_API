@@ -2,10 +2,11 @@ import {Router} from "express";
 import {authMiddleware} from "../middlewares/authMiddleware";
 import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 import {contentForComments} from "../validators/validators";
-import {commentsControllers} from "../controllers/commentsController";
+import {commentsController} from "../compositions/commentsComposition";
+
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/:commentId', commentsControllers.getCommentsById.bind(commentsControllers))
-commentsRouter.delete('/:commentId', authMiddleware, commentsControllers.deleteCommentById.bind(commentsControllers))
-commentsRouter.put('/:commentId', authMiddleware, contentForComments, ExpressErrorValidator, commentsControllers.updateCommentById.bind(commentsControllers))
+commentsRouter.get('/:commentId', commentsController.getCommentsById.bind(commentsController))
+commentsRouter.delete('/:commentId', authMiddleware, commentsController.deleteCommentById.bind(commentsController))
+commentsRouter.put('/:commentId', authMiddleware, contentForComments, ExpressErrorValidator, commentsController.updateCommentById.bind(commentsController))

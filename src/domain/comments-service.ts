@@ -3,12 +3,11 @@ import {CommentsRepository} from "../repositories/comments-db-repository";
 import {PostsRepository} from "../repositories/posts-db-repository";
 
 export class CommentsService {
-    commentsRepository: CommentsRepository;
     postsRepository: PostsRepository
-    constructor() {
-        this.commentsRepository = new CommentsRepository()
+    constructor(protected commentsRepository: CommentsRepository) {
         this.postsRepository = new PostsRepository()
     }
+
     async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
         const findPostByID = await this.postsRepository.getPostById(postID)
         if (!findPostByID) return null

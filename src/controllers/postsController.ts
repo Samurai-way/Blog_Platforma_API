@@ -2,12 +2,13 @@ import {Request, Response} from "express";
 import {getPagination} from "../helpers/pagination";
 import {PostsService} from "../domain/posts-service";
 import {CommentsService} from "../domain/comments-service";
+import {commentsRepository} from "../compositions/commentsComposition";
 
 export class PostsController {
     commentsService: CommentsService;
 
     constructor(protected postsService: PostsService) {
-        this.commentsService = new CommentsService()
+        this.commentsService = new CommentsService(commentsRepository)
     }
 
     async getPosts(req: Request, res: Response) {

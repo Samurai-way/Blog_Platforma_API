@@ -3,12 +3,10 @@ import {CommentsService} from "../domain/comments-service";
 import {CommentsRepository} from "../repositories/comments-db-repository";
 
 
-class CommentsController {
-    commentsService: CommentsService;
+export class CommentsController {
     commentsRepository: CommentsRepository
 
-    constructor() {
-        this.commentsService = new CommentsService()
+    constructor(protected commentsService: CommentsService) {
         this.commentsRepository = new CommentsRepository()
     }
 
@@ -41,4 +39,3 @@ class CommentsController {
     }
 }
 
-export const commentsControllers = new CommentsController()
