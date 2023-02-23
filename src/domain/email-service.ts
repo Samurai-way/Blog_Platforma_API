@@ -1,9 +1,10 @@
-import {emailRepository} from "../repositories/email-repository";
+import {EmailRepository} from "../repositories/email-repository";
 
-class EmailService {
+export class EmailService {
+    constructor(protected emailRepository: EmailRepository) {
+    }
     async sendEmail(email: string, subject: string, message: string) {
-        return await emailRepository.sendEmail(email, subject, message)
+        return this.emailRepository.sendEmail(email, subject, message)
     }
 }
 
-export const emailService = new EmailService()

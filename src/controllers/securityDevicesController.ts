@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
 import {UsersSessionRepository} from "../repositories/usersSession-db-repository";
 import {UserSessionService} from "../domain/userSession-service";
+import {usersSessionRepository} from "../compositions/usersSessionComposition";
 
 
 class SecurityDevicesController {
@@ -10,7 +11,7 @@ class SecurityDevicesController {
 
     constructor() {
         this.usersSessionRepository = new UsersSessionRepository()
-        this.userSessionService = new UserSessionService()
+        this.userSessionService = new UserSessionService(usersSessionRepository)
     }
 
     async getDevices(req: Request, res: Response) {

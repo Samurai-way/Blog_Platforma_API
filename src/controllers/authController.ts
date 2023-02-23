@@ -1,11 +1,12 @@
 import {Request, Response} from "express";
 import {usersRepository} from "../repositories/users-db-repository";
-import {authService} from "../domain/auth-service";
 import {jwtService} from "../application/jwt-service";
 import {email} from "../validators/validators";
 import {UsersService} from "../domain/users-service";
 import {QueryRepository} from "../queryRepository/queryRepository";
 import {UserSessionService} from "../domain/userSession-service";
+import {usersSessionRepository} from "../compositions/usersSessionComposition";
+import {authService} from "../domain/auth-service";
 
 class AuthController {
     usersService: UsersService;
@@ -15,7 +16,7 @@ class AuthController {
     constructor() {
         this.usersService = new UsersService(usersRepository)
         this.queryRepository = new QueryRepository()
-        this.userSessionService = new UserSessionService()
+        this.userSessionService = new UserSessionService(usersSessionRepository)
     }
 
     async getUser(req: Request, res: Response) {

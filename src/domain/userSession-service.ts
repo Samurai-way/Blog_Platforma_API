@@ -3,9 +3,7 @@ import {UserSessionsType} from "../types";
 import {UsersSessionRepository} from "../repositories/usersSession-db-repository";
 
 export class UserSessionService {
-    usersSessionRepository: UsersSessionRepository;
-    constructor() {
-        this.usersSessionRepository = new UsersSessionRepository()
+    constructor(protected usersSessionRepository: UsersSessionRepository) {
     }
     async createNewUserSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {
         const newSession: UserSessionsType = {

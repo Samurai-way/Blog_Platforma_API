@@ -4,6 +4,7 @@ import {DB_User_Type} from "../types";
 import {UsersService} from "./users-service";
 import {UserSessionService} from "./userSession-service";
 import {usersRepository} from "../repositories/users-db-repository";
+import {usersSessionRepository} from "../compositions/usersSessionComposition";
 
 
 class AuthService {
@@ -12,7 +13,7 @@ class AuthService {
 
     constructor() {
         this.usersService = new UsersService(usersRepository)
-        this.userSessionService = new UserSessionService()
+        this.userSessionService = new UserSessionService(usersSessionRepository)
     }
 
     async login(loginOrEmail: string, password: string, ip: string, title: string) {

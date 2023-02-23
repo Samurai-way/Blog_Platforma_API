@@ -2,11 +2,11 @@ import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {emailService} from "../domain/email-service";
 import {DB_User_Type, PostsType} from "../types";
 import {BlogsService} from "../domain/blogs-service";
 import {PostsRepository} from "../repositories/posts-db-repository";
 import {UsersRepository} from "../repositories/users-db-repository";
+import {emailService} from "../compositions/emailComposition";
 
 export class QueryRepository {
     postsRepository: PostsRepository;

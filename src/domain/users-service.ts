@@ -2,9 +2,10 @@ import {ObjectId} from "mongodb";
 import bcrypt from "bcrypt";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
-import {emailService} from "./email-service";
+
 import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
 import {UsersRepository} from "../repositories/users-db-repository";
+import {emailService} from "../compositions/emailComposition";
 
 export class UsersService {
     constructor(protected usersRepository: UsersRepository) {

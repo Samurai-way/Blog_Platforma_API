@@ -32,4 +32,3 @@ export class UsersSessionRepository {
         }, {$set: newSession})
     }
 }
-export const usersSessionRepository = new UsersSessionRepository()
