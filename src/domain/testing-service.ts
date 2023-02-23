@@ -1,10 +1,7 @@
 import {TestingDbRepository} from "../repositories/testing-db-repository";
 
 export class TestingService {
-    testingDbRepository: TestingDbRepository;
-
-    constructor() {
-        this.testingDbRepository = new TestingDbRepository()
+    constructor(protected testingDbRepository: TestingDbRepository) {
     }
 
     async deleteAllData(): Promise<boolean> {
