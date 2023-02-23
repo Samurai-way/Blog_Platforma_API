@@ -1,10 +1,10 @@
 import {ObjectId} from "mongodb";
 import bcrypt from "bcrypt";
-import {usersRepository} from "../repositories/users-db-repository";
 import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {emailService} from "./email-service";
 import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
+import {usersRepository} from "../repositories/users-db-repository";
 
 class UsersService {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {

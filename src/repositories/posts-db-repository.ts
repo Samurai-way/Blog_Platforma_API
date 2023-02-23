@@ -2,7 +2,7 @@ import {paginator} from "../helpers/pagination";
 import {CommentsModel, PostsModel} from "../db/db";
 import {CommentDBModalType, CommentsType, DB_PostsType, PostsType} from "../types";
 
-class PostsRepository {
+export class PostsRepository {
     async getPosts(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any) {
         const findAndSortedPosts = await PostsModel
             .find({}, {_id: 0, __v: 0})
@@ -54,4 +54,4 @@ class PostsRepository {
         return result.deletedCount === 1
     }
 }
-export const postsRepository = new PostsRepository()
+

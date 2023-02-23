@@ -1,7 +1,7 @@
 import {UserSessionsType} from "../types";
 import {UsersSessionModel} from "../db/db";
 
-class UsersSessionRepository {
+export class UsersSessionRepository {
     async createNewUserSession(userSession: UserSessionsType) {
         await UsersSessionModel.insertMany(userSession)
     }
@@ -32,4 +32,3 @@ class UsersSessionRepository {
         }, {$set: newSession})
     }
 }
-export const usersSessionRepository = new UsersSessionRepository()

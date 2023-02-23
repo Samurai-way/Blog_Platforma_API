@@ -5,6 +5,6 @@ import {securityDevicesController} from "../controllers/securityDevicesControlle
 
 export const securityDevicesRouter = Router({})
 
-securityDevicesRouter.get('/devices', refreshTokenMiddleware, securityDevicesController.getDevices)
-securityDevicesRouter.delete('/devices', refreshTokenMiddleware, securityDevicesController.deleteDevices)
-securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, securityDevicesController.deleteDeviceById)
+securityDevicesRouter.get('/devices', refreshTokenMiddleware, securityDevicesController.getDevices.bind(securityDevicesController))
+securityDevicesRouter.delete('/devices', refreshTokenMiddleware, securityDevicesController.deleteDevices.bind(securityDevicesController))
+securityDevicesRouter.delete('/devices/:id', refreshTokenMiddleware, securityDevicesController.deleteDeviceById.bind(securityDevicesController))

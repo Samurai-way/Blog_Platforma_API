@@ -4,6 +4,7 @@ import {jwtService} from "../application/jwt-service";
 import {userSessionService} from "./userSession-service";
 import {DB_User_Type} from "../types";
 
+
 class AuthService {
     async login(loginOrEmail: string, password: string, ip: string, title: string) {
         const user = await usersService.checkUserCredentials(loginOrEmail, password)

@@ -1,8 +1,12 @@
-import {usersSessionRepository} from "../repositories/usersSession-db-repository";
 import {jwtService} from "../application/jwt-service";
 import {UserSessionsType} from "../types";
+import {UsersSessionRepository} from "../repositories/usersSession-db-repository";
 
-class UserSessionService {
+export class UserSessionService {
+    usersSessionRepository: UsersSessionRepository;
+    constructor() {
+        this.usersSessionRepository = new UsersSessionRepository()
+    }
     async createNewUserSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {
         const newSession: UserSessionsType = {
             ip,
@@ -11,7 +15,7 @@ class UserSessionService {
             deviceId,
             userId
         }
-        return usersSessionRepository.createNewUserSession(newSession)
+        return this.usersSessionRepository.createNewUserSession(newSession)
     }
 
     async updateSession(ip: string, title: string, deviceId: string, userId: string, lastActiveDate: string) {
@@ -22,27 +26,26 @@ class UserSessionService {
             deviceId,
             userId
         }
-        return usersSessionRepository.updateUserSession(newSession)
+        return this.usersSessionRepository.updateUserSession(newSession)
     }
 
     async deleteAllDevice(userId: string, deviceId: string) {
-        return usersSessionRepository.deleteAllDevice(userId, deviceId)
+        return this.usersSessionRepository.deleteAllDevice(userId, deviceId)
     }
 
     async findDevicesByDeviceId(deviceId: string) {
-        return usersSessionRepository.findDeviceByDeviceId(deviceId)
+        return this.usersSessionRepository.findDeviceByDeviceId(deviceId)
     }
 
     async deleteDeviceByDeviceID(userId: string, deviceId: string) {
-        return usersSessionRepository.deleteDeviceByDeviceID(userId, deviceId)
+        return this.usersSessionRepository.deleteDeviceByDeviceID(userId, deviceId)
     }
 
     async findDeviceByUserId(refreshToken: string) {
         const getDataFromToken = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
         const userID = getDataFromToken.userID
-        const findDeviceByUserId = await usersSessionRepository.findDeviceByUserId(userID)
+        const findDeviceByUserId = await this.usersSessionRepository.findDeviceByUserId(userID)
         return {userID, findDeviceByUserId}
     }
 }
 
-export const userSessionService = new UserSessionService()

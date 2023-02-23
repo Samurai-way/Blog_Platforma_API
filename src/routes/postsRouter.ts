@@ -6,10 +6,10 @@ import {postsController} from "../controllers/postsController";
 
 export const postsRouter = Router({})
 
-postsRouter.get('/', getPostsPaginationValidator, postsController.getPosts)
-postsRouter.post('/', postPostsValidator, postsController.createPost)
-postsRouter.get('/:postID/comments', postsController.getCommentsByPostId)
-postsRouter.post('/:postID/comments', postCommentsValidator, postsController.createCommentByPostId)
-postsRouter.get('/:id', postsController.getPostById)
-postsRouter.put('/:id', postPostsValidator, postsController.updatePostById)
-postsRouter.delete('/:id', basicAuthMiddleware, postsController.deletePostById)
+postsRouter.get('/', getPostsPaginationValidator, postsController.getPosts.bind(postsController))
+postsRouter.post('/', postPostsValidator, postsController.createPost.bind(postsController))
+postsRouter.get('/:postID/comments', postsController.getCommentsByPostId.bind(postsController))
+postsRouter.post('/:postID/comments', postCommentsValidator, postsController.createCommentByPostId.bind(postsController))
+postsRouter.get('/:id', postsController.getPostById.bind(postsController))
+postsRouter.put('/:id', postPostsValidator, postsController.updatePostById.bind(postsController))
+postsRouter.delete('/:id', basicAuthMiddleware, postsController.deletePostById.bind(postsController))
