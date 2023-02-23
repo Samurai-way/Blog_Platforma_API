@@ -4,15 +4,19 @@ import {v4 as uuidv4} from 'uuid'
 import add from 'date-fns/add'
 import {emailService} from "./email-service";
 import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
-import {usersRepository} from "../repositories/users-db-repository";
+import {UsersRepository} from "../repositories/users-db-repository";
 
-class UsersService {
+export class UsersService {
+    usersRepository: UsersRepository;
+    constructor() {
+        this.usersRepository = new UsersRepository()
+    }
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
-        return usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
+        return this.usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     }
 
     async checkUserCredentials(loginOrEmail: string, password: string) {
-        const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
+        const user = await this.usersRepository.findUserByLoginOrEmail(loginOrEmail)
         if (!user) return null
         const isPasswordsMatch = await bcrypt.compare(password, user.passwordHash)
         if (!isPasswordsMatch) return null
@@ -42,7 +46,7 @@ class UsersService {
                 isConfirmed: false
             }
         }
-        const result = await usersRepository.createUser(newUser)
+        const result = await this.usersRepository.createUser(newUser)
         try {
             const bodyTextMessage = `<h1>Thank for your registration</h1>
        <p>To finish registration please follow the link below:
@@ -57,7 +61,7 @@ class UsersService {
     }
 
     async findUserByEmail(email: string) {
-        return usersRepository.findUserByEmail(email)
+        return this.usersRepository.findUserByEmail(email)
     }
 
     async findUserByEmailAndSendHimLetter(email: string) {
@@ -65,7 +69,7 @@ class UsersService {
             email: email,
             recoveryCode: uuidv4()
         }
-        const result = await usersRepository.addRecoveryUserCode(recoveryCode)
+        const result = await this.usersRepository.addRecoveryUserCode(recoveryCode)
         try {
             const message = `<h1>Password recovery</h1>
        <p>To finish password recovery please follow the link below:
@@ -80,22 +84,22 @@ class UsersService {
     }
 
     async findUserByLogin(login: string) {
-        return await usersRepository.findUserByLoginOrEmail(login)
+        return this.usersRepository.findUserByLoginOrEmail(login)
     }
 
     async deleteUser(id: string): Promise<boolean> {
-        return await usersRepository.deleteUser(id)
+        return this.usersRepository.deleteUser(id)
     }
 
     async confirmEmail(code: string, user: DB_User_Type) {
         if (user.emailConfirmation.expirationDate > new Date() && !user.emailConfirmation.isConfirmed) {
-            const result = usersRepository.updateUserConfirmation(user.id)
+            const result = this.usersRepository.updateUserConfirmation(user.id)
             return result
         }
     }
 
     async findUserByCode(code: string): Promise<DB_User_Type | any> {
-        return await usersRepository.findUserByCode(code)
+        return this.usersRepository.findUserByCode(code)
     }
 
     async _generationHash(password: string, salt: string) {
@@ -104,13 +108,12 @@ class UsersService {
     }
 
     async findUserRecoveryCodeAndChangeNewPassword(newPassword: string, recoveryCode: string) {
-        const findUserRecoveryCode = await usersRepository.findUserByRecoveryCode(recoveryCode)
+        const findUserRecoveryCode = await this.usersRepository.findUserByRecoveryCode(recoveryCode)
         if (!findUserRecoveryCode) return null
         const passwordSalt = await bcrypt.genSalt(10)
         const hash = await this._generationHash(newPassword, passwordSalt)
-        const updateUserHash = await usersRepository.updateUserHash(findUserRecoveryCode.email, hash)
+        const updateUserHash = await this.usersRepository.updateUserHash(findUserRecoveryCode.email, hash)
         return updateUserHash
     }
 }
 
-export const usersService = new UsersService()

@@ -2,7 +2,7 @@ import {paginator} from "../helpers/pagination";
 import {RecoveryCodeModel, UsersModel} from "../db/db";
 import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
 
-class UsersRepository {
+export class UsersRepository {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         const findAndSortedUser = await UsersModel
             .find({
@@ -74,4 +74,3 @@ class UsersRepository {
         return UsersModel.updateOne({email}, {$set: {passwordHash: passwordHash}})
     }
 }
-export const usersRepository = new UsersRepository()
