@@ -1,11 +1,19 @@
 import {DB_User_Type} from "../types";
 import {CommentsRepository} from "../repositories/comments-db-repository";
 import {PostsRepository} from "../repositories/posts-db-repository";
+import {UsersRepository} from "../repositories/users-db-repository";
+import {LikeStatusRepository} from "../repositories/likeStatus-db-repository";
 
 export class CommentsService {
-    postsRepository: PostsRepository
+    postsRepository: PostsRepository;
+    usersRepositore: UsersRepository;
+    likeStatusRepository: LikeStatusRepository;
+
+
     constructor(protected commentsRepository: CommentsRepository) {
         this.postsRepository = new PostsRepository()
+        this.usersRepositore = new UsersRepository()
+        this.likeStatusRepository = new LikeStatusRepository()
     }
 
     async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
@@ -24,5 +32,11 @@ export class CommentsService {
 
     async updateCommentById(commentId: string, content: string, user: DB_User_Type): Promise<boolean> {
         return this.commentsRepository.updateCommentById(commentId, content, user)
+    }
+
+    async updateLikeStatusByCommentId(commentId: string, user: DB_User_Type, likeStatus: string) {
+        const findCommentById = await this.commentsRepository.getCommentById(commentId)
+        if (!findCommentById) return null
+        return this.likeStatusRepository.updateLikeStatusByCommentId(commentId, user.id, user.login, likeStatus)
     }
 }

@@ -66,11 +66,13 @@ class AuthController {
     }
 
     async registrationConfirmation(req: Request, res: Response) {
+        debugger;
         const code = req.body.code
         const error = {errorsMessages: [{message: code, field: "code"}]}
         const findUserByCode = await this.usersService.findUserByCode(code)
         if (!findUserByCode) return res.status(400).send(error)
         if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
+        console.log('1__findUserByCode.emailConfirmation.isConfirmed', findUserByCode.emailConfirmation.isConfirmed)
         await this.usersService.confirmEmail(code, findUserByCode)
         res.send(204)
     }

@@ -1,6 +1,16 @@
 import {DB_User_Type} from "../db/db";
 import {ObjectId} from "mongodb";
 
+export class LikeStatus {
+    constructor(public parentId: string,
+                public userId: string,
+                public login: string,
+                public likeStatus: string,
+                public addedAt: Date)
+
+
+}
+
 export class BlogsType {
     constructor(public id: string,
                 public name: string,
@@ -56,7 +66,6 @@ export class DB_User_Type {
                     expirationDate: Date,
                     isConfirmed: boolean
                 }) {
-
     }
 }
 
@@ -90,10 +99,16 @@ export class CommentsType {
                     userId: string,
                     userLogin: string
                 },
-                public createdAt: string) {
+                public createdAt: string,
+                public likesInfo: {
+                    likesCount: number,
+                    dislikesCount: number,
+                    myStatus: "None" | "Like" | "Dislike"
+                })
 
-    }
+
 }
+
 
 export class CommentDBModalType {
     constructor(public _id: ObjectId,
@@ -104,7 +119,12 @@ export class CommentDBModalType {
                     userId: string
                     userLogin: string
                 },
-                public createdAt: string) {
+                public createdAt: string,
+                public likesInfo: {
+                    likesCount: number,
+                    dislikesCount: number,
+                    myStatus: "None" | "Like" | "Dislike"
+                }) {
 
     }
 }

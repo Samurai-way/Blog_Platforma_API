@@ -5,6 +5,7 @@ import {
     DB_BlogsType,
     DB_PostsType,
     DB_User_Type,
+    LikeStatus,
     RecoveryCodeType,
     TokenType,
     UserSessionsType
@@ -31,6 +32,12 @@ export const PostsSchema = new mongoose.Schema<DB_PostsType>({
     createdAt: String
 })
 
+export enum LikesStatus {
+    None,
+    Like,
+    Dislike
+}
+
 export const CommentsSchema = new mongoose.Schema<CommentDBModalType>({
     _id: ObjectId,
     id: {type: String, required: true},
@@ -41,6 +48,11 @@ export const CommentsSchema = new mongoose.Schema<CommentDBModalType>({
         userLogin: {type: String, required: true},
     },
     createdAt: {type: String, required: true},
+    likesInfo: {
+        likesCount: Number,
+        dislikesCount: Number,
+        myStatus: {type: Array<LikesStatus>}
+    }
 })
 
 export const UsersSchema = new mongoose.Schema<DB_User_Type>({
@@ -53,7 +65,7 @@ export const UsersSchema = new mongoose.Schema<DB_User_Type>({
     emailConfirmation: {
         confirmationCode: String,
         expirationDate: Date,
-        isConfirmed: String
+        isConfirmed: Boolean
     }
 })
 
@@ -78,4 +90,11 @@ export const AttemptsSchema = new mongoose.Schema<AttemptsType>({
 export const RecoveryCodeSchema = new mongoose.Schema<RecoveryCodeType>({
     email: String,
     recoveryCode: String
+})
+export const LikeStatusSchema = new mongoose.Schema<LikeStatus>({
+    parentId: String,
+    userId: String,
+    login: String,
+    addedAt: Date,
+    likeStatus: String
 })

@@ -37,5 +37,14 @@ export class CommentsController {
         if (!updatedComment) return res.sendStatus(403)
         res.send(204)
     }
+
+    async updateLikeStatusByCommentId(req: Request, res: Response) {
+        const commentId = req.params.commentId
+        const user = req.user!
+        const likeStatus = req.body.likeStatus
+        const findCommentById = await this.commentsService.updateLikeStatusByCommentId(commentId, user, likeStatus)
+        if (!findCommentById) return res.sendStatus(404)
+        res.sendStatus(204)
+    }
 }
 

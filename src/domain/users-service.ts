@@ -10,6 +10,7 @@ import {emailService} from "../compositions/emailComposition";
 export class UsersService {
     constructor(protected usersRepository: UsersRepository) {
     }
+
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         return this.usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
     }
@@ -98,6 +99,7 @@ export class UsersService {
     }
 
     async findUserByCode(code: string): Promise<DB_User_Type | any> {
+        console.log('code', code)
         return this.usersRepository.findUserByCode(code)
     }
 

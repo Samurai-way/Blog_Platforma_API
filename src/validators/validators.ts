@@ -83,6 +83,7 @@ const searchEmailTerm = query('searchLoginTerm')
     .default('')
     .trim()
 
+export const likeStatus = body('likeStatus').trim().isIn(["None", "Like", "Dislike"])
 export const login = body('login').trim().isLength({min: 3, max: 10}).matches('^[a-zA-Z0-9_-]*$')
 export const password = body('password').trim().isLength({min: 6, max: 20})
 export const email = body('email').trim().isEmail()

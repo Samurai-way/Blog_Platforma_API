@@ -13,13 +13,16 @@ export class CommentsRepository {
         const getCountComments = await CommentsModel.countDocuments({postId: postID})
         return paginator(pageNumber, pageSize, getCountComments, findAndSortedComments)
     }
+
     async getCommentById(id: string) {
         return CommentsModel.findOne({id}, {_id: 0, postId: 0, __v: 0})
     }
+
     async deleteCommentByID(commentID: string, user: DB_User_Type): Promise<boolean> {
         const result = await CommentsModel.deleteOne({id: commentID, 'commentatorInfo.userId': user.id})
         return result.deletedCount === 1
     }
+
     async updateCommentById(commentId: string, content: string, user: DB_User_Type): Promise<boolean> {
         const result = await CommentsModel.updateOne({id: commentId, 'commentatorInfo.userId': user.id}, {
             $set: {content}

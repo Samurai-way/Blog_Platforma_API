@@ -16,6 +16,7 @@ export class PostsRepository {
     async createPostComment(newComment: CommentDBModalType): Promise<CommentsType> {
         const result = await CommentsModel.insertMany(newComment)
         const {_id, postId, ...comment} = newComment
+        console.log('comment', comment)
         return comment
     }
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {

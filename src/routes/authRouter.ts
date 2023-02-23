@@ -13,7 +13,7 @@ authRouter.get('/me', authMiddleware, authController.getUser.bind(authController
 authRouter.post('/login', requestAttemptsMiddleware, authController.loginUser.bind(authController))
 authRouter.post('/refresh-token', refreshTokenMiddleware, authController.refreshToken.bind(authController))
 authRouter.post('/registration', login, password, email, requestAttemptsMiddleware, ExpressErrorValidator, authController.registration.bind(authController))
-authRouter.post('/registration-confirmation', requestAttemptsMiddleware, authController.registrationConfirmation)
+authRouter.post('/registration-confirmation', requestAttemptsMiddleware, authController.registrationConfirmation.bind(authController))
 authRouter.post('/registration-email-resending', requestAttemptsMiddleware, email, ExpressErrorValidator, authController.registrationEmailResending.bind(authController))
 authRouter.post('/logout', refreshTokenMiddleware, authController.logout.bind(authController))
 authRouter.post('/password-recovery', requestAttemptsMiddleware, email, ExpressErrorValidator, authController.passwordRecovery.bind(authController))

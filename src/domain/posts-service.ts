@@ -48,6 +48,12 @@ export class PostsService {
                 userLogin: user.login
             },
             createdAt: new Date().toISOString(),
+            likesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None"
+            }
+
         }
         return this.postsRepository.createPostComment({...newComment})
     }
