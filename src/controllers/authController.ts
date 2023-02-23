@@ -1,13 +1,23 @@
 import {Request, Response} from "express";
 import {usersRepository} from "../repositories/users-db-repository";
 import {authService} from "../domain/auth-service";
-import {usersService} from "../domain/users-service";
-import {queryRepository} from "../queryRepository/queryRepository";
 import {jwtService} from "../application/jwt-service";
-import {userSessionService} from "../domain/userSession-service";
 import {email} from "../validators/validators";
+import {UsersService} from "../domain/users-service";
+import {QueryRepository} from "../queryRepository/queryRepository";
+import {UserSessionService} from "../domain/userSession-service";
 
 class AuthController {
+    usersService: UsersService;
+    queryRepository: QueryRepository;
+    userSessionService: UserSessionService;
+
+    constructor() {
+        this.usersService = new UsersService()
+        this.queryRepository = new QueryRepository()
+        this.userSessionService = new UserSessionService()
+    }
+
     async getUser(req: Request, res: Response) {
         const user = req.user?.id
         if (!user) return res.sendStatus(401)
@@ -41,15 +51,15 @@ class AuthController {
 
     async registration(req: Request, res: Response) {
         const {login, password, email} = req.body
-        const findByLogin = await usersService.findUserByLogin(login)
-        const findByEmail = await usersService.findUserByEmail(email)
+        const findByLogin = await this.usersService.findUserByLogin(login)
+        const findByEmail = await this.usersService.findUserByEmail(email)
         if (findByLogin?.login === login) return res.status(400).send({
             errorsMessages: [{message: login, field: "login"}]
         })
         if (findByEmail?.email === email) return res.status(400).send({
             errorsMessages: [{message: email, field: "email"}]
         })
-        const user = await usersService.createUser(login, password, email)
+        const user = await this.usersService.createUser(login, password, email)
         if (!user) return res.sendStatus(404)
         res.send(204)
     }
@@ -57,23 +67,23 @@ class AuthController {
     async registrationConfirmation(req: Request, res: Response) {
         const code = req.body.code
         const error = {errorsMessages: [{message: code, field: "code"}]}
-        const findUserByCode = await usersService.findUserByCode(code)
+        const findUserByCode = await this.usersService.findUserByCode(code)
         if (!findUserByCode) return res.status(400).send(error)
         if (findUserByCode.emailConfirmation.isConfirmed) return res.status(400).send(error)
-        await usersService.confirmEmail(code, findUserByCode)
+        await this.usersService.confirmEmail(code, findUserByCode)
         res.send(204)
     }
 
     async registrationEmailResending(req: Request, res: Response) {
         const email = req.body.email
-        const findUserByEmail = await usersService.findUserByEmail(email)
+        const findUserByEmail = await this.usersService.findUserByEmail(email)
         if (!findUserByEmail || findUserByEmail.emailConfirmation.isConfirmed) return res.status(400).send({
             errorsMessages: [{
                 message: email,
                 field: "email"
             }]
         })
-        await queryRepository.resendingEmail(email, findUserByEmail)
+        await this.queryRepository.resendingEmail(email, findUserByEmail)
         return res.sendStatus(204)
     }
 
@@ -82,17 +92,19 @@ class AuthController {
         const {userID, deviceId} = await jwtService.getJwtPayloadFromRefreshToken(refreshToken)
         const clearTokensPair = await jwtService.addRefreshTokenInBlackList(refreshToken)
         if (!clearTokensPair) return res.sendStatus(401)
-        await userSessionService.deleteDeviceByDeviceID(userID, deviceId)
+        await this.userSessionService.deleteDeviceByDeviceID(userID, deviceId)
         res.sendStatus(204)
     }
+
     async passwordRecovery(req: Request, res: Response) {
         const email = req.body.email
-        await usersService.findUserByEmailAndSendHimLetter(email)
+        await this.usersService.findUserByEmailAndSendHimLetter(email)
         res.sendStatus(204)
     }
-    async newPassword(req: Request, res: Response){
+
+    async newPassword(req: Request, res: Response) {
         const {newPassword, recoveryCode} = req.body
-        const findUserRecoveryCodeAndChangeNewPassword = await usersService.findUserRecoveryCodeAndChangeNewPassword(newPassword, recoveryCode)
+        const findUserRecoveryCodeAndChangeNewPassword = await this.usersService.findUserRecoveryCodeAndChangeNewPassword(newPassword, recoveryCode)
         if (!findUserRecoveryCodeAndChangeNewPassword) return res.status(400).send({
             errorsMessages: [{
                 message: "Error",

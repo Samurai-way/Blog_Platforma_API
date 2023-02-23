@@ -2,14 +2,15 @@ import {ObjectId} from "mongodb";
 import {PostsRepository} from "../repositories/posts-db-repository";
 import {CommentDBModalType, DB_PostsType, DB_User_Type, PostsType} from "../types";
 import {BlogsService} from "./blogs-service";
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
 export class PostsService {
     postsRepository: PostsRepository;
-    blogsService: BlogsService
+    blogsService: BlogsService;
 
     constructor() {
+        this.blogsService = new BlogsService(blogsRepository)
         this.postsRepository = new PostsRepository()
-        this.blogsService = new BlogsService()
     }
 
     async getPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
@@ -37,7 +38,7 @@ export class PostsService {
     }
 
     async createPostComment(postID: string, user: DB_User_Type, content: string) {
-        const findPostByID = await postsService.getPostById(postID)
+        const findPostByID = await this.postsRepository.getPostById(postID)
         if (!findPostByID) return null
         const newComment: CommentDBModalType = {
             id: new ObjectId().toString(),

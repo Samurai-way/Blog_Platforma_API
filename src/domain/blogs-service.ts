@@ -2,11 +2,9 @@ import {ObjectId} from "mongodb";
 import {BlogsType, DB_BlogsType} from "../types";
 import {BlogsRepository} from "../repositories/blogs-db-repository";
 
-export class BlogsService {
-    blogsRepository: BlogsRepository
 
-    constructor() {
-        this.blogsRepository = new BlogsRepository()
+export class BlogsService {
+    constructor(protected blogsRepository: BlogsRepository) {
     }
 
     async getBlogs(searchNameTerm: any, sortBy: any, sortDirection: string, pageNumber: number, pageSize: number) {
@@ -38,4 +36,3 @@ export class BlogsService {
         return this.blogsRepository.deleteBlog(id)
     }
 }
-

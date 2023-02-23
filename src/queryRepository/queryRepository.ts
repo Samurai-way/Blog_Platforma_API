@@ -1,20 +1,32 @@
-import {blogsService} from "../domain/blogs-service";
-import {postsRepository} from "../repositories/posts-db-repository";
 import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {usersRepository} from "../repositories/users-db-repository";
 import {emailService} from "../domain/email-service";
 import {DB_User_Type, PostsType} from "../types";
+import {BlogsService} from "../domain/blogs-service";
+import {PostsRepository} from "../repositories/posts-db-repository";
+import {UsersRepository} from "../repositories/users-db-repository";
 
-class QueryRepository {
+export class QueryRepository {
+    postsRepository: PostsRepository;
+    usersRepository: UsersRepository;
+    blogsService: BlogsService;
+
+    constructor() {
+        this.postsRepository = new PostsRepository()
+        this.blogsService = new BlogsService(blogsRepository)
+        this.usersRepository = new UsersRepository()
+    }
+
     async getBlogByID(id: string) {
-        return await blogsService.getBlogById(id)
+        return this.blogsService.getBlogById(id)
     }
+
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, blogId: string) {
-        return await postsRepository.findBlogPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, blogId)
+        return this.postsRepository.findBlogPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, blogId)
     }
+
     async newPost(blogId: string, title: string, shortDescription: string, content: string) {
         const blogName = await blogsRepository.getBlogById(blogId)
         if (!blogName) return false
@@ -28,9 +40,10 @@ class QueryRepository {
             blogName: blogName.name,
             createdAt: new Date().toISOString()
         }
-        const result = await postsRepository.createNewBlogPost(newBlogPost)
+        const result = this.postsRepository.createNewBlogPost(newBlogPost)
         return result
     }
+
     async resendingEmail(email: string, user: DB_User_Type) {
         const code = uuidv4()
         const newEmailConfirmation: DB_User_Type = {
@@ -49,7 +62,7 @@ class QueryRepository {
                 isConfirmed: false
             }
         }
-        await usersRepository.updateUserConfirmationDate(newEmailConfirmation)
+        await this.usersRepository.updateUserConfirmationDate(newEmailConfirmation)
         try {
             const bodyTextMessage = `<h1>Thank for your registration</h1>
        <p>To finish registration please follow the link below:
@@ -63,5 +76,3 @@ class QueryRepository {
         return
     }
 }
-
-export const queryRepository = new QueryRepository()

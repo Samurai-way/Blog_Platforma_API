@@ -1,9 +1,13 @@
 import jwt from 'jsonwebtoken'
 import {settings} from "./settings";
-import {jwtRepository} from "../repositories/jwt-db-repository";
 import {DB_User_Type} from "../types";
+import {JwtRepository} from "../repositories/jwt-db-repository";
 
 class JwtService {
+    jwtRepository: JwtRepository;
+    constructor() {
+        this.jwtRepository = new JwtRepository()
+    }
     createJWT(user: DB_User_Type, deviceId: string) {
         const accessToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '10s'})
         const refreshToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '20s'})
@@ -11,7 +15,7 @@ class JwtService {
     }
 
     async addRefreshTokenInBlackList(refreshToken: string) {
-        return jwtRepository.addRefreshTokenInBlackList(refreshToken)
+        return this.jwtRepository.addRefreshTokenInBlackList(refreshToken)
     }
 
     async getJwtPayloadFromRefreshToken(token: string) {

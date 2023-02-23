@@ -1,13 +1,13 @@
 import {Request, Response} from "express";
 import {getPagination} from "../helpers/pagination";
-import {queryRepository} from "../queryRepository/queryRepository";
 import {BlogsService} from "../domain/blogs-service";
+import {QueryRepository} from "../queryRepository/queryRepository";
 
-class BlogsController {
-    blogsService: BlogsService;
+export class BlogsController {
+    queryRepository: QueryRepository;
 
-    constructor() {
-        this.blogsService = new BlogsService()
+    constructor(protected blogsService: BlogsService) {
+        this.queryRepository = new QueryRepository()
     }
 
     async getBlogs(req: Request, res: Response) {
@@ -25,9 +25,9 @@ class BlogsController {
     async createPostByBlogId(req: Request, res: Response) {
         const id = req.params.id
         const {title, shortDescription, content} = req.body
-        const findBlog = await queryRepository.getBlogByID(id)
+        const findBlog = await this.queryRepository.getBlogByID(id)
         if (!findBlog) return res.sendStatus(404)
-        const newPost = await queryRepository.newPost(id, title, shortDescription, content)
+        const newPost = await this.queryRepository.newPost(id, title, shortDescription, content)
         res.status(201).send(newPost)
     }
 
@@ -42,9 +42,9 @@ class BlogsController {
     async getPostsByBlogId(req: Request, res: Response) {
         const id = req.params.id
         const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
-        const findBlog = await queryRepository.getBlogByID(id)
+        const findBlog = await this.queryRepository.getBlogByID(id)
         if (!findBlog) return res.send(404)
-        const findBlogPost = await queryRepository.findBlogPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, id)
+        const findBlogPost = await this.queryRepository.findBlogPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, id)
         res.status(200).send(findBlogPost)
     }
 
@@ -65,4 +65,3 @@ class BlogsController {
     }
 }
 
-export const blogsController = new BlogsController()

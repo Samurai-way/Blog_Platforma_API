@@ -1,13 +1,15 @@
 import {Request, Response} from "express";
 import {getPagination} from "../helpers/pagination";
 import {PostsService} from "../domain/posts-service";
-import {commentsService} from "../domain/comments-service";
+import {CommentsService} from "../domain/comments-service";
 
 class PostsController {
     postsService: PostsService;
+    commentsService: CommentsService;
 
     constructor() {
         this.postsService = new PostsService()
+        this.commentsService = new CommentsService()
     }
 
     async getPosts(req: Request, res: Response) {
@@ -25,7 +27,7 @@ class PostsController {
     async getCommentsByPostId(req: Request, res: Response) {
         const postID = req.params.postID
         const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
-        const findComments = await commentsService.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
+        const findComments = await this.commentsService.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
         if (!findComments) return res.send(404)
         res.status(200).send(findComments)
     }

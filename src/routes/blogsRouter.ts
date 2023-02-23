@@ -6,7 +6,7 @@ import {
     postBlogValidator
 } from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
-import {blogsController} from "../controllers/blogsController";
+import {blogsController} from "../compositions/blogsComposition";
 
 
 export const blogsRouter = Router({})

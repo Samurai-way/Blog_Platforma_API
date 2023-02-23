@@ -74,3 +74,4 @@ export class UsersRepository {
         return UsersModel.updateOne({email}, {$set: {passwordHash: passwordHash}})
     }
 }
+export const usersRepository = new UsersRepository()
