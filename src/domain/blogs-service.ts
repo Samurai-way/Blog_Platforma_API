@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import {BlogsType, DB_BlogsType} from "../types";
 import {BlogsRepository} from "../repositories/blogs-db-repository";
 
-class BlogsService {
+export class BlogsService {
     blogsRepository: BlogsRepository
 
     constructor() {
@@ -39,4 +39,3 @@ class BlogsService {
     }
 }
 
-export const blogsService = new BlogsService()

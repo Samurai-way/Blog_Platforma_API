@@ -11,10 +11,10 @@ import {blogsController} from "../controllers/blogsController";
 
 export const blogsRouter = Router({})
 
-blogsRouter.get('/', getBlogsPaginationValidator, blogsController.getBlogs)
-blogsRouter.post('/', postBlogValidator, blogsController.createBlog)
-blogsRouter.post('/:id/posts', postBlogPostsValidator, blogsController.createPostByBlogId)
-blogsRouter.get('/:id', blogsController.getBlogById)
-blogsRouter.get('/:id/posts', paginationValidator, blogsController.getPostsByBlogId)
-blogsRouter.put('/:id', postBlogValidator, blogsController.updateBlogById)
-blogsRouter.delete('/:id', basicAuthMiddleware, blogsController.deleteBlogById)
+blogsRouter.get('/', getBlogsPaginationValidator, blogsController.getBlogs.bind(blogsController))
+blogsRouter.post('/', postBlogValidator, blogsController.createBlog.bind(blogsController))
+blogsRouter.post('/:id/posts', postBlogPostsValidator, blogsController.createPostByBlogId.bind(blogsController))
+blogsRouter.get('/:id', blogsController.getBlogById.bind(blogsController))
+blogsRouter.get('/:id/posts', paginationValidator, blogsController.getPostsByBlogId.bind(blogsController))
+blogsRouter.put('/:id', postBlogValidator, blogsController.updateBlogById.bind(blogsController))
+blogsRouter.delete('/:id', basicAuthMiddleware, blogsController.deleteBlogById.bind(blogsController))
