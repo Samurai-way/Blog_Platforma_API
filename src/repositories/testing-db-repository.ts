@@ -8,7 +8,7 @@ import {
     UsersSessionModel
 } from "../db/db";
 
-class TestingDbRepository {
+export class TestingDbRepository {
     async deleteAllData(): Promise<boolean> {
         const clearBlogs = await BlogsModel.deleteMany({})
         const clearPosts = await PostsModel.deleteMany({})
@@ -27,4 +27,3 @@ class TestingDbRepository {
     }
 }
 
-export const testingDbRepository = new TestingDbRepository()

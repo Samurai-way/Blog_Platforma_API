@@ -1,9 +1,15 @@
-import {testingDbRepository} from "../repositories/testing-db-repository";
+import {TestingDbRepository} from "../repositories/testing-db-repository";
 
-class TestingService {
+export class TestingService {
+    testingDbRepository: TestingDbRepository;
+
+    constructor() {
+        this.testingDbRepository = new TestingDbRepository()
+    }
+
     async deleteAllData(): Promise<boolean> {
-        return await testingDbRepository.deleteAllData()
+        return this.testingDbRepository.deleteAllData()
     }
 }
 
-export const testingService = new TestingService()
+
