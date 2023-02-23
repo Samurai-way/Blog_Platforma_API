@@ -3,15 +3,18 @@ import {jwtService} from "../application/jwt-service";
 import {DB_User_Type} from "../types";
 import {UsersService} from "./users-service";
 import {UserSessionService} from "./userSession-service";
+import {usersRepository} from "../repositories/users-db-repository";
 
 
 class AuthService {
     usersService: UsersService;
     userSessionService: UserSessionService;
+
     constructor() {
-        this.usersService = new UsersService()
+        this.usersService = new UsersService(usersRepository)
         this.userSessionService = new UserSessionService()
     }
+
     async login(loginOrEmail: string, password: string, ip: string, title: string) {
         const user = await this.usersService.checkUserCredentials(loginOrEmail, password)
         if (!user) return null

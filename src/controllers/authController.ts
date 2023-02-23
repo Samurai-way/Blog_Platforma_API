@@ -13,7 +13,7 @@ class AuthController {
     userSessionService: UserSessionService;
 
     constructor() {
-        this.usersService = new UsersService()
+        this.usersService = new UsersService(usersRepository)
         this.queryRepository = new QueryRepository()
         this.userSessionService = new UserSessionService()
     }

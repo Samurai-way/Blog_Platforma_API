@@ -2,13 +2,9 @@ import {Request, Response} from "express";
 import {getPagination} from "../helpers/pagination";
 import {UsersService} from "../domain/users-service";
 
-class UsersController {
-    usersService: UsersService;
-
-    constructor() {
-        this.usersService = new UsersService()
+export class UsersController {
+    constructor(protected usersService: UsersService) {
     }
-
     async getUsers(req: Request, res: Response) {
         const {sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm} = getPagination(req.query)
         const findValue = await this.usersService.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
@@ -28,5 +24,3 @@ class UsersController {
         res.send(204)
     }
 }
-
-export const usersController = new UsersController()

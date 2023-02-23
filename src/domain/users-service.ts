@@ -7,9 +7,7 @@ import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
 import {UsersRepository} from "../repositories/users-db-repository";
 
 export class UsersService {
-    usersRepository: UsersRepository;
-    constructor() {
-        this.usersRepository = new UsersRepository()
+    constructor(protected usersRepository: UsersRepository) {
     }
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         return this.usersRepository.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)
