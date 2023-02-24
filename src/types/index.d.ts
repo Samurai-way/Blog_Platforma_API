@@ -103,7 +103,7 @@ export class CommentsType {
                 public likesInfo: {
                     likesCount: number,
                     dislikesCount: number,
-                    myStatus: "None" | "Like" | "Dislike"
+                    myStatus: string
                 })
 
 
@@ -123,7 +123,7 @@ export class CommentDBModalType {
                 public likesInfo: {
                     likesCount: number,
                     dislikesCount: number,
-                    myStatus: "None" | "Like" | "Dislike"
+                    myStatus: string
                 }) {
 
     }

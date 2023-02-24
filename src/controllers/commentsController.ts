@@ -1,19 +1,22 @@
 import {Request, Response} from "express";
 import {CommentsService} from "../domain/comments-service";
 import {CommentsRepository} from "../repositories/comments-db-repository";
+import {QueryRepository} from "../queryRepository/queryRepository";
 
 
 export class CommentsController {
     commentsRepository: CommentsRepository
+    queryRepository: QueryRepository;
 
     constructor(protected commentsService: CommentsService) {
         this.commentsRepository = new CommentsRepository()
+        this.queryRepository = new QueryRepository()
     }
 
     async getCommentsById(req: Request, res: Response) {
         const commentId = req.params.commentId
-        const getCommentById = await this.commentsService.getCommentById(commentId)
-        if (!getCommentById) return res.send(404)
+        const userId = req.user?.id
+        const getCommentById = await this.queryRepository.getCommentByIdWithLikeStatus(commentId, userId)
         res.status(200).send(getCommentById)
     }
 
