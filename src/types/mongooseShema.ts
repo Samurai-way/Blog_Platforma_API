@@ -32,12 +32,6 @@ export const PostsSchema = new mongoose.Schema<DB_PostsType>({
     createdAt: String
 })
 
-export enum LikesStatus {
-    None,
-    Like,
-    Dislike
-}
-
 export const CommentsSchema = new mongoose.Schema<CommentDBModalType>({
     _id: ObjectId,
     id: {type: String, required: true},
@@ -51,7 +45,7 @@ export const CommentsSchema = new mongoose.Schema<CommentDBModalType>({
     likesInfo: {
         likesCount: Number,
         dislikesCount: Number,
-        myStatus: {type: Array<LikesStatus>}
+        myStatus: String
     }
 })
 
