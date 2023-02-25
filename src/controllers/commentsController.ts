@@ -18,7 +18,6 @@ export class CommentsController {
         const userId = req.user?.id
         const getCommentById = await this.queryRepository.getCommentByIdWithLikeStatus(commentId, userId)
         if(!getCommentById) return res.sendStatus(404)
-        console.log('getCommentById', getCommentById)
         res.status(200).send(getCommentById)
     }
 

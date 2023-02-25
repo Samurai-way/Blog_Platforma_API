@@ -1,7 +1,6 @@
 import {LikesStatusModel} from "../db/db";
 
 export const commentsWIthLikeCount = async (findAndSortedComment: any, userId: string | undefined) => {
-    console.log('findAndSortedComment', findAndSortedComment)
     let postsWithCommentLikes = []
     for (let comment of findAndSortedComment) {
         const findLikes = await LikesStatusModel.countDocuments({parentId: comment.id, likeStatus: 'Like'})

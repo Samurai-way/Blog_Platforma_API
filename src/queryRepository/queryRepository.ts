@@ -30,6 +30,7 @@ export class QueryRepository {
 
     async getCommentByIdWithLikeStatus(commentId: string, userId: string) {
         const findComment = await this.commentsRepository.getCommentById(commentId)
+        if (!findComment.length) return null
         console.log('findComment', findComment)
         const commentWithLikeStatus = await commentsWIthLikeCount(findComment, userId)
         // if (!findComment) return null
