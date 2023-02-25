@@ -4,6 +4,7 @@ import {PostsRepository} from "../repositories/posts-db-repository";
 import {UsersRepository} from "../repositories/users-db-repository";
 import {LikeStatusRepository} from "../repositories/likeStatus-db-repository";
 import {paginator} from "../helpers/pagination";
+import {commentsWIthLikeCount} from "../helpers/commentsWIthLikeCount";
 
 export class CommentsService {
     postsRepository: PostsRepository;
@@ -17,12 +18,19 @@ export class CommentsService {
         this.likeStatusRepository = new LikeStatusRepository()
     }
 
-    async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
-        const findAndSortedComment = await this.commentsRepository.findAndSortedComments(pageNumber, pageSize, sortBy, sortDirection, postID)
+    async getComments(userId: string, postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
+        const getPostById = await this.postsRepository.getPostById(postID) // _3_
+        if (!getPostById) return null // _4_
+        // return this.commentsRepository.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
+        // тут было
+        const findAndSortedComment = await this.commentsRepository.findAndSortedComments(pageNumber, pageSize, sortBy, sortDirection, postID) //_6_
+
+        const findCommentsWithLikes = await commentsWIthLikeCount(findAndSortedComment, userId)
+        // console.log('findCommentsWithLikes', findCommentsWithLikes)
         const getUsersCount = await this.commentsRepository.getCountCollection(postID)
-        // console.log('getUsersCount', getUsersCount)
-        // return paginator(pageNumber, pageSize, getUsersCount, findAndSortedComment)
-        return this.commentsRepository.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
+
+        return paginator(pageNumber, pageSize, getUsersCount, findAndSortedComment)
+
     }
 
     async getCommentById(commentId: string) {

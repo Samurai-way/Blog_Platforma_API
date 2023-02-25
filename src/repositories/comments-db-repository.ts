@@ -17,17 +17,16 @@ export class CommentsRepository {
     }
 
     async findAndSortedComments(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, postID: string) {
-        const findAndSortedCommentsResult = await CommentsModel
+        return CommentsModel
             .find({postID}, {_id: 0, postId: 0, __v: 0})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-        return findAndSortedCommentsResult
+            .lean()
     }
 
-    async getCountCollection(postId: string) {
-        const countCollection = await CommentsModel.countDocuments({postId})
-        return countCollection
+    async getCountCollection(postID: string) {
+        return CommentsModel.countDocuments({postId: postID})
     }
 
     async getLikes(id: string) {
@@ -43,7 +42,7 @@ export class CommentsRepository {
     }
 
     async getCommentById(id: string) {
-        return  CommentsModel.findOne({id}, {_id: 0, postId: 0, __v: 0})
+        return CommentsModel.findOne({id}, {_id: 0, postId: 0, __v: 0})
     }
 
     async getCommentByIdWithLikes(id: string, userId: string | mongoose.Types.ObjectId) {
