@@ -8,6 +8,7 @@ import {PostsRepository} from "../repositories/posts-db-repository";
 import {UsersRepository} from "../repositories/users-db-repository";
 import {emailService} from "../compositions/emailComposition";
 import {CommentsRepository} from "../repositories/comments-db-repository";
+import {commentsWIthLikeCount} from "../helpers/commentsWIthLikeCount";
 
 
 export class QueryRepository {
@@ -30,21 +31,23 @@ export class QueryRepository {
     async getCommentByIdWithLikeStatus(commentId: string, userId: string) {
         const findComment = await this.commentsRepository.getCommentById(commentId)
         console.log('findComment', findComment)
-        if (!findComment) return null
-        // return this.commentsRepository.getCommentByIdWithLikes(commentId, userId)
-        const findLikes = await this.commentsRepository.getLikes(commentId)
-        const findDislikes = await this.commentsRepository.getDislikes(commentId)
-        let findStatus = 'None'
-        if (userId) {
-            const find = await this.commentsRepository.getStatus(commentId, userId)
-            if (find) {
-                findStatus = find.likeStatus
-            }
-        }
-        findComment.likesInfo.likesCount = findLikes
-        findComment.likesInfo.dislikesCount = findDislikes
-        findComment.likesInfo.myStatus = findStatus
-        return findComment
+        const commentWithLikeStatus = await commentsWIthLikeCount(findComment, userId)
+        // if (!findComment) return null
+        // // return this.commentsRepository.getCommentByIdWithLikes(commentId, userId)
+        // const findLikes = await this.commentsRepository.getLikes(commentId)
+        // const findDislikes = await this.commentsRepository.getDislikes(commentId)
+        // let findStatus = 'None'
+        // if (userId) {
+        //     const find = await this.commentsRepository.getStatus(commentId, userId)
+        //     if (find) {
+        //         findStatus = find.likeStatus
+        //     }
+        // }
+        // findComment.likesInfo.likesCount = findLikes
+        // findComment.likesInfo.dislikesCount = findDislikes
+        // findComment.likesInfo.myStatus = findStatus
+        // return findComment
+        return commentWithLikeStatus
     }
 
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, blogId: string) {

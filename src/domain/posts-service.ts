@@ -37,7 +37,6 @@ export class PostsService {
 
     async createPostComment(postID: string, user: DB_User_Type, content: string) {
         const findPostByID = await this.postsRepository.getPostById(postID)
-        console.log('findPostByID', findPostByID)
         if (!findPostByID) return null
         const newComment: CommentDBModalType = {
             id: new ObjectId().toString(),

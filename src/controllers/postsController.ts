@@ -25,9 +25,11 @@ export class PostsController {
 
     async getCommentsByPostId(req: Request, res: Response) {
         const postID = req.params.postID
+        const userId = req.user?.id
         const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
-        const findComments = await this.commentsService.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
-        if (!findComments) return res.send(404)
+        const findPostById = await this.postsService.getPostById(postID)
+        if (!findPostById) return res.send(404)
+        const findComments = await this.commentsService.getComments(postID, userId, pageNumber, pageSize, sortBy, sortDirection)
         res.status(200).send(findComments)
     }
 

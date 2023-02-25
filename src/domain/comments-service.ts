@@ -3,6 +3,7 @@ import {CommentsRepository} from "../repositories/comments-db-repository";
 import {PostsRepository} from "../repositories/posts-db-repository";
 import {UsersRepository} from "../repositories/users-db-repository";
 import {LikeStatusRepository} from "../repositories/likeStatus-db-repository";
+import {paginator} from "../helpers/pagination";
 
 export class CommentsService {
     postsRepository: PostsRepository;
@@ -16,10 +17,12 @@ export class CommentsService {
         this.likeStatusRepository = new LikeStatusRepository()
     }
 
-    async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
-        const findPostByID = await this.postsRepository.getPostById(postID)
-        if (!findPostByID) return null
-        return this.commentsRepository.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
+    async getComments(postID: string, userId: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
+        const findAndSortedComment = await this.commentsRepository.findAndSortedComments(pageNumber, pageSize, sortBy, sortDirection, postID)
+        const getUsersCount = await this.commentsRepository.getCountCollection(postID)
+        // console.log('getUsersCount', getUsersCount)
+        return paginator(pageNumber, pageSize, getUsersCount, findAndSortedComment)
+        // return this.commentsRepository.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
     }
 
     async getCommentById(commentId: string) {

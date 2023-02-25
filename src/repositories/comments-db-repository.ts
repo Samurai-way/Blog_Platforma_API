@@ -2,7 +2,6 @@ import {paginator} from "../helpers/pagination";
 import {CommentsModel, LikesStatusModel} from "../db/db";
 import {DB_User_Type} from "../types";
 import mongoose from "mongoose";
-import {ObjectId} from "mongodb";
 import {LikeStatusEnum} from "../types/mongooseShema";
 
 export class CommentsRepository {
@@ -15,6 +14,20 @@ export class CommentsRepository {
             .lean()
         const getCountComments = await CommentsModel.countDocuments({postId: postID})
         return paginator(pageNumber, pageSize, getCountComments, findAndSortedComments)
+    }
+
+    async findAndSortedComments(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, postID: string) {
+        const findAndSortedCommentsResult = await CommentsModel
+            .find({postID}, {_id: 0, postId: 0, __v: 0})
+            .sort({[sortBy]: sortDirection})
+            .skip((pageNumber - 1) * pageSize)
+            .limit(pageSize)
+        return findAndSortedCommentsResult
+    }
+
+    async getCountCollection(postId: string) {
+        const countCollection = await CommentsModel.countDocuments({id: postId})
+        return countCollection
     }
 
     async getLikes(id: string) {
@@ -30,7 +43,7 @@ export class CommentsRepository {
     }
 
     async getCommentById(id: string) {
-        return CommentsModel.findOne({id}, {_id: 0, postId: 0, __v: 0}).lean()
+        return CommentsModel.find({id}, {_id: 0, postId: 0, __v: 0}).lean()
     }
 
     async getCommentByIdWithLikes(id: string, userId: string | mongoose.Types.ObjectId) {
@@ -96,8 +109,8 @@ export class CommentsRepository {
                     },
                 },
             },
-            {$unwind: '$likesInfo.likeStatus' }
-            ])
+            {$unwind: '$likesInfo.likeStatus'}
+        ])
         return result[0];
     }
 
