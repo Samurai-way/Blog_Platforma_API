@@ -31,8 +31,8 @@ export class PostsService {
         return this.postsRepository.createPost(newPost)
     }
 
-    async getPostById(id: string): Promise<PostsType | null> {
-        return this.postsRepository.getPostById(id)
+    async getPostById(postID: string): Promise<PostsType | null> {
+        return this.postsRepository.getPostById(postID)
     }
 
     async createPostComment(postID: string, user: DB_User_Type, content: string) {

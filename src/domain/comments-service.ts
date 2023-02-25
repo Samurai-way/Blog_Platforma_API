@@ -17,12 +17,12 @@ export class CommentsService {
         this.likeStatusRepository = new LikeStatusRepository()
     }
 
-    async getComments(postID: string, userId: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
+    async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
         const findAndSortedComment = await this.commentsRepository.findAndSortedComments(pageNumber, pageSize, sortBy, sortDirection, postID)
         const getUsersCount = await this.commentsRepository.getCountCollection(postID)
         // console.log('getUsersCount', getUsersCount)
-        return paginator(pageNumber, pageSize, getUsersCount, findAndSortedComment)
-        // return this.commentsRepository.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
+        // return paginator(pageNumber, pageSize, getUsersCount, findAndSortedComment)
+        return this.commentsRepository.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
     }
 
     async getCommentById(commentId: string) {

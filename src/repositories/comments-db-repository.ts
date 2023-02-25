@@ -43,7 +43,7 @@ export class CommentsRepository {
     }
 
     async getCommentById(id: string) {
-        return  CommentsModel.find({id}, {_id: 0, postId: 0, __v: 0})
+        return  CommentsModel.findOne({id}, {_id: 0, postId: 0, __v: 0})
     }
 
     async getCommentByIdWithLikes(id: string, userId: string | mongoose.Types.ObjectId) {

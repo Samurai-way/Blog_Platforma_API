@@ -9,8 +9,8 @@ class JwtService {
         this.jwtRepository = new JwtRepository()
     }
     createJWT(user: DB_User_Type, deviceId: string) {
-        const accessToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '50m'})
-        const refreshToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '100m'})
+        const accessToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '5m'})
+        const refreshToken = jwt.sign({userID: user.id, deviceId: deviceId}, settings.JWT_SECRET, {expiresIn: '10m'})
         return {accessToken, refreshToken}
     }
 

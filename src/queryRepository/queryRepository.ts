@@ -30,25 +30,25 @@ export class QueryRepository {
 
     async getCommentByIdWithLikeStatus(commentId: string, userId: string) {
         const findComment = await this.commentsRepository.getCommentById(commentId)
-        if (!findComment.length) return null
-        console.log('findComment', findComment)
-        const commentWithLikeStatus = await commentsWIthLikeCount(findComment, userId)
         // if (!findComment) return null
-        // // return this.commentsRepository.getCommentByIdWithLikes(commentId, userId)
-        // const findLikes = await this.commentsRepository.getLikes(commentId)
-        // const findDislikes = await this.commentsRepository.getDislikes(commentId)
-        // let findStatus = 'None'
-        // if (userId) {
-        //     const find = await this.commentsRepository.getStatus(commentId, userId)
-        //     if (find) {
-        //         findStatus = find.likeStatus
-        //     }
-        // }
-        // findComment.likesInfo.likesCount = findLikes
-        // findComment.likesInfo.dislikesCount = findDislikes
-        // findComment.likesInfo.myStatus = findStatus
-        // return findComment
-        return commentWithLikeStatus
+        // console.log('findComment', findComment)
+        // const commentWithLikeStatus = await commentsWIthLikeCount(findComment, userId)
+        // return this.commentsRepository.getCommentByIdWithLikes(commentId, userId)
+        if (!findComment) return null
+        const findLikes = await this.commentsRepository.getLikes(commentId)
+        const findDislikes = await this.commentsRepository.getDislikes(commentId)
+        let findStatus = 'None'
+        if (userId) {
+            const find = await this.commentsRepository.getStatus(commentId, userId)
+            if (find) {
+                findStatus = find.likeStatus
+            }
+        }
+        findComment.likesInfo.likesCount = findLikes
+        findComment.likesInfo.dislikesCount = findDislikes
+        findComment.likesInfo.myStatus = findStatus
+        return findComment
+        // return commentWithLikeStatus
     }
 
     async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, blogId: string) {
