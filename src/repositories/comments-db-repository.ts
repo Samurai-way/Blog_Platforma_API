@@ -18,7 +18,7 @@ export class CommentsRepository {
 
     async findAndSortedComments(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, postID: string) {
         return CommentsModel
-            .find({postID}, {_id: 0, postId: 0, __v: 0})
+            .find({postId: postID}, {_id: 0, postId: 0, __v: 0})
             .sort({[sortBy]: sortDirection})
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)

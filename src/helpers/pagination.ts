@@ -25,6 +25,7 @@ export const getPagination = (query: any): Pagination => {
 
 export const paginator = (pageNumber: number, pageSize: number, totalCount: number, items: any) => {
     const pagesCount = Math.ceil(totalCount / pageSize)
+    // console.log('items', items)
     return {
         pagesCount,
         page: pageNumber,

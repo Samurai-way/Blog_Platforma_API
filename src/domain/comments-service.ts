@@ -27,9 +27,10 @@ export class CommentsService {
 
         const findCommentsWithLikes = await commentsWIthLikeCount(findAndSortedComment, userId)
         // console.log('findCommentsWithLikes', findCommentsWithLikes)
+        // console.log('findAndSortedComment', findAndSortedComment)
         const getUsersCount = await this.commentsRepository.getCountCollection(postID)
 
-        return paginator(pageNumber, pageSize, getUsersCount, findAndSortedComment)
+        return paginator(pageNumber, pageSize, getUsersCount, findCommentsWithLikes)
 
     }
 
