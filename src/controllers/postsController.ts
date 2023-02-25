@@ -31,9 +31,9 @@ export class PostsController {
         // const findPostById = await this.postsService.getPostById(postID)
         // if (!findPostById) return res.send(404)
 
-        const getCommentsByPostId = await this.commentsService.getComments(userId,postID, pageNumber, pageSize, sortBy, sortDirection)
-        if (!getCommentsByPostId) return res.send(404)
-        res.status(200).send(getCommentsByPostId)
+        const getCommentsAndfindCommentsWithLikes = await this.commentsService.getComments(userId,postID, pageNumber, pageSize, sortBy, sortDirection)
+        if (!getCommentsAndfindCommentsWithLikes) return res.send(404)
+        res.status(200).send(getCommentsAndfindCommentsWithLikes)
     }
 
     async createCommentByPostId(req: Request, res: Response) {
