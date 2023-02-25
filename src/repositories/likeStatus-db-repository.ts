@@ -9,7 +9,7 @@ export class LikeStatusRepository {
             addedAt: new Date(),
             likeStatus
         }
-        const updateLikeStatus = await LikesStatusModel.findOneAndUpdate({parentId: commentId, userId}, {...commentLikeStatus}, {upsert: true})
-        return updateLikeStatus
+        await LikesStatusModel.findOneAndUpdate({parentId: commentId, userId}, {...commentLikeStatus}, {upsert: true})
+        return true
     }
 }
