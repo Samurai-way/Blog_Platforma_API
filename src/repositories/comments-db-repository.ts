@@ -73,7 +73,7 @@ export class CommentsRepository {
                             $project: {_id: 0, likeStatus: 1},
                         },
                     ],
-                    as: 'likeStatus',
+                    as: 'myStatus',
                 },
             },
             {
