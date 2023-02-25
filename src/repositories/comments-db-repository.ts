@@ -3,6 +3,7 @@ import {CommentsModel, LikesStatusModel} from "../db/db";
 import {DB_User_Type} from "../types";
 import mongoose from "mongoose";
 import {ObjectId} from "mongodb";
+import {LikeStatusEnum} from "../types/mongooseShema";
 
 export class CommentsRepository {
     async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any) {
@@ -15,82 +16,88 @@ export class CommentsRepository {
         const getCountComments = await CommentsModel.countDocuments({postId: postID})
         return paginator(pageNumber, pageSize, getCountComments, findAndSortedComments)
     }
-    async getLikes(id: string){
+
+    async getLikes(id: string) {
         return LikesStatusModel.countDocuments({parentId: id, likeStatus: 'Like'})
     }
-    async getDislikes(id: string){
+
+    async getDislikes(id: string) {
         return LikesStatusModel.countDocuments({parentId: id, likeStatus: 'Dislike'})
     }
-    async getStatus(id: string, userId: string){
+
+    async getStatus(id: string, userId: string) {
         return LikesStatusModel.findOne({parentId: id, userId})
     }
+
     async getCommentById(id: string) {
         return CommentsModel.findOne({id}, {_id: 0, postId: 0, __v: 0}).lean()
     }
+
     async getCommentByIdWithLikes(id: string, userId: string | mongoose.Types.ObjectId) {
-        const result = await LikesStatusModel.aggregate([
-            {$match: {parentId: id}},
+        const result = await CommentsModel.aggregate([
+            {$match: {id}},
             {
                 $lookup: {
                     from: 'likesstatuses',
                     localField: 'id',
                     foreignField: 'parentId',
                     pipeline: [
-                        {$match: {likeStatus: 'Dislike'},},], as: 'likesCount',
+                        {$match: {likeStatus: LikeStatusEnum.Like}}], as: 'Likes',
                 },
             },
-        {
-            $lookup: {
-                from: 'reactions',
-                localField: 'id',
-                foreignField: 'parentId',
-                pipeline: [
-                    {
-                        $match: {
-                            likeStatus: 'Dislike'
+            {
+                $lookup: {
+                    from: 'likesstatuses',
+                    localField: 'id',
+                    foreignField: 'parentId',
+                    pipeline: [
+                        {
+                            $match: {
+                                likeStatus: LikeStatusEnum.Dislike
+                            },
+                        },
+                    ],
+                    as: 'Dislikes',
+                },
+            },
+            {
+                $lookup: {
+                    from: 'likesstatuses',
+                    localField: 'id',
+                    foreignField: 'parentId',
+                    pipeline: [
+                        {
+                            $match: {userId: userId ?? ''},
+                        },
+                        {
+                            $project: {_id: 0, likeStatus: 1},
+                        },
+                    ],
+                    as: 'myStatus',
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    id: true,
+                    content: true,
+                    userId: true,
+                    userLogin: true,
+                    createdAt: true,
+                    'likesInfo.likesCount': {$size: '$Likes'},
+                    'likesInfo.dislikesCount': {$size: '$Dislikes'},
+                    'likesInfo.myStatus': {
+                        $cond: {
+                            if: {$eq: [{$size: '$myStatus'}, 0]},
+                            then: 'None',
+                            else: '$myStatus.likeStatus',
                         },
                     },
-                    { $count: 'count' },
-                ],
-                as: 'dislikesCount',
-            },
-        },
-        {
-            $lookup: {
-                from: 'reactions',
-                localField: 'id',
-                foreignField: 'parentId',
-                pipeline: [
-                    {
-                        $match: { userId: userId ?? '' },
-                    },
-                    {
-                        $project: { _id: 0, reactionStatus: 1 },
-                    },
-                ],
-                as: 'myStatus',
-            },
-        },
-        {
-             $project: {
-                _id: 0,
-                id: true,
-                content: true,
-                userId: true,
-                userLogin: true,
-                createdAt: true,
-                'likesInfo.likesCount': { $size: '$likesCount' },
-                'likesInfo.dislikesCount': { $size: '$dislikesCount' },
-                'likesInfo.myStatus': {
-                    $cond: {
-                        if: { $eq: [{ $size: '$myStatus' }, 0] },
-                        then: 'None',
-                        else: '$myStatus.reactionStatus',
-                    },
                 },
-            },}])
-        console.log('result', result)
-        return result;
+            },
+            {$unwind: '$likesInfo.myStatus' }
+            ])
+        return result[0];
     }
 
     async deleteCommentByID(commentID: string, user: DB_User_Type): Promise<boolean> {

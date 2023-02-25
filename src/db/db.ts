@@ -11,6 +11,7 @@ import {
     UsersSchema,
     UsersSessionSchema
 } from "../types/mongooseShema";
+import {LikeStatus} from "../types";
 
 dotenv.config()
 
@@ -28,7 +29,7 @@ export const TokensModel = mongoose.model('tokens', TokensSchema)
 export const UsersSessionModel = mongoose.model('usersSession', UsersSessionSchema)
 export const AttemptsModel = mongoose.model('attempts', AttemptsSchema)
 export const RecoveryCodeModel = mongoose.model('recoveryCode', RecoveryCodeSchema)
-export const LikesStatusModel = mongoose.model('likesStatus', LikeStatusSchema)
+export const LikesStatusModel = mongoose.model<LikeStatus>('likesStatus', LikeStatusSchema)
 
 export const runDb = async () => {
     try {

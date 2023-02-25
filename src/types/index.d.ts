@@ -1,11 +1,12 @@
 import {DB_User_Type} from "../db/db";
 import {ObjectId} from "mongodb";
+import {LikeStatusEnum} from "./mongooseShema";
 
 export class LikeStatus {
     constructor(public parentId: string,
                 public userId: string,
                 public login: string,
-                public likeStatus: string,
+                public likeStatus: LikeStatusEnum,
                 public addedAt: Date)
 
 

@@ -85,10 +85,17 @@ export const RecoveryCodeSchema = new mongoose.Schema<RecoveryCodeType>({
     email: String,
     recoveryCode: String
 })
+
+export enum LikeStatusEnum  {
+    Like = 'Like',
+    Dislike = 'Dislike',
+    None = 'None'
+}
+
 export const LikeStatusSchema = new mongoose.Schema<LikeStatus>({
     parentId: String,
     userId: String,
     login: String,
     addedAt: Date,
-    likeStatus: String
+    likeStatus: {type: String, enum: LikeStatusEnum}
 })
