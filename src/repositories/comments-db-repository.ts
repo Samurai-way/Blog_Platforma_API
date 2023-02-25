@@ -81,6 +81,7 @@ export class CommentsRepository {
                     _id: 0,
                     id: true,
                     content: true,
+                    commentatorInfo: true,
                     userId: true,
                     userLogin: true,
                     createdAt: true,

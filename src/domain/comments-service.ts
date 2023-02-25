@@ -6,13 +6,13 @@ import {LikeStatusRepository} from "../repositories/likeStatus-db-repository";
 
 export class CommentsService {
     postsRepository: PostsRepository;
-    usersRepositore: UsersRepository;
+    usersRepository: UsersRepository;
     likeStatusRepository: LikeStatusRepository;
 
 
     constructor(protected commentsRepository: CommentsRepository) {
         this.postsRepository = new PostsRepository()
-        this.usersRepositore = new UsersRepository()
+        this.usersRepository = new UsersRepository()
         this.likeStatusRepository = new LikeStatusRepository()
     }
 
