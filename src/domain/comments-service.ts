@@ -11,41 +11,28 @@ export class CommentsService {
     usersRepository: UsersRepository;
     likeStatusRepository: LikeStatusRepository;
 
-
     constructor(protected commentsRepository: CommentsRepository) {
         this.postsRepository = new PostsRepository()
         this.usersRepository = new UsersRepository()
         this.likeStatusRepository = new LikeStatusRepository()
     }
-
     async getComments(userId: string, postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
-        const getPostById = await this.postsRepository.getPostById(postID) // _3_
-        if (!getPostById) return null // _4_
-        // return this.commentsRepository.getComments(postID, pageNumber, pageSize, sortBy, sortDirection)
-        // тут было
-        const findAndSortedComment = await this.commentsRepository.findAndSortedComments(pageNumber, pageSize, sortBy, sortDirection, postID) //_6_
-
+        const getPostById = await this.postsRepository.getPostById(postID)
+        if (!getPostById) return null
+        const findAndSortedComment = await this.commentsRepository.findAndSortedComments(pageNumber, pageSize, sortBy, sortDirection, postID)
         const findCommentsWithLikes = await commentsWIthLikeCount(findAndSortedComment, userId)
-        // console.log('findCommentsWithLikes', findCommentsWithLikes)
-        // console.log('findAndSortedComment', findAndSortedComment)
         const getUsersCount = await this.commentsRepository.getCountCollection(postID)
-
         return paginator(pageNumber, pageSize, getUsersCount, findCommentsWithLikes)
-
     }
-
     async getCommentById(commentId: string) {
         return this.commentsRepository.getCommentById(commentId)
     }
-
     async deleteCommentByID(commentID: string, user: DB_User_Type): Promise<boolean> {
         return this.commentsRepository.deleteCommentByID(commentID, user)
     }
-
     async updateCommentById(commentId: string, content: string, user: DB_User_Type): Promise<boolean> {
         return this.commentsRepository.updateCommentById(commentId, content, user)
     }
-
     async updateLikeStatusByCommentId(commentId: string, user: DB_User_Type, likeStatus: string) {
         const findCommentById = await this.commentsRepository.getCommentById(commentId)
         if (!findCommentById) return null

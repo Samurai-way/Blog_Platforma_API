@@ -1,21 +1,9 @@
-import {paginator} from "../helpers/pagination";
 import {CommentsModel, LikesStatusModel} from "../db/db";
 import {DB_User_Type} from "../types";
 import mongoose from "mongoose";
 import {LikeStatusEnum} from "../types/mongooseShema";
 
 export class CommentsRepository {
-    async getComments(postID: string, pageNumber: number, pageSize: number, sortBy: string, sortDirection: any) {
-        const findAndSortedComments = await CommentsModel
-            .find({postId: postID}, {_id: 0, postId: 0, __v: 0})
-            .sort({[sortBy]: sortDirection})
-            .skip((pageNumber - 1) * pageSize)
-            .limit(pageSize)
-            .lean()
-        const getCountComments = await CommentsModel.countDocuments({postId: postID})
-        return paginator(pageNumber, pageSize, getCountComments, findAndSortedComments)
-    }
-
     async findAndSortedComments(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, postID: string) {
         return CommentsModel
             .find({postId: postID}, {_id: 0, postId: 0, __v: 0})
