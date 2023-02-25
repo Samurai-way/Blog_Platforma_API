@@ -73,7 +73,7 @@ export class CommentsRepository {
                             $project: {_id: 0, likeStatus: 1},
                         },
                     ],
-                    as: 'myStatus',
+                    as: 'likeStatus',
                 },
             },
             {
@@ -87,16 +87,16 @@ export class CommentsRepository {
                     createdAt: true,
                     'likesInfo.likesCount': {$size: '$Likes'},
                     'likesInfo.dislikesCount': {$size: '$Dislikes'},
-                    'likesInfo.myStatus': {
+                    'likesInfo.likeStatus': {
                         $cond: {
-                            if: {$eq: [{$size: '$myStatus'}, 0]},
+                            if: {$eq: [{$size: '$likeStatus'}, 0]},
                             then: 'None',
-                            else: '$myStatus.likeStatus',
+                            else: '$likeStatus.likeStatus',
                         },
                     },
                 },
             },
-            {$unwind: '$likesInfo.myStatus' }
+            {$unwind: '$likesInfo.likeStatus' }
             ])
         return result[0];
     }
