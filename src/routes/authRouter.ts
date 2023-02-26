@@ -9,6 +9,7 @@ import {authController} from "../controllers/authController";
 
 export const authRouter = Router({})
 
+
 authRouter.get('/me', authMiddleware, authController.getUser.bind(authController))
 authRouter.post('/login', requestAttemptsMiddleware, authController.loginUser.bind(authController))
 authRouter.post('/refresh-token', refreshTokenMiddleware, authController.refreshToken.bind(authController))
