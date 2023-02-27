@@ -1,3 +1,4 @@
+import "reflect-metadata"
 import {Router} from "express";
 import {
     getBlogsPaginationValidator,
@@ -6,9 +7,11 @@ import {
     postBlogValidator
 } from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
-import {blogsController} from "../compositions/blogsComposition";
+import {container} from "../compositions/blogsComposition";
+import {BlogsController} from "../controllers/blogsController";
 
 
+const blogsController = container.resolve(BlogsController)
 export const blogsRouter = Router({})
 
 blogsRouter.get('/', getBlogsPaginationValidator, blogsController.getBlogs.bind(blogsController))

@@ -2,11 +2,13 @@ import {Request, Response} from "express";
 import {getPagination} from "../helpers/pagination";
 import {BlogsService} from "../domain/blogs-service";
 import {QueryRepository} from "../queryRepository/queryRepository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class BlogsController {
     queryRepository: QueryRepository;
 
-    constructor(protected blogsService: BlogsService) {
+    constructor(@inject(BlogsService) protected blogsService: BlogsService) {
         this.queryRepository = new QueryRepository()
     }
 

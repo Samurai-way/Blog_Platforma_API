@@ -1,10 +1,12 @@
+import "reflect-metadata"
 import {ObjectId} from "mongodb";
 import {BlogsType, DB_BlogsType} from "../types";
 import {BlogsRepository} from "../repositories/blogs-db-repository";
+import {inject, injectable} from "inversify";
 
-
+@injectable()
 export class BlogsService {
-    constructor(protected blogsRepository: BlogsRepository) {
+    constructor(@inject(BlogsRepository) protected blogsRepository: BlogsRepository) {
     }
 
     async getBlogs(searchNameTerm: any, sortBy: any, sortDirection: string, pageNumber: number, pageSize: number) {

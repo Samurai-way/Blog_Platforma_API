@@ -1,7 +1,10 @@
+import "reflect-metadata"
 import {paginator} from "../helpers/pagination";
 import {BlogsType, DB_BlogsType} from "../types";
 import {BlogsModel} from "../db/db";
+import {injectable} from "inversify";
 
+@injectable()
 export class BlogsRepository {
     async getBlogs(searchNameTerm: string, sortBy: any, sortDirection: any, pageNumber: number, pageSize: number) {
         const findAndSortedBlogs = await BlogsModel
