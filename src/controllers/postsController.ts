@@ -3,11 +3,13 @@ import {getPagination} from "../helpers/pagination";
 import {PostsService} from "../domain/posts-service";
 import {CommentsService} from "../domain/comments-service";
 import {commentsRepository} from "../compositions/commentsComposition";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsController {
     commentsService: CommentsService;
 
-    constructor(protected postsService: PostsService) {
+    constructor(@inject(PostsService) protected postsService: PostsService) {
         this.commentsService = new CommentsService(commentsRepository)
     }
 
@@ -28,7 +30,7 @@ export class PostsController {
         const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
         const userId = req.user?.id
 
-        const getCommentsAndfindCommentsWithLikes = await this.commentsService.getComments(userId,postID, pageNumber, pageSize, sortBy, sortDirection)
+        const getCommentsAndfindCommentsWithLikes = await this.commentsService.getComments(userId, postID, pageNumber, pageSize, sortBy, sortDirection)
         if (!getCommentsAndfindCommentsWithLikes) return res.send(404)
         res.status(200).send(getCommentsAndfindCommentsWithLikes)
     }

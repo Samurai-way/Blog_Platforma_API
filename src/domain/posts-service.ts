@@ -3,11 +3,13 @@ import {PostsRepository} from "../repositories/posts-db-repository";
 import {CommentDBModalType, DB_PostsType, DB_User_Type, PostsType} from "../types";
 import {BlogsService} from "./blogs-service";
 import {blogsRepository} from "../repositories/blogs-db-repository";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class PostsService {
     blogsService: BlogsService;
 
-    constructor(protected postsRepository: PostsRepository) {
+    constructor(@inject(PostsRepository) protected postsRepository: PostsRepository) {
         this.blogsService = new BlogsService(blogsRepository)
     }
 

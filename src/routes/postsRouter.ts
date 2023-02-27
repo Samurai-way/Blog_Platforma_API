@@ -1,10 +1,12 @@
 import {Router} from "express";
 import {getPostsPaginationValidator, postCommentsValidator, postPostsValidator} from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
-import {postsController} from "../compositions/postsComposition";
+import {container} from "../compositions/postsComposition";
 import {checkTokenMiddleware} from "../middlewares/authMiddleware";
+import {PostsController} from "../controllers/postsController";
 
 
+const postsController = container.resolve(PostsController)
 export const postsRouter = Router({})
 
 postsRouter.get('/', getPostsPaginationValidator, postsController.getPosts.bind(postsController))

@@ -1,7 +1,9 @@
 import {paginator} from "../helpers/pagination";
 import {CommentsModel, PostsModel} from "../db/db";
 import {CommentDBModalType, CommentsType, DB_PostsType, PostsType} from "../types";
+import {injectable} from "inversify";
 
+@injectable()
 export class PostsRepository {
     async getPosts(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any) {
         const findAndSortedPosts = await PostsModel
