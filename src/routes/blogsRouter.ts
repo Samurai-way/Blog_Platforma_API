@@ -9,6 +9,7 @@ import {
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
 import {container} from "../compositions/blogsComposition";
 import {BlogsController} from "../controllers/blogsController";
+import {checkTokenMiddleware} from "../middlewares/authMiddleware";
 
 
 const blogsController = container.resolve(BlogsController)
@@ -18,6 +19,6 @@ blogsRouter.get('/', getBlogsPaginationValidator, blogsController.getBlogs.bind(
 blogsRouter.post('/', postBlogValidator, blogsController.createBlog.bind(blogsController))
 blogsRouter.post('/:id/posts', postBlogPostsValidator, blogsController.createPostByBlogId.bind(blogsController))
 blogsRouter.get('/:id', blogsController.getBlogById.bind(blogsController))
-blogsRouter.get('/:id/posts', paginationValidator, blogsController.getPostsByBlogId.bind(blogsController))
+blogsRouter.get('/:id/posts', checkTokenMiddleware, paginationValidator, blogsController.getPostsByBlogId.bind(blogsController))
 blogsRouter.put('/:id', postBlogValidator, blogsController.updateBlogById.bind(blogsController))
 blogsRouter.delete('/:id', basicAuthMiddleware, blogsController.deleteBlogById.bind(blogsController))

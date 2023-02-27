@@ -23,10 +23,6 @@ export class QueryRepository {
         this.commentsRepository = new CommentsRepository()
     }
 
-    async getBlogByID(id: string) {
-        return this.blogsService.getBlogById(id)
-    }
-
     async getCommentByIdWithLikeStatus(commentId: string, userId: string) {
         const findComment = await this.commentsRepository.getCommentById(commentId)
         if (!findComment) return null
@@ -46,8 +42,10 @@ export class QueryRepository {
         return findComment
     }
 
-    async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, blogId: string) {
-        return this.postsRepository.findBlogPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, blogId)
+    async findPostByBlogID(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, blogId: string, userId: string) {
+        const findBlog = await blogsRepository.getBlogById(blogId)
+        if (!findBlog) return null
+        return  this.postsRepository.findPostByBlogIDWithPagination(pageNumber, pageSize, sortBy, sortDirection, blogId, userId)
     }
 
     async newPost(blogId: string, title: string, shortDescription: string, content: string) {

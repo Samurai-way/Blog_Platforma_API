@@ -89,7 +89,8 @@ export class PostsService {
 
     async updateLikeStatusByPostId(postID: string, user: DB_User_Type, likeStatus: string) {
         const findPostById = await this.postsRepository.getPostById(postID)
-        if (!findPostById) return null
+        console.log('findPostById', findPostById)
+        if (!findPostById.length) return null
         return this.likeStatusRepository.updateLikeStatusByCommentId(postID, user.id, user.login, likeStatus)
     }
 }

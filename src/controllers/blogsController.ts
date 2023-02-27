@@ -40,19 +40,19 @@ export class BlogsController {
     }
 
     async getPostsByBlogId(req: Request, res: Response) {
-        const id = req.params.id
+        const blogID = req.params.id
+        const userId = req.user?.id
         const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
-        const findBlog = await this.queryRepository.getBlogByID(id)
-        if (!findBlog) return res.send(404)
-        const findBlogPost = await this.queryRepository.findBlogPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, id)
-        res.status(200).send(findBlogPost)
+        const findPostByBlogId = await this.queryRepository.findPostByBlogID(pageNumber, pageSize, sortBy, sortDirection, blogID, userId)
+        if (!findPostByBlogId) return res.sendStatus(404)
+        res.status(200).send(findPostByBlogId)
     }
 
     async updateBlogById(req: Request, res: Response) {
         const id = req.params.id
         const {name, description, websiteUrl} = req.body
         const updateBlog = await this.blogsService.updateBlogById(id, name, description, websiteUrl)
-        if (!updateBlog) return res.send(404)
+        if (!updateBlog) return res.sendStatus(404)
         const blog = await this.blogsService.getBlogById(id)
         res.status(204).send(blog)
     }

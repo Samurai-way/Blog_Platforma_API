@@ -24,7 +24,7 @@ export class PostsRepository {
         return comment
     }
 
-    async findBlogPostByBlogID(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string) {
+    async findPostByBlogIDWithPagination(pageNumber: number, pageSize: number, sortBy: any, sortDirection: any, blogId: string, userId: string) {
         const findBlog = await PostsModel
             .find({blogId}, {_id: 0, __v: 0})
             .sort({[sortBy]: sortDirection})
@@ -32,7 +32,8 @@ export class PostsRepository {
             .limit(pageSize)
             .lean()
         const getCountPosts = await PostsModel.countDocuments({blogId})
-        return paginator(pageNumber, pageSize, getCountPosts, findBlog)
+        const postWithLikes = await postsWithLikeStatus(findBlog, userId)
+        return paginator(pageNumber, pageSize, getCountPosts, postWithLikes)
     }
 
     async createPost(newPost: PostsType): Promise<DB_PostsType | null> {
@@ -47,7 +48,7 @@ export class PostsRepository {
         return newBlogCopy
     }
 
-    async getPostById(id: string): Promise<PostsType | null> {
+    async getPostById(id: string): Promise<PostsType | any> {
         return PostsModel.find({id}, {_id: 0, __v: 0}).lean()
     }
 
