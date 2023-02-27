@@ -29,7 +29,13 @@ export const PostsSchema = new mongoose.Schema<DB_PostsType>({
     content: {type: String, required: true},
     blogId: {type: String, required: true},
     blogName: {type: String, required: true},
-    createdAt: String
+    createdAt: String,
+    extendedLikesInfo: {
+        likesCount: Number,
+        dislikesCount: Number,
+        myStatus: String,
+        newestLikes: []
+    }
 })
 
 export const CommentsSchema = new mongoose.Schema<CommentDBModalType>({

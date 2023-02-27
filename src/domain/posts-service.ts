@@ -5,19 +5,22 @@ import {BlogsService} from "./blogs-service";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {inject, injectable} from "inversify";
 import {LikeStatusRepository} from "../repositories/likeStatus-db-repository";
+import {CommentsRepository} from "../repositories/comments-db-repository";
 
 @injectable()
 export class PostsService {
     blogsService: BlogsService;
     likeStatusRepository: LikeStatusRepository
+    commentsRepository: CommentsRepository;
 
     constructor(@inject(PostsRepository) protected postsRepository: PostsRepository) {
         this.blogsService = new BlogsService(blogsRepository)
         this.likeStatusRepository = new LikeStatusRepository
+        this.commentsRepository = new CommentsRepository
     }
 
-    async getPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
-        return this.postsRepository.getPosts(pageNumber, pageSize, sortBy, sortDirection)
+    async getPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string, userId: string) {
+        return this.postsRepository.getPosts(pageNumber, pageSize, sortBy, sortDirection, userId)
     }
 
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<DB_PostsType | null> {

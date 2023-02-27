@@ -15,7 +15,7 @@ import {ExpressErrorValidator} from "../middlewares/expressErrorValidator";
 const postsController = container.resolve(PostsController)
 export const postsRouter = Router({})
 
-postsRouter.get('/', getPostsPaginationValidator, postsController.getPosts.bind(postsController))
+postsRouter.get('/', getPostsPaginationValidator, checkTokenMiddleware, postsController.getPosts.bind(postsController))
 postsRouter.put('/:postID/like-status', authMiddleware, likeStatus, ExpressErrorValidator, postsController.updateLikeStatusByPostId.bind(postsController)) // дз 12 _1 шаг_
 postsRouter.post('/', postPostsValidator, postsController.createPost.bind(postsController))
 postsRouter.get('/:postID/comments', checkTokenMiddleware, postsController.getCommentsByPostId.bind(postsController))

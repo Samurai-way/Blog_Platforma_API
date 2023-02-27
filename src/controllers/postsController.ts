@@ -14,8 +14,9 @@ export class PostsController {
     }
 
     async getPosts(req: Request, res: Response) {
+        const userId = req.user?.id
         const {pageNumber, pageSize, sortBy, sortDirection} = getPagination(req.query)
-        const findPosts = await this.postsService.getPosts(pageNumber, pageSize, sortBy, sortDirection)
+        const findPosts = await this.postsService.getPosts(pageNumber, pageSize, sortBy, sortDirection, userId)
         res.status(200).send(findPosts)
     }
 
