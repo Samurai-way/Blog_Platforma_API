@@ -48,7 +48,7 @@ export class PostsRepository {
     }
 
     async getPostById(id: string): Promise<PostsType | null> {
-        return PostsModel.findOne({id}, {_id: 0, __v: 0})
+        return PostsModel.find({id}, {_id: 0, __v: 0}).lean()
     }
 
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean> {

@@ -6,6 +6,7 @@ import {blogsRepository} from "../repositories/blogs-db-repository";
 import {inject, injectable} from "inversify";
 import {LikeStatusRepository} from "../repositories/likeStatus-db-repository";
 import {CommentsRepository} from "../repositories/comments-db-repository";
+import {postsWithLikeStatus} from "../helpers/postsWithLikeStatus";
 
 @injectable()
 export class PostsService {
@@ -47,6 +48,12 @@ export class PostsService {
 
     async getPostById(postID: string): Promise<PostsType | null> {
         return this.postsRepository.getPostById(postID)
+    }
+
+    async findPostByIdWithLikes(postID: string, userId: string) {
+        const findPostById = await this.postsRepository.getPostById(postID)
+        const postWithLike = await postsWithLikeStatus(findPostById, userId)
+        return postWithLike[0]
     }
 
     async createPostComment(postID: string, user: DB_User_Type, content: string) {

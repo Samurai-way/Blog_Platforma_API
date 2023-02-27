@@ -46,10 +46,11 @@ export class PostsController {
     }
 
     async getPostById(req: Request, res: Response) {
-        const id = req.params.id
-        const findPost = await this.postsService.getPostById(id)
-        if (!findPost) return res.send(404)
-        res.status(200).send(findPost)
+        const postID = req.params.id
+        const userId = req.user?.id
+        const findPostByIdWithLikes = await this.postsService.findPostByIdWithLikes(postID, userId)
+        if (!findPostByIdWithLikes) return res.send(404)
+        res.status(200).send(findPostByIdWithLikes)
     }
 
     async updatePostById(req: Request, res: Response) {
