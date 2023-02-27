@@ -27,10 +27,9 @@ export class BlogsController {
     async createPostByBlogId(req: Request, res: Response) {
         const id = req.params.id
         const {title, shortDescription, content} = req.body
-        const findBlog = await this.queryRepository.getBlogByID(id)
-        if (!findBlog) return res.sendStatus(404)
-        const newPost = await this.queryRepository.newPost(id, title, shortDescription, content)
-        res.status(201).send(newPost)
+        const findBlogByIdAndCreatePost = await this.queryRepository.newPost(id, title, shortDescription, content)
+        if (!findBlogByIdAndCreatePost) return res.sendStatus(404)
+        res.status(201).send(findBlogByIdAndCreatePost)
     }
 
     async getBlogById(req: Request, res: Response) {
@@ -38,7 +37,6 @@ export class BlogsController {
         const findVideo = await this.blogsService.getBlogById(id)
         if (!findVideo) return res.send(404)
         res.status(200).send(findVideo)
-
     }
 
     async getPostsByBlogId(req: Request, res: Response) {

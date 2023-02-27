@@ -35,7 +35,7 @@ export class TokenType {
     }
 }
 
-export class DB_BlogsPost{
+export class DB_BlogsPost {
     constructor(public id: string,
                 public title: string,
                 public shortDescription: string,
@@ -45,7 +45,8 @@ export class DB_BlogsPost{
                 public createdAt: string) {
     }
 }
-export class BlogsPost{
+
+export class BlogsPost {
     constructor(public id: string,
                 public _id: ObjectId,
                 public title: string,
@@ -53,9 +54,16 @@ export class BlogsPost{
                 public content: string,
                 public blogId: string,
                 public blogName: string,
-                public createdAt: string) {
+                public createdAt: string,
+                public extendedLikesInfo: {
+                    likesCount: number,
+                    dislikesCount: number,
+                    myStatus: string,
+                    newestLikes: []
+                }) {
     }
 }
+
 export class PostsType {
     constructor(public id: string,
                 public _id: ObjectId,

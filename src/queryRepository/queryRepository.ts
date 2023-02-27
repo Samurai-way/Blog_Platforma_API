@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {BlogsPost, DB_User_Type, PostsType} from "../types";
+import {BlogsPost, DB_User_Type} from "../types";
 import {BlogsService} from "../domain/blogs-service";
 import {PostsRepository} from "../repositories/posts-db-repository";
 import {UsersRepository} from "../repositories/users-db-repository";
@@ -51,8 +51,8 @@ export class QueryRepository {
     }
 
     async newPost(blogId: string, title: string, shortDescription: string, content: string) {
-        const blogName = await blogsRepository.getBlogById(blogId)
-        if (!blogName) return false
+        const findBlogById = await blogsRepository.getBlogById(blogId)
+        if (!findBlogById) return null
         const newBlogPost: BlogsPost = {
             id: new ObjectId().toString(),
             _id: new ObjectId(),
@@ -60,8 +60,14 @@ export class QueryRepository {
             shortDescription,
             content,
             blogId,
-            blogName: blogName.name,
-            createdAt: new Date().toISOString()
+            blogName: findBlogById.name,
+            createdAt: new Date().toISOString(),
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+                newestLikes: []
+            }
         }
         const result = this.postsRepository.createNewBlogPost(newBlogPost)
         return result
