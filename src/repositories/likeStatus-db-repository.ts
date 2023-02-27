@@ -1,5 +1,6 @@
 import {LikesStatusModel} from "../db/db";
 
+
 export class LikeStatusRepository {
     async updateLikeStatusByCommentId(commentId: string, userId: string, login: string, likeStatus: string,) {
         const commentLikeStatus = {

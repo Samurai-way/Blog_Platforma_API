@@ -35,6 +35,27 @@ export class TokenType {
     }
 }
 
+export class DB_BlogsPost{
+    constructor(public id: string,
+                public title: string,
+                public shortDescription: string,
+                public content: string,
+                public blogId: string,
+                public blogName: string,
+                public createdAt: string) {
+    }
+}
+export class BlogsPost{
+    constructor(public id: string,
+                public _id: ObjectId,
+                public title: string,
+                public shortDescription: string,
+                public content: string,
+                public blogId: string,
+                public blogName: string,
+                public createdAt: string) {
+    }
+}
 export class PostsType {
     constructor(public id: string,
                 public _id: ObjectId,

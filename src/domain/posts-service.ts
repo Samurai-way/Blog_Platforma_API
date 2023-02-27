@@ -4,13 +4,16 @@ import {CommentDBModalType, DB_PostsType, DB_User_Type, PostsType} from "../type
 import {BlogsService} from "./blogs-service";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {inject, injectable} from "inversify";
+import {LikeStatusRepository} from "../repositories/likeStatus-db-repository";
 
 @injectable()
 export class PostsService {
     blogsService: BlogsService;
+    likeStatusRepository: LikeStatusRepository
 
     constructor(@inject(PostsRepository) protected postsRepository: PostsRepository) {
         this.blogsService = new BlogsService(blogsRepository)
+        this.likeStatusRepository = new LikeStatusRepository
     }
 
     async getPosts(pageNumber: number, pageSize: number, sortBy: string, sortDirection: string) {
@@ -73,11 +76,11 @@ export class PostsService {
     async deletePostById(id: string): Promise<boolean> {
         return this.postsRepository.deletePostById(id)
     }
-    async updateLikeStatusByPostId(postID: string, user: DB_User_Type, likeStatus: string){
+
+    async updateLikeStatusByPostId(postID: string, user: DB_User_Type, likeStatus: string) {
         const findPostById = await this.postsRepository.getPostById(postID)
-        console.log('findPostById', findPostById)
-        if(!findPostById) return null
-        return null
+        if (!findPostById) return null
+        return this.likeStatusRepository.updateLikeStatusByCommentId(postID, user.id, user.login, likeStatus)
     }
 }
 

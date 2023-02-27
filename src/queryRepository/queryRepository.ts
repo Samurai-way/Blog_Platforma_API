@@ -2,7 +2,7 @@ import {ObjectId} from "mongodb";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {DB_User_Type, PostsType} from "../types";
+import {BlogsPost, DB_User_Type, PostsType} from "../types";
 import {BlogsService} from "../domain/blogs-service";
 import {PostsRepository} from "../repositories/posts-db-repository";
 import {UsersRepository} from "../repositories/users-db-repository";
@@ -53,7 +53,7 @@ export class QueryRepository {
     async newPost(blogId: string, title: string, shortDescription: string, content: string) {
         const blogName = await blogsRepository.getBlogById(blogId)
         if (!blogName) return false
-        const newBlogPost: PostsType = {
+        const newBlogPost: BlogsPost = {
             id: new ObjectId().toString(),
             _id: new ObjectId(),
             title,
