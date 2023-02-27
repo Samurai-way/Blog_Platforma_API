@@ -66,5 +66,15 @@ export class PostsController {
         if (!deletePost) return res.send(404)
         res.send(204)
     }
+
+    async updateLikeStatusByPostId(req: Request, res: Response) {
+        const postID = req.params.postID
+        // console.log('postID', postID)
+        const user = req.user!
+        const likeStatus = req.body.likeStatus
+        const findPostById = await this.postsService.updateLikeStatusByPostId(postID, user, likeStatus)
+        if (!findPostById) return res.sendStatus(404)
+        res.sendStatus(204)
+    }
 }
 

@@ -28,7 +28,13 @@ export class PostsService {
             content,
             blogId,
             blogName: blogName.name,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None",
+                newestLikes: []
+            }
         }
         return this.postsRepository.createPost(newPost)
     }
@@ -66,6 +72,12 @@ export class PostsService {
 
     async deletePostById(id: string): Promise<boolean> {
         return this.postsRepository.deletePostById(id)
+    }
+    async updateLikeStatusByPostId(postID: string, user: DB_User_Type, likeStatus: string){
+        const findPostById = await this.postsRepository.getPostById(postID)
+        console.log('findPostById', findPostById)
+        if(!findPostById) return null
+        return null
     }
 }
 

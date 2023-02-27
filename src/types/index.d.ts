@@ -43,7 +43,13 @@ export class PostsType {
                 public content: string,
                 public blogId: string,
                 public blogName: string,
-                public createdAt: string) {
+                public createdAt: string,
+                public extendedLikesInfo: {
+                    likesCount: number,
+                    dislikesCount: number,
+                    myStatus: string,
+                    newestLikes: []
+                }) {
     }
 }
 
@@ -77,7 +83,13 @@ export class DB_PostsType {
                 public content: string,
                 public blogId: string,
                 public blogName: string,
-                public createdAt: string) {
+                public createdAt: string,
+                public extendedLikesInfo: {
+                    likesCount: number,
+                    dislikesCount: number,
+                    myStatus: string,
+                    newestLikes: []
+                }) {
 
     }
 }

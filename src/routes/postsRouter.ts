@@ -10,8 +10,9 @@ const postsController = container.resolve(PostsController)
 export const postsRouter = Router({})
 
 postsRouter.get('/', getPostsPaginationValidator, postsController.getPosts.bind(postsController))
+postsRouter.put('/:postID/like-status', checkTokenMiddleware, postsController.updateLikeStatusByPostId.bind(postsController)) // дз 12 _1 шаг_
 postsRouter.post('/', postPostsValidator, postsController.createPost.bind(postsController))
-postsRouter.get('/:postID/comments', checkTokenMiddleware, postsController.getCommentsByPostId.bind(postsController)) // добавляем миделвару
+postsRouter.get('/:postID/comments', checkTokenMiddleware, postsController.getCommentsByPostId.bind(postsController))
 postsRouter.post('/:postID/comments', postCommentsValidator, postsController.createCommentByPostId.bind(postsController))
 postsRouter.get('/:id', postsController.getPostById.bind(postsController))
 postsRouter.put('/:id', postPostsValidator, postsController.updatePostById.bind(postsController))
