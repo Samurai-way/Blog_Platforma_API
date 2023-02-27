@@ -1,10 +1,13 @@
 import {Request, Response} from "express";
 import {getPagination} from "../helpers/pagination";
 import {UsersService} from "../domain/users-service";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class UsersController {
-    constructor(protected usersService: UsersService) {
+    constructor(@inject(UsersService) protected usersService: UsersService) {
     }
+
     async getUsers(req: Request, res: Response) {
         const {sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm} = getPagination(req.query)
         const findValue = await this.usersService.getUser(sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm)

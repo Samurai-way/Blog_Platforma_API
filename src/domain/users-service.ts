@@ -6,9 +6,11 @@ import add from 'date-fns/add'
 import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
 import {UsersRepository} from "../repositories/users-db-repository";
 import {emailService} from "../compositions/emailComposition";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class UsersService {
-    constructor(protected usersRepository: UsersRepository) {
+    constructor(@inject(UsersRepository) protected usersRepository: UsersRepository) {
     }
 
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {

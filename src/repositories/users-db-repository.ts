@@ -1,7 +1,9 @@
 import {paginator} from "../helpers/pagination";
 import {RecoveryCodeModel, UsersModel} from "../db/db";
 import {DB_User_Type, RecoveryCodeType, UserType} from "../types";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersRepository {
     async getUser(sortBy: any, sortDirection: any, pageNumber: number, pageSize: number, searchLoginTerm: any, searchEmailTerm: any) {
         const findAndSortedUser = await UsersModel

@@ -1,9 +1,11 @@
 import {Router} from "express";
 import {userPostValidator, usersGetValidator} from "../validators/validators";
 import {basicAuthMiddleware} from "../middlewares/basicAuthMiddleware";
-import {usersController} from "../compositions/usersComposition";
+import {container} from "../compositions/usersComposition";
+import {UsersController} from "../controllers/usersController";
 
 
+const usersController = container.resolve(UsersController)
 export const usersRouter = Router({})
 
 usersRouter.get('/', usersGetValidator, usersController.getUsers.bind(usersController))
