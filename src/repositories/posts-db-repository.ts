@@ -2,7 +2,7 @@ import {paginator} from "../helpers/pagination";
 import {CommentsModel, PostsModel} from "../db/db";
 import {BlogsPost, CommentDBModalType, CommentsType, DB_BlogsPost, DB_PostsType, PostsType} from "../types";
 import {injectable} from "inversify";
-import {commentsWIthLikeCount} from "../helpers/commentsWIthLikeCount";
+import {postsWithLikeStatus} from "../helpers/postsWithLikeStatus";
 
 @injectable()
 export class PostsRepository {
@@ -14,9 +14,8 @@ export class PostsRepository {
             .limit(pageSize)
             .lean()
         const getCountPosts = await PostsModel.countDocuments()
-        // const postWithLikes = await commentsWIthLikeCount(findAndSortedPosts, userId)
-        // console.log('postWithLikes', postWithLikes)
-        return paginator(pageNumber, pageSize, getCountPosts, findAndSortedPosts)
+        const postWithLikes = await postsWithLikeStatus(findAndSortedPosts, userId)
+        return paginator(pageNumber, pageSize, getCountPosts, postWithLikes)
     }
 
     async createPostComment(newComment: CommentDBModalType): Promise<CommentsType> {
